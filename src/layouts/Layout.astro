@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="The Great Puzzle Project - Una investigación sobre la arquitectura técnica del olvido." />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		
+		<!-- Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@100;300;400;700;800&family=Gloock&display=swap" rel="stylesheet">
+	</head>
+	<body class="bg-bg text-primary">
+		<slot />
+		
+		<!-- Back to Top Button -->
+		<button id="back-to-top" class="fixed bottom-8 right-8 z-50 p-4 border border-border rounded-full opacity-0 pointer-events-none transition-all duration-500 hover:bg-highlight hover:text-bg mix-blend-difference">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+		</button>
+
+		<script>
+			const backToTop = document.getElementById('back-to-top');
+			
+			window.addEventListener('scroll', () => {
+				if (window.scrollY > 500) {
+					backToTop?.classList.remove('opacity-0', 'pointer-events-none');
+					backToTop?.classList.add('opacity-100', 'pointer-events-auto');
+				} else {
+					backToTop?.classList.add('opacity-0', 'pointer-events-none');
+					backToTop?.classList.remove('opacity-100', 'pointer-events-auto');
+				}
+			});
+
+			backToTop?.addEventListener('click', () => {
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			});
+		</script>
+	</body>
+</html>

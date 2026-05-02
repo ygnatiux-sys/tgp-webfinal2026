@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great Puzzle Project | Archivo Interactivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals (Manteca #fdfbf7, Dark Charcoal #1a1a1a, Muted Bronze #8b7355, Warm Gray #d1c7b7) -->
+    <!-- Application Structure Plan: Diseño temático y exploratorio. Inicia con un Hero que establece el tono filosófico. Sigue una sección interactiva de "Evolución de la Prótesis Cognitiva" (gráfico de líneas). Luego, un panel interactivo (selector) para explorar las 4 tesis fundamentales sin recargar la página. Finaliza con un análisis de la composición del "Archivo Vivo" (gráfico de dona). Esta estructura permite desglosar una teoría compleja en fragmentos digeribles y visuales. -->
+    <!-- Visualization & Content Choices: 1. Gráfico de Líneas (Chart.js): Muestra la externalización de la memoria a través de eras (visualiza la tesis de la tecnología como prótesis). 2. Interfaz de Botones/Panel: Organiza las 4 tesis principales para lectura bajo demanda. 3. Gráfico de Dona (Chart.js): Compara el relato oficial vs. memoria reprimida. Todo renderizado en Canvas. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@100;300;400;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfbf7;
+            color: #1a1a1a;
+            scroll-behavior: smooth;
+        }
+        
+        h1, h2, h3, h4, h5, .font-bodoni {
+            font-family: 'Bodoni Moda', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 60vh;
+            max-height: 450px;
+            min-height: 300px;
+        }
+
+        .thesis-btn.active {
+            background-color: #1a1a1a;
+            color: #fdfbf7;
+            border-color: #1a1a1a;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="sticky top-0 z-50 bg-[#fdfbf7]/90 backdrop-blur-md border-b border-[#d1c7b7] px-6 py-4 flex justify-between items-center">
+        <div class="font-bodoni text-2xl font-bold tracking-tighter text-[#1a1a1a]">TGP<span class="text-[#8b7355] italic">Project</span></div>
+        <div class="hidden md:flex gap-8 text-xs tracking-[0.2em] uppercase font-light">
+            <a href="#introduccion" class="hover:text-[#8b7355] transition-colors">Introducción</a>
+            <a href="#protesis-cognitiva" class="hover:text-[#8b7355] transition-colors">Evolución Técnica</a>
+            <a href="#arquitectura-tesis" class="hover:text-[#8b7355] transition-colors">Las Tesis</a>
+            <a href="#archivo-vivo" class="hover:text-[#8b7355] transition-colors">El Archivo</a>
+        </div>
+    </nav>
+
+    <header id="introduccion" class="py-24 px-6 max-w-6xl mx-auto flex flex-col justify-center items-center text-center min-h-[70vh]">
+        <div class="inline-block px-3 py-1 border border-[#8b7355] text-[#8b7355] text-[10px] tracking-widest uppercase mb-6 rounded-full">
+            Antropología Filosófica & Neurohistoria
+        </div>
+        <h1 class="font-bodoni text-5xl md:text-7xl font-bold leading-tight mb-8 max-w-4xl">
+            Comprender por qué <span class="italic text-[#8b7355]">pensamos</span> lo que pensamos.
+        </h1>
+        <p class="text-lg md:text-xl font-light tracking-wide max-w-3xl leading-relaxed text-gray-700">
+            The Great Puzzle Project es una investigación interactiva sobre la arquitectura técnica del olvido. 
+            Exploramos cómo el <i>Sapiens</i> utiliza los relatos históricos y la tecnología como una prótesis cognitiva 
+            para sobrevivir al azar y construir su propio nicho de realidad.
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pb-24 space-y-32">
+
+        <section id="protesis-cognitiva" class="border-t border-[#d1c7b7] pt-16">
+            <div class="mb-12 max-w-3xl">
+                <h2 class="font-bodoni text-4xl mb-4">La Externalización de la Memoria</h2>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    Esta sección analiza la evolución de la tecnología humana no como meras herramientas, sino como una "prótesis cognitiva". 
+                    Desde la oralidad pre-axial hasta la Inteligencia Artificial actual, la especie ha incrementado su dependencia de memorias externas 
+                    para estabilizar el sentido y gestionar la complejidad de su nicho. Interactúe con el gráfico para ver los saltos históricos.
+                </p>
+            </div>
+            
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-end mb-4 gap-2">
+                    <button id="btn-capacidad" class="px-4 py-2 text-xs font-bold uppercase tracking-wider border border-[#1a1a1a] bg-[#1a1a1a] text-[#fdfbf7] rounded hover:bg-[#8b7355] hover:border-[#8b7355] transition-colors">Ver Capacidad Externa</button>
+                    <button id="btn-angustia" class="px-4 py-2 text-xs font-bold uppercase tracking-wider border border-gray-300 bg-white text-gray-600 rounded hover:bg-gray-50 transition-colors">Ver Angustia Biológica</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="evolutionChart"></canvas>
+                </div>
+                <p id="evolution-caption" class="text-sm text-center text-gray-500 mt-6 font-light italic">
+                    Gráfico 1: A medida que la memoria tecnológica (IA, silicio, imprenta) se expande, la dependencia del procesamiento biológico puro disminuye.
+                </p>
+            </div>
+        </section>
+
+        <section id="arquitectura-tesis" class="border-t border-[#d1c7b7] pt-16">
+            <div class="mb-12 max-w-3xl">
+                <h2 class="font-bodoni text-4xl mb-4">La Matriz del Nicho: Tesis Centrales</h2>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    TGP no es una recopilación de teorías de conspiración, sino un marco conceptual unificado. 
+                    Seleccione cada una de las tesis fundamentales a continuación para explorar cómo se entrelazan la neurobiología, 
+                    la tecnología y la heurística de lo alternativo para dar forma al comportamiento humano histórico.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-4 flex flex-col gap-3">
+                    <button class="thesis-btn active text-left px-6 py-5 border border-gray-300 rounded hover:border-[#1a1a1a] transition-all font-bodoni text-xl" data-target="tesis-1">
+                        I. El Sapiens Arquitecto
+                    </button>
+                    <button class="thesis-btn text-left px-6 py-5 border border-gray-300 rounded hover:border-[#1a1a1a] transition-all font-bodoni text-xl" data-target="tesis-2">
+                        II. La Prótesis Tecnológica
+                    </button>
+                    <button class="thesis-btn text-left px-6 py-5 border border-gray-300 rounded hover:border-[#1a1a1a] transition-all font-bodoni text-xl" data-target="tesis-3">
+                        III. La Heurística de lo Alternativo
+                    </button>
+                    <button class="thesis-btn text-left px-6 py-5 border border-gray-300 rounded hover:border-[#1a1a1a] transition-all font-bodoni text-xl" data-target="tesis-4">
+                        IV. La Semiotización Permanente
+                    </button>
+                </div>
+                
+                <div class="lg:col-span-8 bg-white p-8 md:p-12 rounded-xl border border-gray-200 shadow-sm min-h-[400px] flex flex-col justify-center">
+                    <div id="tesis-content-area" class="transition-opacity duration-500">
+                        <div class="text-[#8b7355] text-4xl mb-6">✦</div>
+                        <h3 id="tesis-title" class="font-bodoni text-3xl mb-6">I. El Sapiens Arquitecto de Nichos</h3>
+                        <p id="tesis-body" class="text-gray-700 leading-relaxed font-light text-lg mb-6">
+                            No somos animales que simplemente habitan un mundo material; somos entidades que construyen y habitan sus propios relatos. La historia de las ideas no es un lujo decorativo o puramente intelectual, sino una estrategia biológica central de supervivencia. Construimos una arquitectura narrativa para no colapsar ante el terror de la entropía, el azar de la naturaleza y la certeza de la muerte.
+                        </p>
+                        <div class="bg-[#fdfbf7] p-4 rounded border border-[#d1c7b7] text-sm text-gray-600 font-light">
+                            <strong class="font-bold text-[#1a1a1a]">Implicación Clave:</strong> Toda civilización es, en el fondo, un mecanismo de defensa neurocognitivo proyectado a escala monumental.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="archivo-vivo" class="border-t border-[#d1c7b7] pt-16">
+            <div class="mb-12 max-w-3xl">
+                <h2 class="font-bodoni text-4xl mb-4">Dinámica del Archivo Vivo</h2>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    La memoria humana colectiva no es un depósito neutral, sino un sistema administrado. 
+                    El "Archivo Vivo" es editado constantemente por estructuras de poder que seleccionan qué memorias estabilizan el presente y cuáles deben ser marginadas. 
+                    Este gráfico representa la tensión neurológica entre el relato oficial (Corteza Prefrontal) y la memoria cíclica/mitológica (Sistema Límbico).
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="chart-container !max-w-md !h-[400px]">
+                    <canvas id="archiveChart"></canvas>
+                </div>
+                <div>
+                    <h4 class="font-bodoni text-2xl mb-4 text-[#8b7355]">El Palimpsesto Cultural</h4>
+                    <p class="text-gray-700 font-light leading-relaxed mb-6">
+                        La historia oficial actúa como un relato solar (vertical, logocéntrico) diseñado para la obediencia y la cohesión. Lo "alternativo" representa las llamaradas reprimidas de la narrativa lunar (cíclica, arquetípica). 
+                    </p>
+                    <ul class="space-y-4 text-sm font-light">
+                        <li class="flex items-start">
+                            <span class="text-xl mr-3">⚙</span>
+                            <span><strong>El Relato Dominante:</strong> Proporciona una ilusión de destino inevitable. Vaciado intencional de sentido para control cognitivo.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-xl mr-3">⚿</span>
+                            <span><strong>La Memoria Marginada:</strong> Anomalías históricas que operan como herramientas diagnósticas (heurística) para desarmar la matriz.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#1a1a1a] text-white py-16 px-6 text-center border-t-4 border-[#8b7355]">
+        <h2 class="font-bodoni text-3xl mb-6">Explora el Gran Rompecabezas</h2>
+        <p class="text-gray-400 font-light max-w-2xl mx-auto mb-10 tracking-wide text-sm">
+            Para conferencias sobre la IA como memoria ancestral, arqueología de las ideas y la gestión del sentido en la era digital.
+        </p>
+        <button class="px-8 py-3 bg-transparent border border-[#d1c7b7] text-[#d1c7b7] uppercase tracking-[0.2em] text-xs hover:bg-[#d1c7b7] hover:text-[#1a1a1a] transition-colors duration-300">
+            Contactar al Autor
+        </button>
+        <div class="mt-16 text-[10px] tracking-[0.3em] uppercase text-gray-500">
+            Xavier Benítez © 2026 | TGP Project | Sur Global
+        </div>
+    </footer>
+
+    <script>
+        const evolutionCtx = document.getElementById('evolutionChart').getContext('2d');
+        const labels = ['Oralidad Pre-Axial', 'Era Axial (Escritura)', 'Imprenta', 'Era Digital', 'IA / Neocórtex Sintético'];
+        
+        const dataCapacidad = [10, 30, 60, 85, 100]; 
+        const dataAngustia = [90, 70, 50, 65, 80]; 
+
+        let currentEvolutionChart = new Chart(evolutionCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Densidad de Memoria Externa (Proxy Tecnológico)',
+                    data: dataCapacidad,
+                    borderColor: '#1a1a1a',
+                    backgroundColor: 'rgba(26, 26, 26, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#8b7355',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { font: { family: 'Inter' } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) label += context.parsed.y + '%';
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        document.getElementById('btn-capacidad').addEventListener('click', function() {
+            this.classList.replace('bg-white', 'bg-[#1a1a1a]');
+            this.classList.replace('text-gray-600', 'text-[#fdfbf7]');
+            this.classList.replace('border-gray-300', 'border-[#1a1a1a]');
+            
+            let btnAngustia = document.getElementById('btn-angustia');
+            btnAngustia.classList.replace('bg-[#1a1a1a]', 'bg-white');
+            btnAngustia.classList.replace('text-[#fdfbf7]', 'text-gray-600');
+            btnAngustia.classList.replace('border-[#1a1a1a]', 'border-gray-300');
+
+            currentEvolutionChart.data.datasets[0].data = dataCapacidad;
+            currentEvolutionChart.data.datasets[0].label = 'Densidad de Memoria Externa (Proxy Tecnológico)';
+            currentEvolutionChart.data.datasets[0].borderColor = '#1a1a1a';
+            currentEvolutionChart.data.datasets[0].backgroundColor = 'rgba(26, 26, 26, 0.1)';
+            currentEvolutionChart.update();
+            document.getElementById('evolution-caption').innerHTML = "Gráfico 1: A medida que la memoria tecnológica se expande, la externalización del pensamiento alcanza niveles donde el humano se vuelve espectador de su ecosistema simbólico.";
+        });
+
+        document.getElementById('btn-angustia').addEventListener('click', function() {
+            this.classList.replace('bg-white', 'bg-[#1a1a1a]');
+            this.classList.replace('text-gray-600', 'text-[#fdfbf7]');
+            this.classList.replace('border-gray-300', 'border-[#1a1a1a]');
+            
+            let btnCapacidad = document.getElementById('btn-capacidad');
+            btnCapacidad.classList.replace('bg-[#1a1a1a]', 'bg-white');
+            btnCapacidad.classList.replace('text-[#fdfbf7]', 'text-gray-600');
+            btnCapacidad.classList.replace('border-[#1a1a1a]', 'border-gray-300');
+
+            currentEvolutionChart.data.datasets[0].data = dataAngustia;
+            currentEvolutionChart.data.datasets[0].label = 'Nivel de Angustia / Crisis de Sentido';
+            currentEvolutionChart.data.datasets[0].borderColor = '#8b7355';
+            currentEvolutionChart.data.datasets[0].backgroundColor = 'rgba(139, 115, 85, 0.1)';
+            currentEvolutionChart.update();
+            document.getElementById('evolution-caption').innerHTML = "Gráfico 1: Las crisis técnicas desestabilizan el entorno, elevando temporalmente la angustia hasta que el proceso de semiotización vuelve a anclar el sentido.";
+        });
+
+        const tesisData = {
+            "tesis-1": {
+                title: "I. El Sapiens Arquitecto de Nichos",
+                body: "No somos animales que simplemente habitan un mundo material; somos entidades que construyen y habitan sus propios relatos. La historia de las ideas no es un lujo decorativo o puramente intelectual, sino una estrategia biológica central de supervivencia. Construimos una arquitectura narrativa para no colapsar ante el terror de la entropía, el azar de la naturaleza y la certeza de la muerte.",
+                implication: "Toda civilización es, en el fondo, un mecanismo de defensa neurocognitivo proyectado a escala monumental."
+            },
+            "tesis-2": {
+                title: "II. La Prótesis Tecnológica",
+                body: "El cerebro biológico tiene límites estrictos. Para superarlos, externalizamos la memoria en herramientas. La tecnología (el archivo, el libro, la IA) no es algo externo que usamos; es la infraestructura donde nuestra mente se anida. Hoy, el Sapiens ha convertido al neocórtex en un órgano compartido con la máquina, redefiniendo las posibilidades de la subjetividad.",
+                implication: "Quien controla el 'aparato de producción narrativa' tecnológico, controla los límites del pensamiento de la especie."
+            },
+            "tesis-3": {
+                title: "III. La Heurística de lo Alternativo",
+                body: "La exploración de misterios y conocimientos anómalos no es una validación de conspiraciones, sino una herramienta metodológica. Lo 'alternativo' es el instrumento necesario para cartografiar el Archivo Vivo, exponiendo cómo la historia oficial tradicional se edifica mediante un sistema activo de exclusión y amnesia programada.",
+                implication: "No buscamos 'la verdad oculta', sino diagnosticar los patrones de censura que garantizan la docilidad contemporánea."
+            },
+            "tesis-4": {
+                title: "IV. La Semiotización Permanente",
+                body: "El espejismo de la 'pérdida de sentido' moderna es falso. El cerebro siempre sintetiza nuevos mitos. Ante cada disrupción técnica, el ser humano dispara un proceso recurrente de creación de sentido. Sin embargo, con la IA actuando como un proxy capaz de autogenerar lenguaje, nos enfrentamos a un nuevo umbral donde la máquina podría asumir la fabricación del sentido.",
+                implication: "Por primera vez en la historia biológica, el ser humano corre el riesgo de ser un espectador, y no el arquitecto, de su ecosistema simbólico."
+            }
+        };
+
+        const tesisBtns = document.querySelectorAll('.thesis-btn');
+        const tesisContentArea = document.getElementById('tesis-content-area');
+        const tesisTitle = document.getElementById('tesis-title');
+        const tesisBody = document.getElementById('tesis-body');
+        
+        tesisBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                tesisBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const target = this.getAttribute('data-target');
+                const data = tesisData[target];
+                
+                tesisContentArea.style.opacity = 0;
+                
+                setTimeout(() => {
+                    tesisTitle.textContent = data.title;
+                    tesisBody.textContent = data.body;
+                    tesisContentArea.querySelector('strong').nextSibling.textContent = " " + data.implication;
+                    tesisContentArea.style.opacity = 1;
+                }, 300);
+            });
+        });
+
+        const archiveCtx = document.getElementById('archiveChart').getContext('2d');
+        new Chart(archiveCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Relato Oficial (Solar / Institucional)', 'Memoria Marginada (Lunar / Arquetípica)'],
+                datasets: [{
+                    data: [85, 15],
+                    backgroundColor: ['#1a1a1a', '#8b7355'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { family: 'Inter' },
+                            padding: 20
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
