@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+
 ---
 
 <Layout title="Trayectoria | The Great Puzzle Project">
@@ -10,17 +12,16 @@ import Layout from '../layouts/Layout.astro';
 				<h1 class="font-gloock text-4xl md:text-6xl tracking-tighter uppercase titulo-estilo-apple">Exploración de Trayectoria</h1>
 				<p class="font-inter text-[10px] uppercase tracking-[0.5em] opacity-40 mt-4">Xavier Benítez • Arquitecto de Nichos</p>
 			</div>
-			<a href="/#about" class="cta-glass !rounded-full !px-8 !py-2 !text-[9px] uppercase tracking-widest group">
+			<a href="/" class="cta-glass rounded-full! px-8! py-2! text-[9px]! uppercase tracking-widest group">
 				<span class="group-hover:-translate-x-1 inline-block transition-transform">←</span> Volver
 			</a>
 		</div>
 
 		<div class="max-w-7xl mx-auto">
 			<section class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-				<!-- Artist Profile Card -->
-				<div class="lg:col-span-2 relative aspect-[16/9] md:aspect-[21/9] rounded-[2.5rem] overflow-hidden bento-glass group shadow-2xl">
-					<img src="/perfil.webp" alt="Xavier Benítez" class="absolute inset-0 w-full h-full object-cover grayscale brightness-50 transition-all duration-1000 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-75" />
-					<div class="absolute inset-0 bg-gradient-to-t from-bg via-transparent to-transparent opacity-90"></div>
+				<div class="lg:col-span-2 relative aspect-video md:aspect-21/9 rounded-[2.5rem] overflow-hidden bento-glass group shadow-2xl">
+					<img src="/perfil.webp" alt="Trayectoria" class="absolute inset-0 w-full h-full object-cover grayscale brightness-50 transition-all duration-1000 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-75" />
+					<div class="absolute inset-0 bg-linear-to-t from-bg via-transparent to-transparent opacity-90"></div>
 					
 					<div class="absolute top-8 left-8 z-20">
 						<span class="font-inter text-[10px] uppercase tracking-[0.4em] opacity-60">Biografía / Trayectoria</span>
@@ -35,8 +36,8 @@ import Layout from '../layouts/Layout.astro';
 				</div>
 
 				<!-- Sidebar -->
-				<div class="space-y-6">
-					<div class="bento-glass p-8 rounded-[2rem] space-y-8">
+				<div class="space-y-6 h-full">
+					<div class="bento-glass p-8 rounded-4xl space-y-6 flex flex-col justify-between h-full">
 						<div>
 							<h4 class="font-inter text-[10px] uppercase tracking-[0.4em] opacity-40 mb-6">Información</h4>
 							<div class="space-y-6">
@@ -49,14 +50,14 @@ import Layout from '../layouts/Layout.astro';
 									<p class="text-sm font-light">Neuroantropología</p>
 								</div>
 								<div>
-									<p class="text-[10px] uppercase tracking-widest opacity-40 mb-1">Contacto</p>
-									<p class="text-sm font-light">info@greatpuzzle.project</p>
+									<p class="text-xs uppercase tracking-widest opacity-40 mb-1">Contacto</p>
+									<p class="text-sm font-light">ygnatiux@gmail.com</p>
 								</div>
 							</div>
 						</div>
 					</div>
 
-					<div class="bento-glass p-8 rounded-[2rem] bg-[#9F8CAE]/5 border-[#9F8CAE]/10">
+					<div class="bento-glass p-8 rounded-4xl bg-[#9F8CAE]/5 border-[#9F8CAE]/10">
 						<p class="font-inter text-xs italic opacity-80 leading-relaxed">
 							"El puzzle no es algo que se resuelve, sino algo en lo que uno se convierte."
 						</p>
@@ -72,5 +73,6 @@ import Layout from '../layouts/Layout.astro';
 				</p>
 			</div>
 		</div>
+	<Footer />
 	</main>
 </Layout>

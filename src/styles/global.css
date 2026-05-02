@@ -11,9 +11,11 @@
 }
 
 @layer base {
-  body {
+html, body {
     @apply bg-bg text-primary font-inter antialiased;
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100%;
   }
 
   .font-gloock {
