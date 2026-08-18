@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Xavier Benítez | The Great Puzzle Project">
+	<!-- LENS GLOWS -->
+	<div class="lens-glow -top-50 -left-50"></div>
+	<div class="lens-glow -bottom-50 -right-50"></div>
+
+	<Navbar />
+
+	<main class="relative z-10 overflow-x-hidden pt-20">
+		<!-- ABOUT SECTION -->
+		<section id="about" class="relative py-40 bg-bg px-6 md:px-16 overflow-hidden min-h-screen flex items-center justify-center">
+			<div class="max-w-6xl mx-auto w-full">
+				<div class="relative w-full max-w-175 aspect-square rounded-4xl overflow-hidden bento-glass group mx-auto shadow-2xl">
+					<!-- Artist Background Image -->
+					<img src="/perfil_square_1777716168000_1777722190849.png" alt="Xavier Benítez" class="absolute inset-0 w-full h-full object-cover grayscale brightness-50 transition-all duration-1000 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-75" />
+					
+					<!-- Top Label -->
+					<div class="absolute top-12 left-12 z-20">
+						<span class="font-inter text-[10px] uppercase tracking-[0.5em] opacity-60">Información sobre el autor</span>
+					</div>
+
+					<!-- Bottom Content -->
+					<div class="absolute inset-0 bg-linear-to-t from-bg via-transparent to-transparent opacity-90"></div>
+					
+					<div class="absolute bottom-12 left-12 right-12 z-20 flex flex-col md:items-start justify-between gap-6">
+						<div class="max-w-3xl">
+							<h2 class="font-bodoni text-5xl md:text-7xl font-bold mb-2 titulo-estilo-apple tracking-tighter leading-none">Xavier Benítez</h2>
+							<div class="flex items-center gap-4 mb-4">
+								<div class="w-8 h-px bg-highlight/50"></div>
+								<span class="font-inter text-[10px] tracking-widest uppercase opacity-60">Arquitecto de Nichos Simbólicos</span>
+							</div>
+							<p class="font-inter text-sm md:text-base font-extralight leading-relaxed opacity-80 max-w-xl">
+								Investigador y arquitecto de nichos simbólicos. Su trabajo se sitúa en la intersección de la neurohistoria, la antropología filosófica y la teoría técnica, cartografiando los procesos de exclusión y amnesia programada en la era digital.
+							</p>
+						</div>
+
+						<a href="/proyectos" class="cta-glass rounded-full! px-12! py-4! text-[11px]! flex items-center gap-3 group/btn whitespace-nowrap mb-2">
+							<span>Explorar Trayectoria</span>
+							<span class="opacity-0 group-hover/btn:opacity-100 transition-all group-hover/btn:translate-x-1">→</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

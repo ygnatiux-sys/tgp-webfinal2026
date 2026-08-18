@@ -1,32 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 
 ---
 
 <Layout title="The Great Puzzle Project | Landing">
 	<!-- LENS GLOWS -->
-	<div class="lens-glow top-[-200px] left-[-200px]"></div>
-	<div class="lens-glow bottom-[-200px] right-[-200px]"></div>
+	<div class="lens-glow -top-50 -left-50"></div>
+	<div class="lens-glow -bottom-50 -right-50"></div>
 
-	<!-- FIXED NAVBAR -->
-	<nav class="fixed top-0 left-0 w-full z-50 border-b border-border/20 bg-bg/80 backdrop-blur-md px-6 py-6 flex justify-between items-center transition-all duration-500">
-		<div class="flex items-center gap-4 group cursor-pointer">
-			<img src="/puzzle.png" alt="Logo" class="h-8 w-auto brightness-150 grayscale group-hover:grayscale-0 transition-all duration-700" />
-			<div class="font-gloock tracking-[0.15em] text-xl md:text-2xl uppercase titulo-estilo-apple">THE GREAT PUZZLE PROJECT</div>
-		</div>
-		<div class="hidden md:flex gap-12 text-[10px] uppercase tracking-ultra-wide font-light text-primary/80">
-			<a href="#" class="hover:text-[#9F8CAE] transition-all duration-500 hover:tracking-[0.4em]">Xavier Benítez</a>
-			<a href="#tesis" class="hover:text-[#9F8CAE] transition-all duration-500 hover:tracking-[0.4em]">Tesis</a>
-			<a href="#media" class="hover:text-[#9F8CAE] transition-all duration-500 hover:tracking-[0.4em]">Media Lab</a>
-			<a href="#" class="hover:text-[#9F8CAE] transition-all duration-500 hover:tracking-[0.4em]">Archivo</a>
-		</div>
-	</nav>
+	<Navbar />
 
-	<main class="relative z-10 overflow-x-hidden">
+	<main class="relative z-10 overflow-x-hidden pt-20">
 		<!-- HERO SECTION -->
-		<section id="hero" class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20 overflow-hidden">
-			<div class="absolute -z-10 opacity-5 w-[70%] max-w-[900px] pointer-events-none">
+		<section id="hero" class="relative min-h-[calc(100vh-80px)] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+			<div class="absolute -z-10 opacity-5 w-[70%] max-w-225 pointer-events-none">
 				<img src="/puzzle.png" alt="" class="w-full h-auto grayscale blur-[2px]" />
 			</div>
 
@@ -38,7 +27,7 @@ import Footer from '../components/Footer.astro';
 			</p>
 			
 			<div class="mt-16 flex flex-col md:flex-row gap-6 hero-subtitle reveal-buttons">
-				<a href="/tesis" class="cta-editorial">Explorar el Archivo</a>
+				<a href="/tesis-home" class="cta-editorial">Explorar el Archivo</a>
 				<a href="mailto:ygnatiux@gmail.com" class="cta-glass">Consultoría</a>
 			</div>
 			
@@ -46,230 +35,9 @@ import Footer from '../components/Footer.astro';
 				<div class="w-px h-12 bg-border"></div>
 			</div>
 		</section>
-
-		<script>
-			// Intersection Observer for Thesis Numbers and Cards
-			const observerOptions = {
-				threshold: 0.1
-			};
-
-			const revealObserver = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
-				entries.forEach(entry => {
-					if (entry.isIntersecting) {
-						const card = entry.target as HTMLElement;
-						const number = card.querySelector('.number-reveal') as HTMLElement;
-						
-						card.style.opacity = '1';
-						card.style.transform = 'translateY(0)';
-						
-						if (number) {
-							setTimeout(() => {
-								number.style.opacity = '0.1';
-								number.style.filter = 'blur(10px)';
-							}, 400);
-						}
-					}
-				});
-			}, observerOptions);
-
-			document.querySelectorAll('.thesis-card').forEach(card => {
-				(card as HTMLElement).style.opacity = '0';
-				(card as HTMLElement).style.transform = 'translateY(40px)';
-				(card as HTMLElement).style.transition = 'all 1.5s cubic-bezier(0.22, 1, 0.36, 1)';
-				revealObserver.observe(card);
-			});
-		</script>
-
-		<style>
-			.reveal-subtitle, .reveal-buttons {
-				opacity: 1;
-			}
-			.number-reveal {
-				transition: all 2s cubic-bezier(0.22, 1, 0.36, 1);
-			}
-		</style>
-
-		<!-- ABOUT SECTION (Spotify Artist Style) -->
-		<section id="about" class="relative py-40 bg-bg px-6 md:px-16 overflow-hidden">
-			<div class="max-w-6xl mx-auto">
-				<div class="relative w-full max-w-[700px] aspect-square rounded-4xl overflow-hidden bento-glass group mx-auto shadow-2xl">
-					<!-- Artist Background Image -->
-					<img src="/perfil_square_1777716168000_1777722190849.png" alt="Xavier Benítez" class="absolute inset-0 w-full h-full object-cover grayscale brightness-50 transition-all duration-1000 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-75" />
-					
-					<!-- Top Label -->
-					<div class="absolute top-12 left-12 z-20">
-						<span class="font-inter text-[10px] uppercase tracking-[0.5em] opacity-60">Información sobre el autor</span>
-					</div>
-
-					<!-- Bottom Content -->
-					<div class="absolute inset-0 bg-linear-to-t from-bg via-transparent to-transparent opacity-90"></div>
-					
-					<div class="absolute bottom-12 left-12 right-12 z-20 flex flex-col md:items-start justify-between gap-6">
-						<div class="max-w-3xl">
-							<h2 class="font-bodoni text-5xl md:text-7xl font-bold mb-2 titulo-estilo-apple tracking-tighter leading-none">Xavier Benítez</h2>
-							<div class="flex items-center gap-4 mb-4">
-								<div class="w-8 h-px bg-highlight/50"></div>
-								<span class="font-inter text-[10px] tracking-widest uppercase opacity-60">Arquitecto de Nichos Simbólicos</span>
-							</div>
-							<p class="font-inter text-sm md:text-base font-extralight leading-relaxed opacity-80 max-w-xl">
-								Investigador y arquitecto de nichos simbólicos. Su trabajo se sitúa en la intersección de la neurohistoria, la antropología filosófica y la teoría técnica, cartografiando los procesos de exclusión y amnesia programada en la era digital.
-							</p>
-						</div>
-
-						<a href="/proyectos" class="cta-glass rounded-full! px-12! py-4! text-[11px]! flex items-center gap-3 group/btn whitespace-nowrap mb-2">
-							<span>Explorar Trayectoria</span>
-							<span class="opacity-0 group-hover/btn:opacity-100 transition-all group-hover/btn:translate-x-1">→</span>
-						</a>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- THESES SECTION -->
-		<section id="tesis" class="relative py-80 bg-bg px-6 md:px-16 overflow-hidden">
-			<div class="w-full flex flex-col items-center mb-64 text-center">
-				<h2 class="font-bodoni text-7xl md:text-[10rem] leading-[0.8] titulo-estilo-apple font-extrabold mb-12 tracking-tighter">
-					Archivo de <span class="highlight-word italic">Tesis</span>
-				</h2>
-				<div class="w-24 h-px bg-highlight/30 mb-12"></div>
-				<p class="font-inter text-[10px] tracking-[0.8em] uppercase opacity-40">Arquitectura del sentido</p>
-			</div>
-
-			<div class="flex flex-col gap-32 max-w-6xl mx-auto">
-				<a href="/tesis-01" class="thesis-card w-full bento-glass p-8 md:p-16 rounded-[3rem] card-lift group min-h-[450px] flex flex-col md:flex-row gap-16 items-center mask-image-v relative overflow-hidden">
-					<div class="absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 text-[15rem] md:text-[25rem] font-bodoni italic opacity-0 blur-3xl group-hover:opacity-10 group-hover:blur-none transition-all duration-1000 select-none pointer-events-none text-highlight/20 number-reveal">01</div>
-					<div class="text-7xl md:text-9xl font-bodoni italic opacity-10 group-hover:opacity-30 transition-opacity z-10 relative">01</div>
-					<div class="flex-1 z-10">
-						<h3 class="font-bodoni text-4xl md:text-6xl mb-8 uppercase tracking-tighter transition-transform duration-700 group-hover:translate-x-6 titulo-estilo-apple">
-							I. El Sapiens <span class="highlight-word">Arquitecto</span>
-						</h3>
-						<p class="font-inter font-extralight text-lg md:text-2xl leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity max-w-2xl">
-							No habitamos mundos materiales, sino relatos. La civilización es un mecanismo de defensa neurocognitivo proyectado a escala monumental.
-						</p>
-					</div>
-				</a>
-
-				<a href="/tesis-02" class="thesis-card w-full bento-glass p-8 md:p-16 rounded-[3rem] card-lift group min-h-[450px] flex flex-col md:flex-row gap-16 items-center mask-image-v relative overflow-hidden">
-					<div class="absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 text-[15rem] md:text-[25rem] font-bodoni italic opacity-0 blur-3xl group-hover:opacity-10 group-hover:blur-none transition-all duration-1000 select-none pointer-events-none text-highlight/20 number-reveal">02</div>
-					<div class="text-7xl md:text-9xl font-bodoni italic opacity-10 group-hover:opacity-30 transition-opacity z-10 relative">02</div>
-					<div class="flex-1 z-10">
-						<h3 class="font-bodoni text-4xl md:text-6xl mb-8 uppercase tracking-tighter transition-transform duration-700 group-hover:translate-x-6 titulo-estilo-apple">
-							II. La Prótesis <span class="highlight-word">Técnica</span>
-						</h3>
-						<p class="font-inter font-extralight text-lg md:text-2xl leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity max-w-2xl">
-							La tecnología no es externa; es la infraestructura donde nuestra mente se anida. El neocórtex es ahora compartido con la máquina.
-						</p>
-					</div>
-				</a>
-
-				<a href="/tesis-03" class="thesis-card w-full bento-glass p-8 md:p-16 rounded-[3rem] card-lift group min-h-[450px] flex flex-col md:flex-row gap-16 items-center mask-image-v relative overflow-hidden">
-					<div class="absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 text-[15rem] md:text-[25rem] font-bodoni italic opacity-0 blur-3xl group-hover:opacity-10 group-hover:blur-none transition-all duration-1000 select-none pointer-events-none text-highlight/20 number-reveal">03</div>
-					<div class="text-7xl md:text-9xl font-bodoni italic opacity-10 group-hover:opacity-30 transition-opacity z-10 relative">03</div>
-					<div class="flex-1 z-10">
-						<h3 class="font-bodoni text-4xl md:text-6xl mb-8 uppercase tracking-tighter transition-transform duration-700 group-hover:translate-x-6 titulo-estilo-apple">
-							III. La Heurística <span class="highlight-word">Alterna</span>
-						</h3>
-						<p class="font-inter font-extralight text-lg md:text-2xl leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity max-w-2xl">
-							Lo "alternativo" no es verdad oculta, sino una herramienta diagnóstica para cartografiar los procesos de exclusión y amnesia programada.
-						</p>
-					</div>
-				</a>
-
-				<a href="/tesis-04" class="thesis-card w-full bento-glass p-8 md:p-16 rounded-[3rem] card-lift group min-h-[450px] flex flex-col md:flex-row gap-16 items-center mask-image-v relative overflow-hidden">
-					<div class="absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 text-[15rem] md:text-[25rem] font-bodoni italic opacity-0 blur-3xl group-hover:opacity-10 group-hover:blur-none transition-all duration-1000 select-none pointer-events-none text-highlight/20 number-reveal">04</div>
-					<div class="text-7xl md:text-9xl font-bodoni italic opacity-10 group-hover:opacity-30 transition-opacity z-10 relative">04</div>
-					<div class="flex-1 z-10">
-						<h3 class="font-bodoni text-4xl md:text-6xl mb-8 uppercase tracking-tighter transition-transform duration-700 group-hover:translate-x-6 titulo-estilo-apple">
-							IV. <span class="highlight-word">Semiotización</span>
-						</h3>
-						<p class="font-inter font-extralight text-lg md:text-2xl leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity max-w-2xl">
-							El cerebro siempre sintetiza mitos. Ante la IA, el riesgo no es perder el sentido, sino convertirnos en espectadores del sentido generado por el proxy.
-						</p>
-					</div>
-				</a>
-			</div>
-		</section>
-
-		<!-- MEDIA LAB SECTION -->
-		<section id="media" class="px-6 md:px-16 py-80 bg-bg relative overflow-hidden">
-			<div class="w-full flex flex-col items-center mb-64 text-center">
-				<h2 class="font-bodoni text-7xl md:text-[10rem] leading-[0.8] titulo-estilo-apple font-extrabold mb-12 tracking-tighter">
-					<span class="highlight-word">Media</span> Lab
-				</h2>
-				<div class="w-24 h-px bg-highlight/30 mb-12"></div>
-				<p class="font-inter text-[10px] tracking-[0.8em] uppercase opacity-40">Exploración de Nichos</p>
-			</div>
-
-			<!-- Media Lab Category Bentos -->
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
-				<a href="/media" class="block bento-glass mask-image-v p-10 group cursor-pointer h-full text-center">
-					<div class="flex flex-col items-center mb-12">
-						<h2 class="font-bodoni text-4xl italic tracking-tighter text-highlight group-hover:text-[#9F8CAE] transition-colors duration-500 mb-4">Eventos</h2>
-						<span class="text-3xl opacity-10 group-hover:opacity-100 group-hover:text-[#9F8CAE] transition-all group-hover:translate-y-2">↓</span>
-					</div>
-					<p class="font-inter text-sm font-light opacity-60 group-hover:opacity-100 transition-opacity">Conferencias & Simposios internacionales.</p>
-				</a>
-
-				<a href="/media" class="block bento-glass mask-image-v p-10 group cursor-pointer h-full text-center">
-					<div class="flex flex-col items-center mb-12">
-						<h2 class="font-bodoni text-4xl italic tracking-tighter text-highlight group-hover:text-[#9F8CAE] transition-colors duration-500 mb-4">Podcast</h2>
-						<span class="text-3xl opacity-10 group-hover:opacity-100 group-hover:text-[#9F8CAE] transition-all group-hover:translate-y-2">↓</span>
-					</div>
-					<p class="font-inter text-sm font-light opacity-60 group-hover:opacity-100 transition-opacity">Arqueología de las ideas en formato audio.</p>
-				</a>
-
-				<a href="/media" class="block bento-glass mask-image-v p-10 group cursor-pointer h-full text-center">
-					<div class="flex flex-col items-center mb-12">
-						<h2 class="font-bodoni text-4xl italic tracking-tighter text-highlight group-hover:text-[#9F8CAE] transition-colors duration-500 mb-4">Lab</h2>
-						<span class="text-3xl opacity-10 group-hover:opacity-100 group-hover:text-[#9F8CAE] transition-all group-hover:translate-y-2">↓</span>
-					</div>
-					<p class="font-inter text-sm font-light opacity-60 group-hover:opacity-100 transition-opacity">Prototipado de nichos simbólicos.</p>
-				</a>
-			</div>
-
-			<!-- Contact CTA -->
-			<div class="w-full bento-glass p-8 md:p-20 flex flex-col items-center text-center rounded-[3rem] card-lift group min-h-[450px] mt-32 relative overflow-hidden max-w-6xl mx-auto">
-				<div class="absolute -top-24 -right-24 w-64 h-64 bg-highlight/5 rounded-full blur-[100px]"></div>
-				<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-[#9F8CAE]/5 rounded-full blur-[100px]"></div>
-				
-				<div class="relative z-10 max-w-3xl">
-					<h3 class="font-bodoni text-5xl md:text-8xl font-bold leading-tight titulo-estilo-apple mb-8">
-						¿Deseas explorar el <span class="highlight-word group-hover:text-[#9F8CAE]!">nicho</span>?
-					</h3>
-					<p class="font-inter mt-8 text-xl md:text-3xl font-extralight text-highlight/60 leading-relaxed italic mb-12">
-						"¡Quiero unirme al puzzle!"
-					</p>
-					<div class="mt-8 flex justify-center">
-						<a href="mailto:ygnatiux@gmail.com" class="cta-editorial text-lg! px-12! py-4!">¡Unirse al Puzzle!</a>
-					</div>
-				</div>
-			</div>
-		</section>
 	</main>
 
 	<!-- FOOTER -->
 	<Footer />
-	</footer>
 
-	<script>
-		import gsap from 'gsap';
-		import { ScrollTrigger } from 'gsap/ScrollTrigger';
-		gsap.registerPlugin(ScrollTrigger);
-
-		// Fade in sections
-		gsap.utils.toArray('section').forEach((section: any) => {
-			gsap.from(section, {
-				scrollTrigger: {
-					trigger: section,
-					start: 'top 85%',
-				},
-				y: 50,
-				opacity: 0,
-				duration: 1.2,
-				ease: 'power2.out'
-			});
-		});
-	</script>
 </Layout>
-
-

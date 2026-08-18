@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Media Lab | The Great Puzzle Project">
+	<!-- LENS GLOWS -->
+	<div class="lens-glow -top-50 -left-50"></div>
+	<div class="lens-glow -bottom-50 -right-50"></div>
+
+	<Navbar />
+
+	<main class="relative z-10 overflow-x-hidden pt-20">
+		<!-- MEDIA LAB SECTION -->
+		<section id="media" class="px-6 md:px-16 py-40 bg-bg relative overflow-hidden min-h-screen">
+			<div class="w-full flex flex-col items-center mb-64 text-center">
+				<h2 class="font-bodoni text-7xl md:text-[10rem] leading-[0.8] titulo-estilo-apple font-extrabold mb-12 tracking-tighter">
+					<span class="highlight-word">Media</span> Lab
+				</h2>
+				<div class="w-24 h-px bg-highlight/30 mb-12"></div>
+				<p class="font-inter text-[10px] tracking-[0.8em] uppercase opacity-40">Exploración de Nichos</p>
+			</div>
+
+			<!-- Media Lab Category Bentos -->
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+				<a href="/media" class="block bento-glass mask-image-v p-10 group cursor-pointer h-full text-center">
+					<div class="flex flex-col items-center mb-12">
+						<h2 class="font-bodoni text-4xl italic tracking-tighter text-highlight group-hover:text-[#9F8CAE] transition-colors duration-500 mb-4">Eventos</h2>
+						<span class="text-3xl opacity-10 group-hover:opacity-100 group-hover:text-[#9F8CAE] transition-all group-hover:translate-y-2">↓</span>
+					</div>
+					<p class="font-inter text-sm font-light opacity-60 group-hover:opacity-100 transition-opacity">Conferencias & Simposios internacionales.</p>
+				</a>
+
+				<a href="/media" class="block bento-glass mask-image-v p-10 group cursor-pointer h-full text-center">
+					<div class="flex flex-col items-center mb-12">
+						<h2 class="font-bodoni text-4xl italic tracking-tighter text-highlight group-hover:text-[#9F8CAE] transition-colors duration-500 mb-4">Podcast</h2>
+						<span class="text-3xl opacity-10 group-hover:opacity-100 group-hover:text-[#9F8CAE] transition-all group-hover:translate-y-2">↓</span>
+					</div>
+					<p class="font-inter text-sm font-light opacity-60 group-hover:opacity-100 transition-opacity">Arqueología de las ideas en formato audio.</p>
+				</a>
+
+				<a href="/media" class="block bento-glass mask-image-v p-10 group cursor-pointer h-full text-center">
+					<div class="flex flex-col items-center mb-12">
+						<h2 class="font-bodoni text-4xl italic tracking-tighter text-highlight group-hover:text-[#9F8CAE] transition-colors duration-500 mb-4">Lab</h2>
+						<span class="text-3xl opacity-10 group-hover:opacity-100 group-hover:text-[#9F8CAE] transition-all group-hover:translate-y-2">↓</span>
+					</div>
+					<p class="font-inter text-sm font-light opacity-60 group-hover:opacity-100 transition-opacity">Prototipado de nichos simbólicos.</p>
+				</a>
+			</div>
+
+			<!-- Contact CTA -->
+			<div class="w-full bento-glass p-8 md:p-20 flex flex-col items-center text-center rounded-[3rem] card-lift group min-h-112.5 mt-32 relative overflow-hidden max-w-6xl mx-auto">
+				<div class="absolute -top-24 -right-24 w-64 h-64 bg-highlight/5 rounded-full blur-[100px]"></div>
+				<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-[#9F8CAE]/5 rounded-full blur-[100px]"></div>
+				
+				<div class="relative z-10 max-w-3xl">
+					<h3 class="font-bodoni text-5xl md:text-8xl font-bold leading-tight titulo-estilo-apple mb-8">
+						¿Deseas explorar el <span class="highlight-word group-hover:text-[#9F8CAE]!">nicho</span>?
+					</h3>
+					<p class="font-inter mt-8 text-xl md:text-3xl font-extralight text-highlight/60 leading-relaxed italic mb-12">
+						"¡Quiero unirme al puzzle!"
+					</p>
+					<div class="mt-8 flex justify-center">
+						<a href="mailto:ygnatiux@gmail.com" class="cta-editorial text-lg! px-12! py-4!">¡Unirse al Puzzle!</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>
