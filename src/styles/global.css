@@ -147,4 +147,175 @@ html, body {
     @apply border-[#9F8CAE]/30 text-[#9F8CAE] scale-105;
     box-shadow: 0 0 20px rgba(159, 140, 174, 0.1);
   }
+
+  .cta-vault {
+    @apply relative py-6 px-12 md:px-14 border border-vault-accent/40 text-vault-accent uppercase tracking-[0.3em] text-[10px] md:text-xs font-bold rounded-full transition-all duration-700 backdrop-blur-md;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    box-shadow: 0 0 25px rgba(201, 169, 110, 0.08);
+  }
+
+  .cta-vault:hover {
+    @apply scale-105 text-highlight;
+    border-color: var(--color-vault-accent);
+    background: rgba(201, 169, 110, 0.12);
+    box-shadow: 0 0 45px rgba(201, 169, 110, 0.3);
+    letter-spacing: 0.38em;
+  }
+}
+
+/* ============================================================
+   TGP-VAULT — Design System Extension
+   Namespace: --color-vault-* | No collision with global tokens
+   ============================================================ */
+
+@theme {
+  /* Superficie y fondos */
+  --color-vault-bg:      #0a0a0a;
+  --color-vault-surface: #111111;
+  --color-vault-raised:  #181818;
+  --color-vault-border:  #1e1e1e;
+  --color-vault-border-subtle: #282828;
+
+  /* Tipografía */
+  --color-vault-text:    #c8c4bc;   /* marfil mineral */
+  --color-vault-muted:   #5a5757;   /* texto secundario */
+  --color-vault-ghost:   #333333;   /* placeholders */
+
+  /* Acentos */
+  --color-vault-accent:  #c9a96e;   /* ámbar arcaico */
+  --color-vault-accent-dim: #7a6140; /* acento apagado */
+  --color-vault-glow:    rgba(201, 169, 110, 0.12);
+
+  /* Estados */
+  --color-vault-danger:  #8b3a3a;
+  --color-vault-danger-bg: rgba(139, 58, 58, 0.12);
+  --color-vault-success: #3a6b4a;
+  --color-vault-success-bg: rgba(58, 107, 74, 0.12);
+  --color-vault-loading: #4a5a7a;
+}
+
+@layer components {
+  /* --- Inputs & Textareas --- */
+  .vault-input {
+    @apply w-full bg-vault-surface border border-vault-border text-vault-text
+           placeholder:text-vault-ghost rounded-sm px-4 py-3
+           text-sm font-inter outline-none
+           transition-all duration-300;
+  }
+  .vault-input:focus {
+    border-color: var(--color-vault-accent-dim);
+    box-shadow: 0 0 0 2px var(--color-vault-glow);
+  }
+
+  /* --- Tabs --- */
+  .vault-tab {
+    @apply relative px-6 py-3 text-[11px] uppercase tracking-[0.25em]
+           font-bold text-vault-muted transition-all duration-400
+           border-b-2 border-transparent cursor-pointer;
+  }
+  .vault-tab:hover {
+    color: var(--color-vault-text);
+  }
+  .vault-tab.active {
+    color: var(--color-vault-accent);
+    border-bottom-color: var(--color-vault-accent);
+  }
+
+  /* --- Dropzone --- */
+  .vault-dropzone {
+    @apply relative flex flex-col items-center justify-center gap-4
+           w-full min-h-48 rounded-sm
+           border-2 border-dashed border-vault-border
+           text-vault-muted text-sm transition-all duration-300 cursor-pointer;
+  }
+  .vault-dropzone:hover,
+  .vault-dropzone.dragging {
+    border-color: var(--color-vault-accent-dim);
+    background: var(--color-vault-glow);
+    color: var(--color-vault-text);
+  }
+
+  /* --- Botón principal --- */
+  .vault-btn-transmit {
+    @apply relative px-10 py-4 text-[11px] uppercase tracking-[0.3em]
+           font-bold rounded-sm border border-vault-accent/30
+           text-vault-accent bg-transparent
+           transition-all duration-500 cursor-pointer;
+    overflow: hidden;
+  }
+  .vault-btn-transmit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-vault-glow);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .vault-btn-transmit:hover::before {
+    opacity: 1;
+  }
+  .vault-btn-transmit:hover {
+    border-color: var(--color-vault-accent);
+    box-shadow: 0 0 30px var(--color-vault-glow);
+    letter-spacing: 0.35em;
+  }
+  .vault-btn-transmit:disabled {
+    @apply cursor-not-allowed opacity-30;
+  }
+  .vault-btn-transmit.loading {
+    animation: vault-pulse 1.5s ease-in-out infinite;
+  }
+
+  /* --- Badges de estado --- */
+  .vault-badge-success {
+    @apply px-4 py-2 text-xs rounded-sm;
+    background: var(--color-vault-success-bg);
+    border: 1px solid var(--color-vault-success);
+    color: #6dba8a;
+  }
+  .vault-badge-error {
+    @apply px-4 py-2 text-xs rounded-sm;
+    background: var(--color-vault-danger-bg);
+    border: 1px solid var(--color-vault-danger);
+    color: #c47a7a;
+  }
+
+  /* --- Metadata label --- */
+  .vault-label {
+    @apply block mb-2 text-[10px] uppercase tracking-[0.2em] text-vault-muted font-bold;
+  }
+
+  /* --- Separador tenue --- */
+  .vault-divider {
+    @apply w-full border-t border-vault-border my-6;
+  }
+
+  /* --- TipTap editor container --- */
+  .vault-editor-wrap {
+    @apply w-full min-h-72 bg-vault-surface border border-vault-border
+           rounded-sm text-vault-text text-sm font-inter
+           transition-all duration-300;
+  }
+  .vault-editor-wrap:focus-within {
+    border-color: var(--color-vault-accent-dim);
+    box-shadow: 0 0 0 2px var(--color-vault-glow);
+  }
+  .vault-editor-wrap .ProseMirror {
+    @apply p-4 outline-none min-h-72;
+  }
+  .vault-editor-wrap .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    color: var(--color-vault-ghost);
+    pointer-events: none;
+    float: left;
+    height: 0;
+  }
+}
+
+@keyframes vault-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
 }

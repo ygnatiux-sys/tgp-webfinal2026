@@ -1,0 +1,16 @@
+---
+// src/pages/tgp-vault/index.astro
+// Ruta privada del TGP-Vault — no indexada, sin Navbar/Footer
+
+import Layout from '../../layouts/Layout.astro';
+import VaultEngine from '../../components/vault/VaultEngine.svelte';
+
+const webhookUrl = import.meta.env.PUBLIC_WEBHOOK_URL ?? '';
+---
+
+<Layout title="TGP-Vault · Centro de Operaciones">
+  <VaultEngine
+    client:only="svelte"
+    webhookUrl={webhookUrl}
+  />
+</Layout>
