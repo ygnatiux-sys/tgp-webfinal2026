@@ -96,6 +96,9 @@
 
       const res = await fetch(`${webhookUrl}/transmute-image`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${securityToken}`,
+        },
         body: fd,
       });
       if (!res.ok) throw new Error(`Webhook error: ${res.status}`);
@@ -117,7 +120,10 @@
     try {
       const res = await fetch(`${webhookUrl}/transmute-image`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${securityToken}`,
+        },
         body: JSON.stringify({ image_url: externalUrl, token: securityToken }),
       });
       if (!res.ok) throw new Error(`Webhook error: ${res.status}`);

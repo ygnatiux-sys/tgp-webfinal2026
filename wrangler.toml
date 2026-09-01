@@ -1,0 +1,11 @@
+# wrangler.toml — Cloudflare Pages & D1 Binding Configuration
+name = "tgp-webfinal2026"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"
+
+# Binding de Cloudflare D1
+[[d1_databases]]
+binding = "DB"
+database_name = "tgp-vault-db"
+database_id = "0b5832a8-xxxx-xxxx-xxxx-xxxxxxxxxxxx" # Reemplazar con el UUID real de tu base de datos D1

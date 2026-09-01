@@ -1,0 +1,193 @@
+---
+// src/pages/archivo.astro
+// Hemeroteca Pública — Lectura directa de Cloudflare D1 vía Astro SSR (Cloudflare Pages)
+
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+// Modelo de datos de la entrada en la Bóveda / Hemeroteca
+interface VaultEntry {
+  id: string | number;
+  title?: string;
+  titulo?: string;
+  description?: string;
+  contenido_html?: string;
+  image_url?: string;
+  created_at?: string;
+  fecha_ingesta?: string;
+  era?: string;
+  coordenadas?: string;
+}
+
+let entries: VaultEntry[] = [];
+let queryError: string | null = null;
+
+try {
+  // Acceso nativo al binding D1 en el runtime de Cloudflare Pages
+  const env = (Astro.locals as any)?.runtime?.env;
+  const db = env?.DB;
+
+  if (db) {
+    // Consulta nativa a la tabla de entradas históricas
+    const query = await db
+      .prepare("SELECT * FROM vault_entries ORDER BY created_at DESC")
+      .all();
+
+    entries = (query.results as VaultEntry[]) || [];
+  } else {
+    // Si se ejecuta en local sin runtime de Cloudflare o emulador
+    console.info("[Hemeroteca SSR] Binding 'DB' no disponible en este entorno local. Mostrando vista informativa.");
+  }
+} catch (err: any) {
+  console.error("[Hemeroteca SSR] Error al consultar Cloudflare D1:", err);
+  queryError = err?.message || "Error al conectar con la base de datos de la Hemeroteca.";
+}
+
+// Formateador de fechas
+function formatDate(dateStr?: string) {
+  if (!dateStr) return 'Fecha no registrada';
+  try {
+    const d = new Date(dateStr);
+    return new Intl.DateTimeFormat('es-ES', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    }).format(d);
+  } catch {
+    return dateStr;
+  }
+}
+
+// Helper para limpiar etiquetas HTML en resúmenes
+function cleanSnippet(text?: string) {
+  if (!text) return '';
+  return text.replace(/<[^>]*>?/gm, '').trim();
+}
+---
+
+<Layout title="Archivo de Hemeroteca | The Great Puzzle Project">
+  <!-- LENS GLOWS -->
+  <div class="lens-glow -top-50 -left-50"></div>
+  <div class="lens-glow -bottom-50 -right-50"></div>
+
+  <Navbar />
+
+  <main class="relative z-10 overflow-x-hidden pt-24 md:pt-32">
+    <!-- HERO DE LA HEMEROTECA -->
+    <section class="relative px-6 md:px-16 pb-20 max-w-7xl mx-auto text-center">
+      <div class="w-full flex flex-col items-center mb-16">
+        <p class="text-[10px] md:text-xs uppercase tracking-[0.5em] text-vault-accent/90 mb-4 font-mono font-medium">
+          The Great Puzzle Project · Ingesta Indexada
+        </p>
+
+        <h1 class="font-bodoni text-6xl md:text-8xl lg:text-9xl leading-[0.9] font-extrabold tracking-tighter titulo-estilo-apple mb-8">
+          Archivo de <span class="highlight-word italic">Hemeroteca</span>
+        </h1>
+
+        <div class="w-24 h-px bg-highlight/30 mb-8"></div>
+
+        <p class="font-inter font-light text-sm md:text-base tracking-[0.2em] uppercase text-fade-gradient max-w-2xl leading-relaxed">
+          Fragmentos, testimonios y registros históricos preservados en la Bóveda descentralizada.
+        </p>
+
+        <!-- Contador / Estado -->
+        <div class="mt-8 flex items-center gap-3 px-5 py-2 rounded-full border border-vault-accent/20 bg-vault-surface/60 backdrop-blur-md">
+          <span class="inline-block w-2 h-2 rounded-full bg-vault-accent animate-pulse"></span>
+          <span class="text-[11px] font-mono tracking-widest text-vault-text uppercase">
+            {entries.length} {entries.length === 1 ? 'Registro' : 'Registros Preservados'}
+          </span>
+        </div>
+      </div>
+
+      <!-- ALERTA SI OCURRIÓ ERROR -->
+      {queryError && (
+        <div class="max-w-2xl mx-auto mb-12 p-4 border border-vault-danger/40 bg-vault-danger-bg rounded-lg text-xs text-[#c47a7a] flex items-center gap-3 text-left">
+          <span class="text-base">⚠</span>
+          <div>
+            <p class="font-bold uppercase tracking-wider">Aviso de Conexión</p>
+            <p class="opacity-80">{queryError}</p>
+          </div>
+        </div>
+      )}
+
+      <!-- GRILLA DE TARJETAS EDITORIALES -->
+      {entries.length > 0 && (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 text-left">
+          {entries.map((entry) => {
+            const title = entry.title || entry.titulo || 'Registro sin título';
+            const rawDesc = entry.description || entry.contenido_html || '';
+            const snippet = cleanSnippet(rawDesc);
+            const dateDisplay = formatDate(entry.created_at || entry.fecha_ingesta);
+
+            return (
+              <article class="bento-glass rounded-4xl overflow-hidden card-lift group border border-white/5 hover:border-vault-accent/40 transition-all duration-700 flex flex-col justify-between">
+                <div>
+                  {entry.image_url ? (
+                    <div class="w-full h-56 md:h-64 overflow-hidden relative bg-vault-surface border-b border-white/5">
+                      <img
+                        src={entry.image_url}
+                        alt={title}
+                        class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                        loading="lazy"
+                      />
+                      <div class="absolute inset-0 bg-linear-to-t from-bg via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                    </div>
+                  ) : (
+                    <div class="w-full h-24 bg-linear-to-b from-white/5 to-transparent border-b border-white/5 flex items-center px-8 justify-between opacity-50">
+                      <span class="text-xs tracking-widest text-vault-accent font-mono">◈ TGP</span>
+                      <span class="text-[10px] font-mono uppercase tracking-[0.2em] opacity-40">Documento</span>
+                    </div>
+                  )}
+
+                  <div class="p-8 md:p-10 flex flex-col gap-4">
+                    <div class="flex items-center justify-between gap-4 text-[10px] uppercase font-mono tracking-[0.25em] text-vault-accent/90">
+                      <span>{dateDisplay}</span>
+                      {entry.era && <span class="opacity-60 truncate max-w-[50%]">{entry.era}</span>}
+                    </div>
+
+                    <h2 class="font-bodoni text-2xl md:text-3xl font-bold leading-tight text-highlight group-hover:text-vault-accent transition-colors duration-500">
+                      {title}
+                    </h2>
+
+                    {snippet && (
+                      <p class="font-inter font-light text-sm leading-relaxed text-primary/70 line-clamp-4 group-hover:text-primary/90 transition-colors">
+                        {snippet}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div class="px-8 md:px-10 pb-8 pt-2 flex items-center justify-between border-t border-white/5 text-[10px] font-mono text-primary/40 uppercase tracking-widest">
+                  <span>ID: {String(entry.id).slice(0, 12)}</span>
+                  <span class="text-vault-accent/70 group-hover:translate-x-1 transition-transform">✦ Ver registro</span>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+
+      <!-- ESTADO VACÍO ELEGANTE -->
+      {entries.length === 0 && (
+        <div class="bento-glass max-w-3xl mx-auto p-12 md:p-20 rounded-[3rem] border border-white/5 text-center flex flex-col items-center gap-6">
+          <span class="text-4xl text-vault-accent select-none">◈</span>
+          <h2 class="font-bodoni text-3xl md:text-4xl text-highlight">
+            La Bóveda aguarda nuevos testimonios
+          </h2>
+          <p class="font-inter font-light text-sm md:text-base text-primary/60 max-w-lg leading-relaxed">
+            Actualmente no hay entradas indexadas o el binding de Cloudflare D1 se encuentra activo exclusivamente en el entorno de producción.
+          </p>
+          <a href="/tgp-vault" class="cta-vault mt-4">
+            <span class="text-xs">✦</span>
+            <span>Acceder a TGP-Vault</span>
+          </a>
+        </div>
+      )}
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

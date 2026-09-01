@@ -7,8 +7,18 @@
   let isDragging = false;
   let fileInput;
 
-  const ACCEPTED_EXTENSIONS = ['.txt', '.pdf', '.mdoc'];
-  const ICONS = { '.pdf': '📄', '.txt': '📝', '.mdoc': '📜' };
+  const ACCEPTED_EXTENSIONS = ['.txt', '.pdf', '.mdoc', '.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
+  const ICONS = {
+    '.pdf': '📄',
+    '.txt': '📝',
+    '.mdoc': '📜',
+    '.jpg': '🖼️',
+    '.jpeg': '🖼️',
+    '.png': '🖼️',
+    '.webp': '🖼️',
+    '.gif': '🖼️',
+    '.svg': '🖼️',
+  };
 
   /** @param {File} file */
   function getExt(file) {
@@ -24,7 +34,7 @@
   /** @param {FileList} files */
   function processFiles(files) {
     const valid = Array.from(files).filter(f =>
-      ACCEPTED_EXTENSIONS.includes(getExt(f))
+      ACCEPTED_EXTENSIONS.includes(getExt(f)) || f.type.startsWith('image/')
     );
     droppedFiles = [...droppedFiles, ...valid];
   }
@@ -50,6 +60,7 @@
   export function getPayload() {
     const fd = new FormData();
     droppedFiles.forEach(f => fd.append('files', f));
+    fd.append('description', htmlPaste);
     fd.append('htmlPaste', htmlPaste);
     return fd;
   }
@@ -73,7 +84,7 @@
     bind:this={fileInput}
     type="file"
     multiple
-    accept=".txt,.pdf,.mdoc"
+    accept=".txt,.pdf,.mdoc,image/*"
     class="hidden"
     onchange={onFileInput}
   />
@@ -87,7 +98,7 @@
       Arrastra archivos o haz clic para seleccionar
     </span>
     <span class="text-vault-ghost text-[10px] tracking-widest uppercase">
-      .txt · .pdf · .mdoc
+      .TXT · .PDF · .MDOC · .JPG · .PNG · .WEBP
     </span>
   {/if}
 </div>

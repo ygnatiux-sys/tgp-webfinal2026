@@ -50,6 +50,9 @@
 
         response = await fetch(webhookUrl, {
           method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${cleanToken}`,
+          },
           body: fd,               // browser establece Content-Type: multipart/form-data
         });
 
@@ -60,7 +63,10 @@
 
         response = await fetch(webhookUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${cleanToken}`,
+          },
           body: JSON.stringify({ ...data, token: cleanToken, mode: 'scriptorium' }),
         });
       }
