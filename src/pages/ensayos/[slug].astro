@@ -1,0 +1,242 @@
+---
+// src/pages/ensayos/[slug].astro
+// Visor Editorial de Ensayos y Borradores — The Great Puzzle Project
+
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const ensayos = await getCollection('ensayos');
+  return ensayos.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const data = entry.data;
+
+// Formateador de fecha
+function formatDate(dateStr?: string) {
+  if (!dateStr) return 'Fecha no registrada';
+  try {
+    const d = new Date(dateStr);
+    return new Intl.DateTimeFormat('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(d);
+  } catch {
+    return dateStr;
+  }
+}
+
+const formattedDate = formatDate(data.date);
+const mainImage = data.gallery && data.gallery.length > 0 ? data.gallery[0] : null;
+---
+
+<Layout title={`${data.title} | The Great Puzzle Project`}>
+  <div class="lens-glow -top-40 -left-40"></div>
+  <div class="lens-glow top-1/2 -right-60"></div>
+  <div class="lens-glow -bottom-50 left-1/4"></div>
+
+  <Navbar />
+
+  <main class="relative z-10 min-h-screen pt-28 md:pt-36 pb-32 px-6 md:px-12">
+    <div class="max-w-6xl mx-auto mb-12 flex justify-between items-center">
+      <a
+        href="/archivo"
+        class="cta-glass rounded-full! px-6! py-2.5! text-[10px]! uppercase tracking-widest group flex items-center gap-2"
+      >
+        <span class="group-hover:-translate-x-1 inline-block transition-transform">←</span>
+        <span>Volver al Archivo</span>
+      </a>
+
+      <div class="flex items-center gap-3 text-[10px] font-mono tracking-widest text-vault-accent uppercase">
+        {data.category && (
+          <span class="px-3.5 py-1 rounded-full border border-vault-accent/30 bg-vault-accent/10">
+            {data.category}
+          </span>
+        )}
+        {data.powertype && (
+          <span class="opacity-60 hidden sm:inline-block">
+            ◈ {data.powertype}
+          </span>
+        )}
+      </div>
+    </div>
+
+    <header class="max-w-4xl mx-auto text-center mb-16 space-y-6">
+      {data.volanta && (
+        <p class="text-[11px] md:text-xs uppercase tracking-[0.4em] text-vault-accent/80 font-mono font-medium">
+          {data.volanta}
+        </p>
+      )}
+
+      <h1 class="font-bodoni text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.05] tracking-tight titulo-estilo-apple">
+        {data.title}
+      </h1>
+
+      <div class="flex items-center justify-center gap-6 pt-4 text-xs font-mono tracking-widest text-primary/50 uppercase">
+        <span>{formattedDate}</span>
+        <span class="opacity-30">•</span>
+        <span class="text-vault-accent/80">The Great Puzzle Project</span>
+      </div>
+    </header>
+
+    {mainImage && (
+      <div class="max-w-6xl mx-auto mb-16">
+        <div class="bento-glass rounded-[2.5rem] p-3 md:p-5 border border-white/10 shadow-2xl overflow-hidden group">
+          <div class="relative w-full h-[55vh] md:h-[72vh] rounded-4xl overflow-hidden bg-black/40">
+            <img
+              src={mainImage}
+              alt={data.title}
+              class="w-full h-full object-cover ken-burns-cinematic"
+            />
+            <div class="absolute inset-0 bg-linear-to-t from-bg/90 via-transparent to-transparent pointer-events-none"></div>
+
+            {data.gallery && data.gallery.length > 1 && (
+              <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2 bg-black/70 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-mono tracking-widest uppercase text-white/80">
+                <span>◈ {data.gallery.length} Registros Visuales</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {data.gallery && data.gallery.length > 1 && (
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+            {data.gallery.slice(1).map((imgUrl, idx) => (
+              <div class="bento-glass rounded-2xl overflow-hidden p-2 border border-white/5 h-32 md:h-40 group/sub">
+                <img
+                  src={imgUrl}
+                  alt={`Registro ${idx + 2}`}
+                  class="w-full h-full object-cover rounded-xl group-hover/sub:scale-105 transition-all duration-500"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    )}
+
+    <article class="max-w-4xl mx-auto">
+      {data.abstract && (
+        <div class="mb-14 p-8 md:p-10 bento-glass rounded-3xl border-l-4 border-l-vault-accent border-white/5 max-w-[66ch] mx-auto shadow-lg">
+          <p class="font-bodoni italic text-xl md:text-2xl text-highlight/90 leading-relaxed">
+            "{data.abstract}"
+          </p>
+        </div>
+      )}
+
+      <div class="max-w-[66ch] mx-auto text-base md:text-lg text-primary/85 leading-[1.85] font-light space-y-8 tracking-wide font-inter ensayo-prose">
+        <Content />
+      </div>
+
+      <div class="max-w-[66ch] mx-auto mt-20 pt-10 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-6 text-xs font-mono tracking-widest text-primary/40 uppercase">
+        <span>The Great Puzzle Project · Archivo Vivo</span>
+        <a href="/archivo" class="hover:text-vault-accent transition-colors flex items-center gap-2">
+          <span>Explorar más borradores</span>
+          <span>→</span>
+        </a>
+      </div>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style is:global>
+  .ensayo-prose h2,
+  .ensayo-prose h3,
+  .ensayo-prose h4 {
+    font-family: 'Bodoni Moda', serif;
+    color: #fdfbf7;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    display: block;
+  }
+
+  .ensayo-prose h2 {
+    font-size: 2rem;
+  }
+
+  .ensayo-prose h3 {
+    font-size: 1.6rem;
+    color: #e5e5e5;
+  }
+
+  .ensayo-prose h4 {
+    font-size: 1.25rem;
+    color: #9F8CAE;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .ensayo-prose p {
+    margin-bottom: 1.75rem;
+    color: rgba(213, 213, 213, 0.9);
+    line-height: 1.85;
+  }
+
+  .ensayo-prose blockquote {
+    border-left: 2px solid #9F8CAE;
+    padding-left: 1.5rem;
+    font-style: italic;
+    color: rgba(253, 251, 247, 0.85);
+    margin: 2rem 0;
+  }
+
+  .ensayo-prose ul,
+  .ensayo-prose ol {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+    color: rgba(213, 213, 213, 0.85);
+  }
+
+  .ensayo-prose li {
+    margin-bottom: 0.75rem;
+  }
+
+  .ensayo-prose strong {
+    color: #fdfbf7;
+    font-weight: 600;
+  }
+
+  .ensayo-prose a {
+    color: #9F8CAE;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.3s ease;
+  }
+
+  .ensayo-prose a:hover {
+    color: #ffffff;
+  }
+
+  /* Efecto Ken Burns milimétrico desde punto angular (zoom-out suave) */
+  @keyframes ken-burns-zoom-out {
+    0% {
+      transform: scale(1.08) translate(1.2%, 1%);
+    }
+    50% {
+      transform: scale(1.04) translate(-0.4%, -0.3%);
+    }
+    100% {
+      transform: scale(1.0) translate(0, 0);
+    }
+  }
+
+  .ken-burns-cinematic {
+    transform-origin: 15% 15%;
+    animation: ken-burns-zoom-out 20s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate ease-in-out;
+    will-change: transform;
+  }
+</style>

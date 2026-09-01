@@ -1,17 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-
 ---
 
 <Layout title="Media Lab | The Great Puzzle Project">
-	<main class="min-h-screen bg-bg text-primary px-6 md:px-16 pt-32 pb-20">
+	<!-- LENS GLOWS -->
+	<div class="lens-glow -top-50 -left-50"></div>
+	<div class="lens-glow -bottom-50 -right-50"></div>
+
+	<Navbar />
+
+	<main class="relative z-10 min-h-screen bg-bg text-primary px-6 md:px-16 pt-32 pb-20">
 		<!-- HEADER -->
 		<div class="max-w-7xl mx-auto mb-48 flex flex-col items-center text-center pt-20">
 			<h1 class="font-gloock text-5xl md:text-8xl tracking-tighter uppercase titulo-estilo-apple font-extrabold mb-8">Media Lab</h1>
 			<p class="font-inter text-[10px] uppercase tracking-[0.6em] opacity-40 mb-16">Exploración Transmedia & Simbólica</p>
-			<a href="/#media" class="cta-glass rounded-full! px-8! py-2! text-[9px]! uppercase tracking-widest group">
-				<span class="group-hover:-translate-x-1 inline-block transition-transform">←</span> Volver
+			<a href="/media-home" class="cta-glass rounded-full! px-8! py-2! text-[9px]! uppercase tracking-widest group">
+				<span class="group-hover:-translate-x-1 inline-block transition-transform">←</span> Volver a Media Lab
 			</a>
 		</div>
 

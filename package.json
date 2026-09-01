@@ -10,10 +10,12 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "sync": "node scripts/sync.mjs"
+    "sync": "node scripts/sync.mjs",
+    "generate-types": "wrangler types"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
+    "@astrojs/cloudflare": "^14.2.6",
     "@astrojs/mdx": "^7.0.7",
     "@astrojs/svelte": "^9.0.1",
     "@tailwindcss/vite": "^4.2.4",
@@ -26,7 +28,8 @@
     "gsap": "^3.15.0",
     "svelte": "^5.57.0",
     "tailwindcss": "^4.2.4",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.128.0"
   },
   "allowScripts": {
     "esbuild@0.28.2": true,

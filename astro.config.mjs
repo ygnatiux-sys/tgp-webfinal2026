@@ -5,6 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import svelte from '@astrojs/svelte';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
@@ -17,5 +19,6 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [mdx(), svelte()]
+  integrations: [mdx(), svelte()],
+  adapter: cloudflare()
 });
