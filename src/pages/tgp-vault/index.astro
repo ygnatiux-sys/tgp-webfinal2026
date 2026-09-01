@@ -1,16 +1,23 @@
 ---
 // src/pages/tgp-vault/index.astro
-// Ruta privada del TGP-Vault — no indexada, sin Navbar/Footer
+// TGP-Vault — Centro de Operaciones y Mesa de Trabajo Modular
 
 import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
 import VaultEngine from '../../components/vault/VaultEngine.svelte';
-
-const webhookUrl = import.meta.env.PUBLIC_WEBHOOK_URL ?? '';
 ---
 
 <Layout title="TGP-Vault · Centro de Operaciones">
-  <VaultEngine
-    client:only="svelte"
-    webhookUrl={webhookUrl}
-  />
+	<!-- LENS GLOWS -->
+	<div class="lens-glow -top-50 -left-50"></div>
+	<div class="lens-glow -bottom-50 -right-50"></div>
+
+	<Navbar />
+
+	<main class="relative z-10 overflow-x-hidden pt-28 pb-20">
+		<VaultEngine client:only="svelte" />
+	</main>
+
+	<Footer />
 </Layout>

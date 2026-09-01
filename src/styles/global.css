@@ -4,10 +4,10 @@
   --font-bodoni: "Bodoni Moda", serif;
   --font-inter: "Inter", sans-serif;
   
-  --color-bg: #141720;
-  --color-primary: #d1d1d1;
+  --color-bg: #11141c;
+  --color-primary: #d5d5d5;
   --color-highlight: #fdfbf7;
-  --color-border: #2a2a2a;
+  --color-border: #2a2e3d;
 }
 
 @layer base {
@@ -70,14 +70,11 @@ html, body {
   .titulo-estilo-apple {
     font-weight: bold;
     /* 1. El gradiente de grises (iluminado arriba, oscuro abajo) */
-    background: linear-gradient(to bottom, #ffffff 0%, #a1a1a1 50%, #3a3a3a 100%);
+    background: linear-gradient(to bottom, #ffffff 0%, #d1d1d1 50%, #6e6e6e 100%);
     /* 2. El truco para meter el gradiente dentro de la letra */
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    /* 3. El efecto para traslucir y difuminar el fondo (Apple Style) */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     display: inline-block;
   }
 
@@ -103,19 +100,22 @@ html, body {
   }
 
   .bento-glow {
-    @apply bg-inherit;
+    background-color: rgba(255, 255, 255, 0.02);
     box-shadow: 
-      inset 0 0 20px rgba(255, 255, 255, 0.02),
-      0 0 30px rgba(255, 255, 255, 0.01);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+      inset 0 0 20px rgba(255, 255, 255, 0.03),
+      0 0 30px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .bento-glass {
-    @apply bg-inherit backdrop-blur-xl transition-all duration-700;
+    background-color: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    @apply transition-all duration-700;
     box-shadow: 
       inset 0 0 20px rgba(255, 255, 255, 0.02),
-      0 0 40px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+      0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .bento-glass:hover {
@@ -132,7 +132,7 @@ html, body {
   }
 
   .cta-editorial:hover {
-    @apply scale-105 text-[#9F8CAE] border-[#9F8CAE]/50;
+    @apply scale-105 text-vault-loading border-vault-loading/50;
     box-shadow: 0 0 40px rgba(159, 140, 174, 0.2);
     background: rgba(159, 140, 174, 0.05);
     letter-spacing: 0.4em;
@@ -144,7 +144,7 @@ html, body {
   }
 
   .cta-glass:hover {
-    @apply border-[#9F8CAE]/30 text-[#9F8CAE] scale-105;
+    @apply border-vault-loading/30 text-vault-loading scale-105;
     box-shadow: 0 0 20px rgba(159, 140, 174, 0.1);
   }
 
@@ -172,29 +172,29 @@ html, body {
    ============================================================ */
 
 @theme {
-  /* Superficie y fondos */
-  --color-vault-bg:      #0a0a0a;
-  --color-vault-surface: #111111;
-  --color-vault-raised:  #181818;
-  --color-vault-border:  #1e1e1e;
-  --color-vault-border-subtle: #282828;
+  /* Superficie y fondos — Coherencia absoluta con Midnight Obsidian (#141720) */
+  --color-vault-bg:      #141720;
+  --color-vault-surface: rgba(22, 26, 37, 0.75);
+  --color-vault-raised:  rgba(30, 36, 51, 0.85);
+  --color-vault-border:  rgba(255, 255, 255, 0.08);
+  --color-vault-border-subtle: rgba(255, 255, 255, 0.15);
 
-  /* Tipografía */
-  --color-vault-text:    #c8c4bc;   /* marfil mineral */
-  --color-vault-muted:   #5a5757;   /* texto secundario */
-  --color-vault-ghost:   #333333;   /* placeholders */
+  /* Tipografía mineral / marfil */
+  --color-vault-text:    #fdfbf7;   /* highlight marfil */
+  --color-vault-muted:   #9ca3af;   /* texto secundario refinado */
+  --color-vault-ghost:   #4b5563;   /* placeholders & counters */
 
   /* Acentos */
-  --color-vault-accent:  #c9a96e;   /* ámbar arcaico */
-  --color-vault-accent-dim: #7a6140; /* acento apagado */
-  --color-vault-glow:    rgba(201, 169, 110, 0.12);
+  --color-vault-accent:  #c9a96e;   /* ámbar arcaico / cobre */
+  --color-vault-accent-dim: #8b7348; /* acento apagado */
+  --color-vault-glow:    rgba(201, 169, 110, 0.18);
 
   /* Estados */
-  --color-vault-danger:  #8b3a3a;
-  --color-vault-danger-bg: rgba(139, 58, 58, 0.12);
-  --color-vault-success: #3a6b4a;
-  --color-vault-success-bg: rgba(58, 107, 74, 0.12);
-  --color-vault-loading: #4a5a7a;
+  --color-vault-danger:  #e06c75;
+  --color-vault-danger-bg: rgba(224, 108, 117, 0.12);
+  --color-vault-success: #6dba8a;
+  --color-vault-success-bg: rgba(109, 186, 138, 0.12);
+  --color-vault-loading: #9F8CAE;
 }
 
 @layer components {
