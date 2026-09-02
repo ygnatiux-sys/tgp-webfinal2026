@@ -6,8 +6,6 @@ import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import svelte from '@astrojs/svelte';
 
-import cloudflare from '@astrojs/cloudflare';
-
 // https://astro.build/config
 export default defineConfig({
   site: 'https://alternative.thegreatpuzzleproject.com',
@@ -30,6 +28,5 @@ export default defineConfig({
     }
   },
 
-  integrations: [mdx(), react(), svelte()],
-  adapter: cloudflare()
+  integrations: [mdx(), react(), svelte()]
 });
