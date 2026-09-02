@@ -1,27 +1,34 @@
-# build output
+# Build output
 dist/
-# generated types
+
+# Generated types & Astro cache
 .astro/
 
-# dependencies
+# Cloudflare & Wrangler local state (Miniflare SQLite databases, KV, sessions)
+.wrangler/
+
+# Dependencies
 node_modules/
 
-# logs
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-
-# environment variables
+# Environment variables & secrets
 .env
-.env.production
+.env.*
+!.env.example
 
-# macOS-specific files
-.DS_Store
-
-# jetbrains setting folder
+# IDE & Editor history / backups (protects VS Code Local History snapshots of .env)
+.history/
+.vscode/
 .idea/
+
+# OS specific files
+.DS_Store
+Thumbs.db
 
 # Local placeholder images
 /public/images/posts/

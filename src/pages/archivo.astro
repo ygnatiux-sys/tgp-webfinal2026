@@ -22,7 +22,6 @@ interface ArchivoItem {
 }
 
 let items: ArchivoItem[] = [];
-let queryError: string | null = null;
 
 // 1. Cargar Ensayos y Borradores locales de la colección
 try {
@@ -51,10 +50,13 @@ try {
   console.warn('[Archivo] Error cargando colección de ensayos:', e?.message);
 }
 
-// 2. Cargar registros de Cloudflare D1 si está disponible (entorno SSR o híbrido)
+// 2. Cargar registros de Cloudflare D1 si está disponible (entorno Worker runtime)
 try {
-  const env = (Astro.locals as any)?.runtime?.env;
-  const db = env?.DB;
+  // En Astro v7+ con @astrojs/cloudflare, el acceso a bindings D1 se hace
+  // a través del contexto de Cloudflare Workers. En build estático / dev local
+  // el binding no existe y el bloque se omite silenciosamente.
+  const { env: cfEnv } = await import('cloudflare:workers').catch(() => ({ env: null }));
+  const db = (cfEnv as any)?.DB ?? null;
 
   if (db) {
     const query = await db
@@ -76,9 +78,10 @@ try {
 
     items.push(...mappedD1);
   }
-} catch (err: any) {
-  queryError = err?.message || null;
+} catch {
+  // Binding D1 no disponible en modo estático o entorno local — se omite
 }
+
 
 // Ordenar cronológicamente (más recientes primero)
 items.sort((a, b) => {
@@ -136,17 +139,6 @@ function formatDate(dateStr?: string) {
           </span>
         </div>
       </div>
-
-      <!-- ALERTA DE ERROR SI EXISTE -->
-      {queryError && (
-        <div class="max-w-2xl mx-auto mb-12 p-4 border border-vault-danger/40 bg-vault-danger-bg rounded-lg text-xs text-[#c47a7a] flex items-center gap-3 text-left">
-          <span class="text-base">⚠</span>
-          <div>
-            <p class="font-bold uppercase tracking-wider">Aviso de Bóveda D1</p>
-            <p class="opacity-80">{queryError}</p>
-          </div>
-        </div>
-      )}
 
       <!-- GRILLA BENTO DE TARJETAS EDITORIALES -->
       {items.length > 0 ? (

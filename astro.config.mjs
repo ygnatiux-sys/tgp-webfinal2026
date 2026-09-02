@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
+import react from '@astrojs/react';
 import svelte from '@astrojs/svelte';
 
 import cloudflare from '@astrojs/cloudflare';
@@ -16,9 +17,18 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    server: {
+      watch: {
+        ignored: [
+          '**/.astro/**',
+          '**/.wrangler/**',
+          '**/dist/**'
+        ]
+      }
+    }
   },
 
-  integrations: [mdx(), svelte()],
+  integrations: [mdx(), react(), svelte()],
   adapter: cloudflare()
-});
+});

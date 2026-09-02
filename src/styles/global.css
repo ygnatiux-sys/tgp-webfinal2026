@@ -11,12 +11,16 @@
 }
 
 @layer base {
-html, body {
-    @apply bg-bg text-primary font-inter antialiased;
+  html, body {
+    background-color: var(--color-bg, #11141c);
+    color: var(--color-primary, #d5d5d5);
+    @apply font-inter antialiased;
+    color-scheme: dark;
     scroll-behavior: smooth;
     overflow-x: hidden;
     max-width: 100%;
   }
+
 
   .font-gloock {
     font-family: 'Gloock', serif;

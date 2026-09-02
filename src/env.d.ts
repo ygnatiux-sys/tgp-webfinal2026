@@ -12,6 +12,14 @@ declare namespace App {
   interface Locals extends Runtime {}
 }
 
+declare module 'cloudflare:workers' {
+  export const env: {
+    DB?: any;
+    [key: string]: any;
+  };
+}
+
+
 // ─── Ambient Type Declarations for React & JSX ─────────────────────────────
 declare namespace JSX {
   interface IntrinsicElements {
