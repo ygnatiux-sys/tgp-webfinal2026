@@ -1,0 +1,65 @@
+---
+// src/pages/kenburns.astro
+// Demostración y Visor Cinemático Ken Burns en pantalla completa (100dvh)
+// Soporta Wikimedia Commons y registros fotográficos de alta resolución.
+
+import Layout from '../layouts/Layout.astro';
+import KenBurnsWikimedia from '../components/KenBurnsWikimedia';
+
+const wikimediaSamples = [
+  {
+    url: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Dusk_landscape_high_resolution.jpg',
+    title: 'Paisaje al atardecer en alta resolución',
+    subtitle: 'Wikimedia Commons · Dominio Público',
+    caption: 'Composición panorámica capturada durante el ocaso. Interpolación cinemática continua Ken Burns con escala de 1.0x a 1.3x y paneo lateral.',
+    credit: 'Wikimedia Commons / Archivo TGP'
+  },
+  {
+    url: 'https://upload.wikimedia.org/wikipedia/commons/d/d7/Bonampak_painting.jpg',
+    title: 'Pinturas murales de Bonampak',
+    subtitle: 'Chiapas, México · Período Clásico Tardío',
+    caption: 'Códice visual monumental que documenta la ritualidad y la vida cortesana maya en el Templo de los Murales.',
+    credit: 'INAH / Wikimedia Commons'
+  },
+  {
+    url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Ancient_Library_of_Alexandria.jpg/1280px-Ancient_Library_of_Alexandria.jpg',
+    title: 'La Gran Biblioteca de Alejandría',
+    subtitle: 'Reconstrucción histórica del saber universal',
+    caption: 'El centro neurálgico del saber clásico en el período helenístico ptolemaico.',
+    credit: 'Archivo Histórico / Wikimedia Commons'
+  },
+  {
+    url: '/magazine-hero-gobekli.jpg',
+    title: 'Recinto C de Göbekli Tepe',
+    subtitle: 'Anatolia, 9500 a.C. · Neolítico Precerámico',
+    caption: 'Pilares monolíticos antropomorfos de seis toneladas esculpidos doce mil años antes del presente.',
+    credit: 'Deutsches Archäologisches Institut / TGP Vault'
+  }
+];
+---
+
+<Layout title="Visor Ken Burns 100dvh | The Great Puzzle Project">
+  <main class="w-full h-[100dvh] overflow-hidden bg-black relative">
+    <!-- Botón flotante para regresar al Archivo -->
+    <div class="absolute top-6 left-6 z-40">
+      <a
+        href="/archivo"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 hover:bg-[#c9a96e] hover:text-black border border-white/20 hover:border-[#c9a96e] text-[10px] font-mono uppercase tracking-widest text-white transition-all backdrop-blur-md shadow-2xl group cursor-pointer"
+      >
+        <span class="group-hover:-translate-x-1 transition-transform">←</span>
+        <span>Volver al Archivo</span>
+      </a>
+    </div>
+
+    <!-- VISOR KEN BURNS REACT (100dvh) -->
+    <KenBurnsWikimedia
+      client:load
+      images={wikimediaSamples}
+      title="Paisaje al atardecer en alta resolución"
+      subtitle="Wikimedia Commons · Dominio Público"
+      duration={10}
+      isModal={false}
+      isOpen={true}
+    />
+  </main>
+</Layout>
