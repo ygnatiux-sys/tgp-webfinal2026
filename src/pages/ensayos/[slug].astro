@@ -6,6 +6,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import ArticleKenBurnsModal from '../../components/ArticleKenBurnsModal';
 
 export async function getStaticPaths() {
   const ensayos = await getCollection('ensayos');
@@ -36,6 +37,12 @@ function formatDate(dateStr?: string) {
 
 const formattedDate = formatDate(data.date);
 const mainImage = data.gallery && data.gallery.length > 0 ? data.gallery[0] : null;
+
+// Lista completa de imágenes del artículo para el Visor Ken Burns
+const allImages: string[] = [
+  ...(data.gallery || []),
+  ...(mainImage && (!data.gallery || !data.gallery.includes(mainImage)) ? [mainImage] : [])
+].filter((url): url is string => Boolean(url));
 ---
 
 <Layout title={`${data.title} | The Great Puzzle Project`}>
@@ -89,7 +96,28 @@ const mainImage = data.gallery && data.gallery.length > 0 ? data.gallery[0] : nu
 
     {mainImage && (
       <div class="max-w-6xl mx-auto mb-16">
-        <div class="bento-glass rounded-[2.5rem] p-3 md:p-5 border border-white/10 shadow-2xl overflow-hidden group">
+        <div class="flex items-center justify-between mb-4 px-2">
+          <div class="text-[10px] font-mono tracking-widest text-vault-accent uppercase flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
+            <span>Registro Visual Arqueológico</span>
+          </div>
+
+          {allImages.length > 0 && (
+            <ArticleKenBurnsModal
+              client:load
+              images={allImages}
+              title={data.title}
+              subtitle={data.category || 'Archivo Vivo'}
+              buttonLabel="Abrir Visor Ken Burns (100dvh)"
+            />
+          )}
+        </div>
+
+        <div
+          class="bento-glass rounded-[2.5rem] p-3 md:p-5 border border-white/10 shadow-2xl overflow-hidden group cursor-pointer relative"
+          data-kenburns-index="0"
+          title="Click para ver en Visor Cinemático Ken Burns (100dvh)"
+        >
           <div class="relative w-full h-[55vh] md:h-[72vh] rounded-4xl overflow-hidden bg-black/40">
             <img
               src={mainImage}
@@ -97,6 +125,10 @@ const mainImage = data.gallery && data.gallery.length > 0 ? data.gallery[0] : nu
               class="w-full h-full object-cover ken-burns-cinematic"
             />
             <div class="absolute inset-0 bg-linear-to-t from-bg/90 via-transparent to-transparent pointer-events-none"></div>
+
+            <div class="absolute bottom-6 left-6 z-20 flex items-center gap-2 bg-black/75 backdrop-blur-md px-4 py-2 rounded-full border border-vault-accent/40 text-[10px] font-mono tracking-widest uppercase text-vault-accent group-hover:bg-vault-accent group-hover:text-black transition-all shadow-lg">
+              <span>◈ Click para expandir en Visor Ken Burns (100dvh)</span>
+            </div>
 
             {data.gallery && data.gallery.length > 1 && (
               <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2 bg-black/70 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-mono tracking-widest uppercase text-white/80">
@@ -109,13 +141,18 @@ const mainImage = data.gallery && data.gallery.length > 0 ? data.gallery[0] : nu
         {data.gallery && data.gallery.length > 1 && (
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
             {data.gallery.slice(1).map((imgUrl, idx) => (
-              <div class="bento-glass rounded-2xl overflow-hidden p-2 border border-white/5 h-32 md:h-40 group/sub">
+              <div
+                class="bento-glass rounded-2xl overflow-hidden p-2 border border-white/5 h-32 md:h-40 group/sub cursor-pointer relative hover:border-vault-accent/50 transition-all"
+                data-kenburns-index={idx + 1}
+                title={`Ver registro ${idx + 2} en Visor Ken Burns`}
+              >
                 <img
                   src={imgUrl}
                   alt={`Registro ${idx + 2}`}
                   class="w-full h-full object-cover rounded-xl group-hover/sub:scale-105 transition-all duration-500"
                   loading="lazy"
                 />
+                <div class="absolute inset-0 bg-black/20 group-hover/sub:bg-transparent transition-colors rounded-xl pointer-events-none"></div>
               </div>
             ))}
           </div>
@@ -219,6 +256,17 @@ const mainImage = data.gallery && data.gallery.length > 0 ? data.gallery[0] : nu
 
   .ensayo-prose a:hover {
     color: #ffffff;
+  }
+
+  .ensayo-prose img {
+    cursor: pointer;
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .ensayo-prose img:hover {
+    transform: scale(1.015);
+    border-color: rgba(201, 169, 110, 0.6);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(201, 169, 110, 0.2);
   }
 
   /* Efecto Ken Burns milimétrico desde punto angular (zoom-out suave) */
