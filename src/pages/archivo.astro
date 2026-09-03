@@ -9,23 +9,26 @@ import Footer from '../components/Footer.astro';
 import ArchivoHub from '../components/archivo/ArchivoHub.svelte';
 import { getCollection } from 'astro:content';
 
+let initialEnsayos: any[] = [];
 let initialD1Items: any[] = [];
 
 try {
   const ensayos = await getCollection('ensayos');
   if (Array.isArray(ensayos)) {
-    initialD1Items = ensayos.map((ensayo) => {
+    initialEnsayos = ensayos.map((ensayo) => {
       const data = ensayo.data;
       const cover = data.gallery && data.gallery.length > 0 ? data.gallery[0] : undefined;
       const snippet = data.abstract || (ensayo.body ? ensayo.body.slice(0, 180).replace(/<[^>]*>?/gm, '').replace(/^[#\s*]+/gm, '') + '...' : '');
 
       return {
         id: ensayo.id,
+        url: `/ensayos/${ensayo.id}`,
         title: data.title || 'Ensayo Histórico',
+        volanta: data.volanta || data.powertype || 'Ensayo Editorial',
         description: snippet,
         category: data.category || 'Ensayo Editorial',
         imageUrl: cover || '/magazine-hero-gobekli.jpg',
-        date: data.date ? new Date(data.date).toLocaleDateString('es-ES') : 'Fecha no registrada',
+        date: data.date ? new Date(data.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Fecha no registrada',
         tags: [data.category || 'ensayo', data.powertype || 'historia'].filter(Boolean),
         source: 'ensayo'
       };
@@ -65,8 +68,8 @@ try {
         </p>
       </div>
 
-      <!-- COMPONENTE SVELTE: ARCHIVO HUB (MAGAZINES + D1) -->
-      <ArchivoHub client:load initialD1Items={initialD1Items} />
+      <!-- COMPONENTE SVELTE: ARCHIVO HUB (MAGAZINES + ENSAYOS + D1) -->
+      <ArchivoHub client:load initialEnsayos={initialEnsayos} initialD1Items={initialD1Items} />
     </section>
   </main>
 
