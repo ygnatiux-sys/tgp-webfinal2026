@@ -1,112 +1,42 @@
 ---
 // src/pages/archivo.astro
 // Hemeroteca & Archivo Vivo — The Great Puzzle Project
-// Integra Ensayos y Borradores locales (Content Collections) y Bóveda D1
+// Integra Ediciones Magazine (Revistas Inmersivas 60/40 en su propio HTML) y Bóveda Cloudflare D1 / R2
 
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import ArchivoHub from '../components/archivo/ArchivoHub.svelte';
+import { getCollection } from 'astro:content';
 
-// Modelo unificado de visualización
-interface ArchivoItem {
-  id: string;
-  url: string;
-  title: string;
-  excerpt: string;
-  imageUrl?: string;
-  dateStr?: string;
-  category?: string;
-  era?: string;
-  source: 'ensayo' | 'vault';
-}
+let initialD1Items: any[] = [];
 
-let items: ArchivoItem[] = [];
-
-// 1. Cargar Ensayos y Borradores locales de la colección
 try {
   const ensayos = await getCollection('ensayos');
-  
-  const mappedEnsayos: ArchivoItem[] = ensayos.map((ensayo) => {
-    const data = ensayo.data;
-    const cover = data.gallery && data.gallery.length > 0 ? data.gallery[0] : undefined;
-    const snippet = data.abstract || (ensayo.body ? ensayo.body.slice(0, 180).replace(/<[^>]*>?/gm, '').replace(/^[#\s*]+/gm, '') + '...' : '');
+  if (Array.isArray(ensayos)) {
+    initialD1Items = ensayos.map((ensayo) => {
+      const data = ensayo.data;
+      const cover = data.gallery && data.gallery.length > 0 ? data.gallery[0] : undefined;
+      const snippet = data.abstract || (ensayo.body ? ensayo.body.slice(0, 180).replace(/<[^>]*>?/gm, '').replace(/^[#\s*]+/gm, '') + '...' : '');
 
-    return {
-      id: ensayo.id,
-      url: `/ensayos/${ensayo.id}`,
-      title: data.title || 'Borrador sin título',
-      excerpt: snippet,
-      imageUrl: cover,
-      dateStr: data.date,
-      category: data.category || 'Ensayo',
-      era: data.powertype || 'Borrador',
-      source: 'ensayo',
-    };
-  });
-
-  items.push(...mappedEnsayos);
+      return {
+        id: ensayo.id,
+        title: data.title || 'Ensayo Histórico',
+        description: snippet,
+        category: data.category || 'Ensayo Editorial',
+        imageUrl: cover || '/magazine-hero-gobekli.jpg',
+        date: data.date ? new Date(data.date).toLocaleDateString('es-ES') : 'Fecha no registrada',
+        tags: [data.category || 'ensayo', data.powertype || 'historia'].filter(Boolean),
+        source: 'ensayo'
+      };
+    });
+  }
 } catch (e: any) {
   console.warn('[Archivo] Error cargando colección de ensayos:', e?.message);
 }
-
-// 2. Cargar registros de Cloudflare D1 si está disponible (entorno Worker runtime)
-try {
-  // En Astro v7+ con @astrojs/cloudflare, el acceso a bindings D1 se hace
-  // a través del contexto de Cloudflare Workers. En build estático / dev local
-  // el binding no existe y el bloque se omite silenciosamente.
-  const { env: cfEnv } = await import('cloudflare:workers').catch(() => ({ env: null }));
-  const db = (cfEnv as any)?.DB ?? null;
-
-  if (db) {
-    const query = await db
-      .prepare("SELECT * FROM vault_entries ORDER BY created_at DESC")
-      .all();
-
-    const d1Results = (query.results as any[]) || [];
-    const mappedD1: ArchivoItem[] = d1Results.map((r) => ({
-      id: String(r.id),
-      url: `/tgp-vault`,
-      title: r.title || r.titulo || 'Registro de Bóveda',
-      excerpt: (r.description || r.contenido_html || '').replace(/<[^>]*>?/gm, '').slice(0, 180),
-      imageUrl: r.image_url,
-      dateStr: r.created_at || r.fecha_ingesta,
-      category: 'Bóveda D1',
-      era: r.era,
-      source: 'vault',
-    }));
-
-    items.push(...mappedD1);
-  }
-} catch {
-  // Binding D1 no disponible en modo estático o entorno local — se omite
-}
-
-
-// Ordenar cronológicamente (más recientes primero)
-items.sort((a, b) => {
-  const dateA = a.dateStr ? new Date(a.dateStr).getTime() : 0;
-  const dateB = b.dateStr ? new Date(b.dateStr).getTime() : 0;
-  return dateB - dateA;
-});
-
-// Formateador de fechas
-function formatDate(dateStr?: string) {
-  if (!dateStr) return 'Fecha no registrada';
-  try {
-    const d = new Date(dateStr);
-    return new Intl.DateTimeFormat('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    }).format(d);
-  } catch {
-    return dateStr;
-  }
-}
 ---
 
-<Layout title="Archivo de Hemeroteca | The Great Puzzle Project">
+<Layout title="Archivo & Magazines | The Great Puzzle Project">
   <!-- LENS GLOWS -->
   <div class="lens-glow -top-50 -left-50"></div>
   <div class="lens-glow -bottom-50 -right-50"></div>
@@ -114,111 +44,29 @@ function formatDate(dateStr?: string) {
   <Navbar />
 
   <main class="relative z-10 overflow-x-hidden pt-24 md:pt-32">
-    <!-- HERO DE LA HEMEROTECA -->
+    <!-- HERO DE LA HEMEROTECA & ARCHIVO VIVO -->
     <section class="relative px-6 md:px-16 pb-20 max-w-7xl mx-auto text-center">
       <div class="w-full flex flex-col items-center mb-16">
-        <p class="text-[10px] md:text-xs uppercase tracking-[0.5em] text-vault-accent/90 mb-4 font-mono font-medium">
-          The Great Puzzle Project · Archivo Vivo & Borradores
-        </p>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-vault-accent/30 bg-vault-accent/5 backdrop-blur-md mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
+          <span class="text-[10px] uppercase font-mono tracking-[0.35em] text-vault-accent font-medium">
+            The Great Puzzle Project · Solapa Archivo & Hemeroteca
+          </span>
+        </div>
 
         <h1 class="font-bodoni text-6xl md:text-8xl lg:text-9xl leading-[0.9] font-extrabold tracking-tighter titulo-estilo-apple mb-8">
-          Archivo de <span class="highlight-word italic">Hemeroteca</span>
+          Archivo & <span class="highlight-word italic font-light font-bodoni text-vault-accent">Magazines</span>
         </h1>
 
         <div class="w-24 h-px bg-highlight/30 mb-8"></div>
 
         <p class="font-inter font-light text-sm md:text-base tracking-[0.2em] uppercase text-fade-gradient max-w-2xl leading-relaxed">
-          Ensayos, borradores de investigación y fragmentos preservados en la Bóveda del proyecto.
+          Ediciones inmersivas en pantalla completa, artefactos de la Bóveda D1 y testimonios arqueológicos.
         </p>
-
-        <!-- Contador / Estado -->
-        <div class="mt-8 flex items-center gap-3 px-5 py-2 rounded-full border border-vault-accent/20 bg-vault-surface/60 backdrop-blur-md">
-          <span class="inline-block w-2 h-2 rounded-full bg-vault-accent animate-pulse"></span>
-          <span class="text-[11px] font-mono tracking-widest text-vault-text uppercase">
-            {items.length} {items.length === 1 ? 'Documento Indexado' : 'Documentos Indexados'}
-          </span>
-        </div>
       </div>
 
-      <!-- GRILLA BENTO DE TARJETAS EDITORIALES -->
-      {items.length > 0 ? (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 text-left">
-          {items.map((item) => {
-            const dateDisplay = formatDate(item.dateStr);
-
-            return (
-              <a
-                href={item.url}
-                class="bento-glass rounded-4xl overflow-hidden card-lift group border border-white/10 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-between"
-              >
-                <div>
-                  {item.imageUrl ? (
-                    <div class="w-full h-56 md:h-64 overflow-hidden relative bg-black/40 border-b border-white/5">
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title}
-                        class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
-                        loading="lazy"
-                      />
-                      <div class="absolute inset-0 bg-linear-to-t from-bg via-transparent to-transparent opacity-80 group-hover:opacity-30 transition-opacity"></div>
-                      
-                      {item.category && (
-                        <div class="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-mono tracking-widest text-vault-accent uppercase">
-                          {item.category}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div class="w-full h-28 bg-linear-to-b from-white/5 to-transparent border-b border-white/5 flex items-center px-8 justify-between">
-                      <span class="text-xs tracking-widest text-vault-accent font-mono">◈ TGP</span>
-                      <span class="text-[10px] font-mono uppercase tracking-[0.2em] opacity-40">{item.category || 'Ensayo'}</span>
-                    </div>
-                  )}
-
-                  <div class="p-8 md:p-9 flex flex-col gap-4">
-                    <div class="flex items-center justify-between gap-4 text-[10px] uppercase font-mono tracking-[0.25em] text-vault-accent/90">
-                      <span>{dateDisplay}</span>
-                      {item.era && <span class="opacity-60 truncate max-w-[50%]">{item.era}</span>}
-                    </div>
-
-                    <h2 class="font-bodoni text-2xl md:text-3xl font-bold leading-tight text-highlight group-hover:text-vault-accent transition-colors duration-500">
-                      {item.title}
-                    </h2>
-
-                    {item.excerpt && (
-                      <p class="font-inter font-light text-sm leading-relaxed text-primary/70 line-clamp-3 group-hover:text-primary/90 transition-colors">
-                        {item.excerpt}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div class="px-8 md:px-9 pb-8 pt-3 flex items-center justify-between border-t border-white/5 text-[10px] font-mono text-primary/40 uppercase tracking-widest">
-                  <span class="truncate max-w-[55%]">ID: {item.id.slice(0, 16)}</span>
-                  <span class="text-vault-accent/80 group-hover:translate-x-1.5 transition-transform flex items-center gap-1.5 font-bold">
-                    <span>Leer ensayo</span>
-                    <span>→</span>
-                  </span>
-                </div>
-              </a>
-            );
-          })}
-        </div>
-      ) : (
-        <div class="bento-glass max-w-3xl mx-auto p-12 md:p-20 rounded-[3rem] border border-white/5 text-center flex flex-col items-center gap-6">
-          <span class="text-4xl text-vault-accent select-none">◈</span>
-          <h2 class="font-bodoni text-3xl md:text-4xl text-highlight">
-            El Archivo aguarda nuevos testimonios
-          </h2>
-          <p class="font-inter font-light text-sm md:text-base text-primary/60 max-w-lg leading-relaxed">
-            No se encontraron borradores o ensayos en <code class="text-vault-accent text-xs">src/content/ensayos/</code>.
-          </p>
-          <a href="/tgp-vault" class="cta-vault mt-4">
-            <span class="text-xs">✦</span>
-            <span>Acceder a TGP-Vault</span>
-          </a>
-        </div>
-      )}
+      <!-- COMPONENTE SVELTE: ARCHIVO HUB (MAGAZINES + D1) -->
+      <ArchivoHub client:load initialD1Items={initialD1Items} />
     </section>
   </main>
 

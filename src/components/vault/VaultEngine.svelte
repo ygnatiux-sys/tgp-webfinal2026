@@ -33,6 +33,7 @@
   // TGP Mind
   let mindPrompt = '';
   let mindResponse = '';
+  let formatoCognitivo: 'magazine' | 'ensayo' = 'magazine';
 
   // TGP Magazine
   let magazinePrompt = '';
@@ -186,27 +187,71 @@
           throw new Error('Introduce una consulta o adjunta un artefacto para el análisis cognitivo.');
         }
 
-        response = await fetch(motorUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${cleanToken}`,
-          },
-          body: JSON.stringify({
-            prompt_natural: mindPrompt.trim()
-          }),
-        });
+        if (formatoCognitivo === 'magazine') {
+          // Apuntar al endpoint /magazine de tgp-mind
+          const magUrl = motorUrl.replace(/\/inbox\/?$/, '/magazine');
+          response = await fetch(magUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${cleanToken}`,
+            },
+            body: JSON.stringify({
+              prompt_natural: mindPrompt.trim(),
+              theme: magazineTheme,
+            }),
+          });
 
-        if (!response.ok) {
-          const errText = await response.text();
-          throw new Error(`Error ${response.status}: ${errText || response.statusText}`);
+          if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`Error ${response.status}: ${errText || response.statusText}`);
+          }
+
+          const resJson = await response.json().catch(() => null);
+          magazineArticle = resJson;
+          const draftId = 'draft_id';
+
+          if (typeof window !== 'undefined' && resJson) {
+            localStorage.setItem(`tgp_magazine_${draftId}`, JSON.stringify(resJson));
+            localStorage.setItem('tgp_magazine_draft', JSON.stringify(resJson));
+            sessionStorage.setItem('tgp_current_magazine', JSON.stringify(resJson));
+          }
+
+          status = 'success';
+          statusMessage = `Edición Magazine forjada. Redirigiendo a /magazine/${draftId}…`;
+
+          // Redirección inmediata al visor
+          setTimeout(() => {
+            if (typeof window !== 'undefined') {
+              window.location.href = `/magazine/${draftId}`;
+            }
+          }, 600);
+          return;
+
+        } else {
+          // Modo Ensayo MDX estándar (/inbox)
+          response = await fetch(motorUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${cleanToken}`,
+            },
+            body: JSON.stringify({
+              prompt_natural: mindPrompt.trim()
+            }),
+          });
+
+          if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`Error ${response.status}: ${errText || response.statusText}`);
+          }
+
+          const resJson = await response.json().catch(() => null);
+          mindResponse = resJson?.mdx_preview || resJson?.respuesta || resJson?.analisis || 'Análisis cognitivo completado.';
+          status = 'success';
+          statusMessage = 'Síntesis cognitiva generada por TGP Mind.';
+          return;
         }
-
-        const resJson = await response.json().catch(() => null);
-        mindResponse = resJson?.mdx_preview || resJson?.respuesta || resJson?.analisis || 'Análisis cognitivo completado.';
-        status = 'success';
-        statusMessage = 'Síntesis cognitiva generada por TGP Mind.';
-        return;
 
       // 3B. MODO TGP MAGAZINE (WikiForge + Gemini + R2 60/40)
       } else if (modoActivo === 'magazine') {
@@ -215,7 +260,8 @@
           throw new Error('Introduce un tema para forjar la edición Magazine.');
         }
 
-        response = await fetch(motorUrl, {
+        const magUrl = motorUrl.replace(/\/inbox\/?$/, '/magazine');
+        response = await fetch(magUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -234,11 +280,22 @@
 
         const resJson = await response.json().catch(() => null);
         magazineArticle = resJson;
+        const draftId = 'draft_id';
+
         if (typeof window !== 'undefined' && resJson) {
+          localStorage.setItem(`tgp_magazine_${draftId}`, JSON.stringify(resJson));
+          localStorage.setItem('tgp_magazine_draft', JSON.stringify(resJson));
           sessionStorage.setItem('tgp_current_magazine', JSON.stringify(resJson));
         }
+
         status = 'success';
-        statusMessage = `Edición Magazine "${resJson?.titulo || query}" forjada con éxito.`;
+        statusMessage = `Edición Magazine forjada. Redirigiendo a /magazine/${draftId}…`;
+
+        setTimeout(() => {
+          if (typeof window !== 'undefined') {
+            window.location.href = `/magazine/${draftId}`;
+          }
+        }, 600);
         return;
 
       // 4. MODOS VAULT: Bóveda D1 / Solo Imagen / Solo Texto
@@ -646,14 +703,60 @@
       {:else if modoActivo === 'cognitivo'}
         <div class="space-y-6">
           <div>
-            <label class="vault-label" for="mind-prompt">Instrucción Cognitiva / Consulta Multimodal</label>
+            <div class="flex items-center justify-between mb-2">
+              <label class="vault-label mb-0" for="mind-prompt">Instrucción Cognitiva / Consulta</label>
+              <div class="flex items-center gap-2 text-[10px] font-mono">
+                <span class="text-primary/40">Formato:</span>
+                <button
+                  type="button"
+                  on:click={() => formatoCognitivo = 'magazine'}
+                  class="px-2.5 py-1 rounded-full transition-all {formatoCognitivo === 'magazine' ? 'bg-vault-accent text-black font-bold shadow-[0_0_12px_rgba(201,169,110,0.3)]' : 'bg-white/5 text-primary/60 hover:bg-white/10'}"
+                >
+                  ✦ Revista (60/40)
+                </button>
+                <button
+                  type="button"
+                  on:click={() => formatoCognitivo = 'ensayo'}
+                  class="px-2.5 py-1 rounded-full transition-all {formatoCognitivo === 'ensayo' ? 'bg-vault-accent text-black font-bold' : 'bg-white/5 text-primary/60 hover:bg-white/10'}"
+                >
+                  📝 Ensayo MDX
+                </button>
+              </div>
+            </div>
             <textarea
               id="mind-prompt"
               rows="4"
               class="vault-input resize-y text-xs leading-relaxed"
-              placeholder="Ej. Realiza un análisis deconstructivo sobre los siguientes fragmentos respecto a la epistemología del olvido..."
+              placeholder={formatoCognitivo === 'magazine'
+                ? "Ej. Haz un artículo sobre Göbekli Tepe, Zenobia de Palmira o el Colapso del Bronce..."
+                : "Ej. Realiza un análisis deconstructivo sobre los siguientes fragmentos respecto a la epistemología del olvido..."}
               bind:value={mindPrompt}
             ></textarea>
+            {#if formatoCognitivo === 'magazine'}
+              <div class="mt-2 flex items-center justify-between text-[11px] font-mono">
+                <span class="text-vault-accent/90 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
+                  WikiForge extraerá imágenes y se redirigirá a /magazine/draft_id.
+                </span>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-primary/40">Tema:</span>
+                  <button
+                    type="button"
+                    on:click={() => magazineTheme = 'charcoal'}
+                    class="px-2 py-0.5 rounded text-[10px] {magazineTheme === 'charcoal' ? 'bg-white/20 text-white font-bold' : 'text-primary/50'}"
+                  >
+                    Charcoal
+                  </button>
+                  <button
+                    type="button"
+                    on:click={() => magazineTheme = 'paper'}
+                    class="px-2 py-0.5 rounded text-[10px] {magazineTheme === 'paper' ? 'bg-white/20 text-white font-bold' : 'text-primary/50'}"
+                  >
+                    Paper
+                  </button>
+                </div>
+              </div>
+            {/if}
           </div>
 
           <!-- Dropzone Opcional para Análisis Visual de IA -->

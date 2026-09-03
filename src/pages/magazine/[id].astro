@@ -1,7 +1,7 @@
 ---
 // src/pages/magazine/[id].astro
-// Visor Editorial Inmersivo 60/40 — The Great Puzzle Project
-// Soporta hidratación dinámica en vivo (sessionStorage) y renderizado estático
+// REVISTA UNIFICADA — Cada imagen es una página/spread completa 60/40 con su excerpt y texto
+// Soporta hidratación dinámica en vivo (localStorage / sessionStorage) y renderizado estático
 
 export function getStaticPaths() {
   return [
@@ -15,82 +15,104 @@ export function getStaticPaths() {
 
 const { id } = Astro.params;
 
-const MOCK_ARTICLE = {
-  theme: 'charcoal',
-  title: 'Göbekli Tepe',
-  subtitle: 'El santuario antes del tiempo',
-  category: 'ARQUEOLOGÍA COGNITIVA · TGP MIND',
-  date: '3 septiembre 2026',
-  excerpt: 'Doce mil años antes de que los primeros faraones pusieran la primera piedra, manos anónimas esculpieron pilares de caliza de seis toneladas en las colinas del sureste de Anatolia. Göbekli Tepe no es solo el templo más antiguo del mundo conocido: es la evidencia perturbadora de que la religión antecede a la agricultura.',
-  body: 'En 1994, el arqueólogo Klaus Schmidt llegó a una colina ondulada que los lugareños llamaban la montaña con ombligo. Lo que encontró bajo la superficie reescribió los manuales de prehistoria. Göbekli Tepe reveló un complejo de al menos veinte recintos circulares, con pilares en forma de T de hasta cinco metros y dieciséis toneladas, con relieves de zorros, escorpiones, grullas y buitres con una maestría que desafía cualquier narrativa lineal del progreso humano.\n\nLo que perturba profundamente no es la complejidad técnica sino la implicación sociológica. Para levantar estas estructuras se necesitaron cientos de personas organizadas durante generaciones. Pero no hay rastros de vivienda permanente en el sitio. Göbekli Tepe era un destino, no una residencia: un punto de convergencia periódico para comunidades de cazadores-recolectores.',
-  heroUrl: '/magazine-hero-gobekli.jpg',
-  heroCaption: 'Recinto C de Göbekli Tepe, ca. 9500 a.C. Los pilares centrales representan figuras antropomorfas estilizadas.',
-  heroCredit: 'Archaeological survey, southeast Anatolia',
-  slug: 'gobekli-tepe',
-  reading_time: '6 min',
-  galeria: {
-    slider: [
-      {
-        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png/1280px-The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
-        caption: 'Excavación general del recinto megalítico principal'
-      },
-      {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/G%C3%B6bekli_Tepe_Birthing_Woman_in_Leopard_Pillar_Building.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
-        caption: 'Pilar con grabado de leopardo y relieves zoomorfos'
-      }
-    ]
+const MOCK_PAGES = [
+  {
+    folio: '01',
+    tag: 'FOLIO I · EL ORIGEN SAGRADO',
+    title: 'Göbekli Tepe',
+    subtitle: 'El santuario antes del tiempo',
+    excerpt: 'Doce mil años antes de que los primeros faraones pusieran la primera piedra, manos anónimas esculpieron pilares de caliza de seis toneladas en las colinas de Anatolia. Göbekli Tepe no es solo el templo más antiguo del mundo: es la evidencia de que la religión antecede a la agricultura.',
+    body: 'En 1994, el arqueólogo Klaus Schmidt llegó a una colina ondulada que los lugareños llamaban la montaña con ombligo. Lo que encontró bajo la superficie reescribió los manuales de prehistoria. Göbekli Tepe reveló un complejo de al menos veinte recintos circulares con pilares en forma de T de hasta cinco metros y dieciséis toneladas.\n\nPara levantar estas estructuras se necesitaron cientos de personas coordinadas durante generaciones. Pero no hay rastros de vivienda permanente: Göbekli Tepe era un destino ritual periódico.',
+    imageUrl: '/magazine-hero-gobekli.jpg',
+    imageCaption: 'Recinto C de Göbekli Tepe, ca. 9500 a.C. Los pilares centrales representan figuras antropomorfas estilizadas.',
+    imageCredit: 'Archaeological survey, southeast Anatolia',
+    date: '3 septiembre 2026',
+    slug: 'gobekli-tepe',
+    readingTime: '6 min'
+  },
+  {
+    folio: '02',
+    tag: 'FOLIO II · LA ARQUITECTURA CÓSMICA',
+    title: 'La Geometría de lo Sagrado',
+    subtitle: 'Estratigrafía del décimo milenio',
+    excerpt: 'Bajo la colina se entrelazan al menos veinte círculos concéntricos de piedra. Cada recinto fue deliberadamente enterrado tras siglos de uso ceremonial, como si la clausura del templo fuera tan sagrada como su consagración.',
+    body: 'La precisión geométrica de los recintos A, B, C y D sugiere alineaciones astronómicas con Sirio y las Pléyades. Los constructores del Neolítico Precerámico no solo dominaban la extracción megalítica, sino un calendario ritual vinculado a los ciclos celestes y a la memoria colectiva.',
+    imageUrl: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png/1280px-The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+    imageCaption: 'Excavación general del recinto megalítico principal con estructuras circulares de soporte.',
+    imageCredit: 'Deutsches Archäologisches Institut',
+    date: '3 septiembre 2026',
+    slug: 'gobekli-tepe/estratigrafia',
+    readingTime: '4 min'
+  },
+  {
+    folio: '03',
+    tag: 'FOLIO III · EL BESTIARIO TOTÉMICO',
+    title: 'El Umbral Simbólico',
+    subtitle: 'Relieves en el corazón de la caliza',
+    excerpt: 'Leopardos, buitres sin cabeza, zorros y escorpiones pueblan la superficie de los monolitos. No son meras decoraciones cinegéticas: representan el umbral mítico entre los cazadores y el más allá.',
+    body: 'En las culturas chamánicas de Anatolia, el buitre es el psicopompo que transporta el alma de los difuntos hacia el firmamento. Los pilares de Göbekli Tepe son monolitos personificados: brazos estilizados doblados hacia el cinturón y manos talladas en bajo relieve protegiendo el centro del mundo.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/G%C3%B6bekli_Tepe_Birthing_Woman_in_Leopard_Pillar_Building.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
+    imageCaption: 'Pilar con grabado zoomorfo de leopardo y relieves de la fauna pleistocénica.',
+    imageCredit: 'Şanlıurfa Museum Collection',
+    date: '3 septiembre 2026',
+    slug: 'gobekli-tepe/simbologia',
+    readingTime: '5 min'
   }
-};
+];
+
+const initialPage = MOCK_PAGES[0];
 ---
 <!DOCTYPE html>
 <html lang="es" class="theme-charcoal">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="page-title">{MOCK_ARTICLE.title} — TGP Magazine</title>
-  <meta id="page-desc" name="description" content={MOCK_ARTICLE.excerpt} />
+  <title id="page-title">{initialPage.title} — TGP Magazine</title>
+  <meta id="page-desc" name="description" content={initialPage.excerpt} />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* TEMAS DUALES */
     html.theme-charcoal {
-      --bg: #111111;
+      --bg: #0f0f0f;
+      --bg-panel: rgba(20, 20, 20, 0.95);
       --text-primary: #f0ede8;
-      --text-muted: rgba(240, 237, 232, 0.65);
+      --text-muted: rgba(240, 237, 232, 0.68);
       --text-dim: rgba(240, 237, 232, 0.45);
       --accent: #c9a96e;
-      --accent-glow: rgba(201, 169, 110, 0.15);
+      --accent-soft: rgba(201, 169, 110, 0.15);
       --border: rgba(255, 255, 255, 0.08);
-      --shadow: rgba(0, 0, 0, 0.8);
-      --caption-bg: rgba(17, 17, 17, 0.75);
+      --shadow: rgba(0, 0, 0, 0.85);
+      --caption-bg: rgba(15, 15, 15, 0.82);
       --tag-bg: rgba(201, 169, 110, 0.12);
       --tag-color: #c9a96e;
-      --close-bg: rgba(255, 255, 255, 0.06);
-      --close-hover: rgba(255, 255, 255, 0.14);
-      --card-bg: rgba(255, 255, 255, 0.03);
+      --control-bg: rgba(255, 255, 255, 0.05);
+      --control-hover: rgba(255, 255, 255, 0.14);
+      --card-active: rgba(201, 169, 110, 0.2);
     }
 
     html.theme-paper {
-      --bg: #f5f2eb;
+      --bg: #f4f1eb;
+      --bg-panel: rgba(244, 241, 235, 0.95);
       --text-primary: #181715;
       --text-muted: rgba(24, 23, 21, 0.75);
-      --text-dim: rgba(24, 23, 21, 0.55);
+      --text-dim: rgba(24, 23, 21, 0.52);
       --accent: #8b6b38;
-      --accent-glow: rgba(139, 107, 56, 0.15);
+      --accent-soft: rgba(139, 107, 56, 0.15);
       --border: rgba(0, 0, 0, 0.1);
-      --shadow: rgba(0, 0, 0, 0.15);
-      --caption-bg: rgba(245, 242, 235, 0.85);
+      --shadow: rgba(0, 0, 0, 0.16);
+      --caption-bg: rgba(244, 241, 235, 0.9);
       --tag-bg: rgba(139, 107, 56, 0.1);
       --tag-color: #8b6b38;
-      --close-bg: rgba(0, 0, 0, 0.05);
-      --close-hover: rgba(0, 0, 0, 0.12);
-      --card-bg: rgba(0, 0, 0, 0.02);
+      --control-bg: rgba(0, 0, 0, 0.05);
+      --control-hover: rgba(0, 0, 0, 0.12);
+      --card-active: rgba(139, 107, 56, 0.2);
     }
 
     html, body {
@@ -132,6 +154,7 @@ const MOCK_ARTICLE = {
       z-index: 1;
     }
 
+    /* Grid 60/40 */
     .mag-grid {
       display: grid;
       grid-template-columns: 6fr 4fr;
@@ -144,7 +167,13 @@ const MOCK_ARTICLE = {
       position: relative;
       height: 100vh;
       overflow: hidden;
-      animation: fadeLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .mag-visual__img-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
     }
 
     .mag-visual__img {
@@ -154,19 +183,19 @@ const MOCK_ARTICLE = {
       display: block;
       border-radius: 0 24px 24px 0;
       box-shadow: 12px 0 70px var(--shadow);
-      transition: transform 6s ease;
+      transition: opacity 0.4s ease, transform 6s ease;
     }
 
     .mag-visual:hover .mag-visual__img {
-      transform: scale(1.03);
+      transform: scale(1.025);
     }
 
     .mag-visual__overlay {
       position: absolute;
       inset: 0;
       border-radius: 0 24px 24px 0;
-      background: linear-gradient(to right, rgba(0,0,0,0) 60%, rgba(0,0,0,0.3) 100%),
-                  linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 45%);
+      background: linear-gradient(to right, rgba(0,0,0,0) 65%, rgba(0,0,0,0.35) 100%),
+                  linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 45%);
       pointer-events: none;
     }
 
@@ -177,8 +206,8 @@ const MOCK_ARTICLE = {
       right: 32px;
       padding: 16px 20px;
       background: var(--caption-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       border-radius: 12px;
       border: 1px solid var(--border);
       font-size: 11px;
@@ -186,6 +215,7 @@ const MOCK_ARTICLE = {
       letter-spacing: 0.04em;
       color: var(--text-primary);
       line-height: 1.6;
+      transition: opacity 0.3s ease;
     }
 
     .mag-visual__caption strong {
@@ -200,12 +230,12 @@ const MOCK_ARTICLE = {
       height: 100vh;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 56px 52px 64px;
+      padding: 72px 52px 48px;
       display: flex;
       flex-direction: column;
       scrollbar-width: thin;
       scrollbar-color: var(--border) transparent;
-      animation: fadeRight 0.8s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+      transition: opacity 0.35s ease;
     }
 
     .mag-content::-webkit-scrollbar { width: 4px; }
@@ -223,7 +253,7 @@ const MOCK_ARTICLE = {
       font-weight: 600;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       width: fit-content;
     }
 
@@ -239,108 +269,184 @@ const MOCK_ARTICLE = {
 
     .mag-title {
       font-family: 'Bodoni Moda', Georgia, serif;
-      font-size: clamp(2.6rem, 4.2vw, 4.8rem);
+      font-size: clamp(2.4rem, 3.8vw, 4.4rem);
       font-weight: 400;
       line-height: 1.05;
       letter-spacing: -0.02em;
       color: var(--text-primary);
       margin-bottom: 12px;
+      transition: opacity 0.3s ease;
     }
 
     .mag-subtitle {
       font-family: 'Bodoni Moda', Georgia, serif;
-      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+      font-size: clamp(1rem, 1.35vw, 1.25rem);
       font-weight: 400;
       font-style: italic;
       color: var(--text-muted);
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       line-height: 1.4;
+      transition: opacity 0.3s ease;
     }
 
     .mag-divider {
       width: 48px;
       height: 1px;
       background: var(--accent);
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       opacity: 0.7;
     }
 
     .mag-excerpt {
-      font-size: clamp(0.9rem, 1.15vw, 1.02rem);
+      font-size: clamp(0.88rem, 1.1vw, 1rem);
       font-weight: 300;
-      line-height: 1.9;
+      line-height: 1.88;
       color: var(--text-muted);
-      margin-bottom: 32px;
+      margin-bottom: 28px;
+      transition: opacity 0.3s ease;
     }
 
     .mag-body {
-      font-size: clamp(0.85rem, 1.05vw, 0.92rem);
+      font-size: clamp(0.83rem, 1vw, 0.9rem);
       font-weight: 300;
       line-height: 1.95;
       color: var(--text-dim);
+      transition: opacity 0.3s ease;
     }
 
-    .mag-body p + p { margin-top: 18px; }
+    .mag-body p + p { margin-top: 16px; }
 
-    /* Galería secundaria / Slider previews */
-    .mag-gallery {
-      margin-top: 40px;
-      padding-top: 32px;
+    /* ── TIRA INFERIOR DE PÁGINAS / SPREADS ── */
+    .mag-spreads-nav {
+      margin-top: 36px;
+      padding-top: 24px;
       border-top: 1px solid var(--border);
     }
 
-    .mag-gallery__title {
-      font-size: 10px;
-      font-mono: monospace;
+    .mag-spreads-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .mag-spreads-title {
+      font-size: 9px;
+      font-family: monospace;
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 16px;
     }
 
-    .mag-gallery__grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    .mag-spreads-hint {
+      font-size: 9px;
+      font-family: monospace;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+    }
+
+    .mag-spreads-track {
+      display: flex;
       gap: 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 4px;
     }
 
-    .mag-gallery__item {
+    .mag-spreads-track::-webkit-scrollbar { display: none; }
+
+    .mag-spread-thumb {
+      flex: 0 0 110px;
       border-radius: 10px;
       overflow: hidden;
       border: 1px solid var(--border);
-      background: var(--card-bg);
-      transition: transform 0.25s, border-color 0.25s;
+      background: var(--control-bg);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.25s ease;
+      position: relative;
     }
 
-    .mag-gallery__item:hover {
-      transform: translateY(-2px);
+    .mag-spread-thumb:hover {
       border-color: var(--accent);
+      transform: translateY(-2px);
     }
 
-    .mag-gallery__item img {
+    .mag-spread-thumb.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 14px var(--accent-soft);
+    }
+
+    .mag-spread-thumb img {
       width: 100%;
-      height: 80px;
+      height: 60px;
       object-fit: cover;
       display: block;
     }
 
-    .mag-gallery__caption {
+    .mag-spread-thumb__info {
       padding: 6px 8px;
-      font-size: 9px;
-      line-height: 1.35;
-      color: var(--text-dim);
+    }
+
+    .mag-spread-thumb__num {
+      font-size: 8px;
+      font-family: monospace;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      display: block;
+    }
+
+    .mag-spread-thumb__title {
+      font-size: 8.5px;
+      font-weight: 400;
+      color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      display: block;
     }
 
-    .mag-spacer { flex: 1; min-height: 40px; }
+    /* Botón siguiente página al pie */
+    .mag-next-page-banner {
+      margin-top: 20px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--control-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mag-next-page-banner:hover {
+      background: var(--control-hover);
+      border-color: var(--accent);
+    }
+
+    .mag-next-page-banner span {
+      font-size: 10px;
+      font-family: monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .mag-next-page-banner strong {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+
+    .mag-spacer { flex: 1; min-height: 28px; }
 
     .mag-meta {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-top: 24px;
+      padding-top: 20px;
       border-top: 1px solid var(--border);
       margin-top: 16px;
     }
@@ -361,10 +467,10 @@ const MOCK_ARTICLE = {
       color: var(--accent);
     }
 
-    /* ── BARRA SUPERIOR DE CONTROLES ── */
+    /* ── BARRA SUPERIOR CON PAGINADOR EDITORIAL ── */
     .mag-topbar {
       position: fixed;
-      top: 24px;
+      top: 20px;
       left: 28px;
       right: 28px;
       display: flex;
@@ -374,11 +480,9 @@ const MOCK_ARTICLE = {
       z-index: 100;
     }
 
-    .mag-topbar > * {
-      pointer-events: auto;
-    }
+    .mag-topbar > * { pointer-events: auto; }
 
-    /* Theme Toggle Switcher */
+    /* Theme Switcher */
     .mag-theme-switcher {
       display: inline-flex;
       align-items: center;
@@ -412,14 +516,81 @@ const MOCK_ARTICLE = {
       font-weight: 600;
     }
 
+    /* Paginador Editorial Central */
+    .mag-pagination {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--caption-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 5px 14px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+    }
+
+    .mag-page-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .mag-page-btn:hover:not(:disabled) {
+      background: var(--control-hover);
+      transform: scale(1.1);
+      color: var(--accent);
+    }
+
+    .mag-page-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+
+    .mag-page-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+    }
+
+    .mag-page-label {
+      font-size: 8px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .mag-page-current {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .mag-page-divider {
+      color: var(--text-dim);
+    }
+
+    .mag-page-total {
+      color: var(--text-dim);
+    }
+
     .mag-close {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      background: var(--close-bg);
+      background: var(--control-bg);
       backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       cursor: pointer;
@@ -429,25 +600,28 @@ const MOCK_ARTICLE = {
     }
 
     .mag-close:hover {
-      background: var(--close-hover);
+      background: var(--control-hover);
       transform: scale(1.08);
     }
 
-    .mag-close svg { width: 16px; height: 16px; }
+    .mag-close svg { width: 15px; height: 15px; }
 
-    @keyframes fadeLeft { from{opacity:0;transform:translateX(-24px)} to{opacity:1;transform:translateX(0)} }
-    @keyframes fadeRight { from{opacity:0;transform:translateX(24px)} to{opacity:1;transform:translateX(0)} }
+    /* Clases de animación de cambio de página */
+    .fade-out {
+      opacity: 0 !important;
+    }
 
     /* Mobile */
-    @media(max-width: 820px){
+    @media(max-width: 860px){
       html, body { overflow: auto; }
       .mag-viewer, .mag-grid { height: auto; }
       .mag-grid { grid-template-columns: 1fr; }
-      .mag-visual { height: 60vw; min-height: 280px; max-height: 460px; }
+      .mag-visual { height: 65vw; min-height: 290px; max-height: 480px; }
       .mag-visual__img, .mag-visual__overlay { border-radius: 0 0 24px 24px; }
-      .mag-content { height: auto; overflow: visible; padding: 40px 24px 60px; }
-      .mag-title { font-size: 2.3rem; }
-      .mag-topbar { top: 16px; left: 16px; right: 16px; }
+      .mag-content { height: auto; overflow: visible; padding: 36px 20px 60px; }
+      .mag-title { font-size: 2.2rem; }
+      .mag-topbar { top: 12px; left: 14px; right: 14px; }
+      .mag-pagination { padding: 4px 10px; }
     }
   </style>
 </head>
@@ -455,13 +629,37 @@ const MOCK_ARTICLE = {
 
 <div class="mag-viewer">
 
-  <!-- Barra superior con selector de tema y botón cerrar -->
+  <!-- ─── BARRA SUPERIOR CON CONTROLES Y PAGINADOR EDITORIAL ─── -->
   <div class="mag-topbar">
+    <!-- Selector de tema -->
     <div class="mag-theme-switcher" role="group" aria-label="Cambiar tema">
       <button type="button" class="mag-theme-btn active" id="btn-charcoal" onclick="setTheme('charcoal')">✦ Charcoal</button>
       <button type="button" class="mag-theme-btn" id="btn-paper" onclick="setTheme('paper')">◈ Paper</button>
     </div>
 
+    <!-- Paginador central de la revista unificada -->
+    <div class="mag-pagination" role="navigation" aria-label="Navegación de páginas">
+      <button type="button" class="mag-page-btn" id="prev-page-btn" aria-label="Página anterior" onclick="changePage(-1)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="mag-page-indicator">
+        <span class="mag-page-label">FOLIO</span>
+        <span class="mag-page-current" id="current-page-num">01</span>
+        <span class="mag-page-divider">/</span>
+        <span class="mag-page-total" id="total-pages-num">03</span>
+      </div>
+
+      <button type="button" class="mag-page-btn" id="next-page-btn" aria-label="Página siguiente" onclick="changePage(1)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Botón volver a la Bóveda -->
     <a href="/tgp-vault" class="mag-close" aria-label="Volver a la Bóveda">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M18 6L6 18M6 6l12 12"/>
@@ -473,65 +671,87 @@ const MOCK_ARTICLE = {
 
     <!-- ─── BLOQUE VISUAL 60% ─── -->
     <div class="mag-visual">
-      <img
-        id="hero-img"
-        class="mag-visual__img"
-        src={MOCK_ARTICLE.heroUrl}
-        alt={MOCK_ARTICLE.title}
-        loading="eager"
-      />
+      <div class="mag-visual__img-wrapper">
+        <img
+          id="hero-img"
+          class="mag-visual__img"
+          src={initialPage.imageUrl}
+          alt={initialPage.title}
+          loading="eager"
+        />
+      </div>
       <div class="mag-visual__overlay"></div>
       <div class="mag-visual__caption" id="hero-caption">
-        <strong id="caption-strong">{MOCK_ARTICLE.heroCaption}</strong>
-        <span id="caption-credit">{MOCK_ARTICLE.heroCredit}</span>
+        <strong id="caption-strong">{initialPage.imageCaption}</strong>
+        <span id="caption-credit">{initialPage.imageCredit}</span>
       </div>
     </div>
 
     <!-- ─── BLOQUE CONTENIDO 40% ─── -->
-    <div class="mag-content">
+    <div class="mag-content" id="mag-content-col">
       <span class="mag-tag" id="article-tag">
         <span class="mag-tag__dot"></span>
-        <span id="tag-text">{MOCK_ARTICLE.category}</span>
+        <span id="tag-text">{initialPage.tag}</span>
       </span>
 
-      <h1 class="mag-title" id="article-title">{MOCK_ARTICLE.title}</h1>
-      <p class="mag-subtitle" id="article-subtitle">{MOCK_ARTICLE.subtitle}</p>
+      <h1 class="mag-title" id="article-title">{initialPage.title}</h1>
+      <p class="mag-subtitle" id="article-subtitle">{initialPage.subtitle}</p>
 
       <div class="mag-divider"></div>
 
-      <p class="mag-excerpt" id="article-excerpt">{MOCK_ARTICLE.excerpt}</p>
+      <p class="mag-excerpt" id="article-excerpt">{initialPage.excerpt}</p>
 
       <div class="mag-body" id="article-body">
-        {MOCK_ARTICLE.body.split('\n\n').map((p: string) => <p>{p}</p>)}
+        {initialPage.body.split('\n\n').map((p: string) => <p>{p}</p>)}
       </div>
 
-      <!-- Galería secundaria si existe -->
-      <div class="mag-gallery" id="article-gallery">
-        <div class="mag-gallery__title">✦ Galería de Artefactos</div>
-        <div class="mag-gallery__grid" id="gallery-grid">
-          {MOCK_ARTICLE.galeria.slider.map((item: any) => (
-            <div class="mag-gallery__item">
-              <img src={item.url} alt={item.caption} loading="lazy" />
-              <div class="mag-gallery__caption">{item.caption}</div>
-            </div>
+      <!-- Tira de Miniaturas de Folios / Capítulos -->
+      <div class="mag-spreads-nav" id="spreads-nav">
+        <div class="mag-spreads-header">
+          <span class="mag-spreads-title">✦ Folios de la Revista</span>
+          <span class="mag-spreads-hint">Usa flechas ← →</span>
+        </div>
+        <div class="mag-spreads-track" id="spreads-track">
+          {MOCK_PAGES.map((page, idx) => (
+            <button
+              type="button"
+              class={`mag-spread-thumb ${idx === 0 ? 'active' : ''}`}
+              onclick={`goToPage(${idx})`}
+            >
+              <img src={page.imageUrl} alt={page.title} loading="lazy" />
+              <div class="mag-spread-thumb__info">
+                <span class="mag-spread-thumb__num">FOLIO {page.folio}</span>
+                <span class="mag-spread-thumb__title">{page.title}</span>
+              </div>
+            </button>
           ))}
         </div>
+      </div>
+
+      <!-- Banner de siguiente página -->
+      <div class="mag-next-page-banner" id="next-page-banner" onclick="changePage(1)">
+        <span>Siguiente Folio →</span>
+        <strong id="next-page-title">{MOCK_PAGES[1].title}</strong>
       </div>
 
       <div class="mag-spacer"></div>
 
       <div class="mag-meta">
-        <span class="mag-meta__date" id="meta-date">{MOCK_ARTICLE.date}</span>
-        <span class="mag-meta__slug" id="meta-slug">/{MOCK_ARTICLE.slug}</span>
-        <span class="mag-meta__read" id="meta-read">{MOCK_ARTICLE.reading_time}</span>
+        <span class="mag-meta__date" id="meta-date">{initialPage.date}</span>
+        <span class="mag-meta__slug" id="meta-slug">/{initialPage.slug}</span>
+        <span class="mag-meta__read" id="meta-read">{initialPage.readingTime}</span>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- ─── SCRIPT DE HIDRATACIÓN DINÁMICA & TEMAS ─── -->
+<!-- ─── SCRIPT DE CONTROL EDITORIAL MULTI-PÁGINA & TEMAS ─── -->
 <script is:inline>
+  // Estado global de páginas
+  let magazinePages = [];
+  let currentPageIndex = 0;
+
   function setTheme(t) {
     const html = document.documentElement;
     const btnC = document.getElementById('btn-charcoal');
@@ -548,8 +768,128 @@ const MOCK_ARTICLE = {
     }
   }
 
-  // Hidratación desde localStorage / sessionStorage (si fue generado en vivo por TGP Mind)
-  (function hydrateLiveArticle() {
+  // Renderiza una página específica en pantalla con micro-transición suave
+  function renderPage(index, animate = true) {
+    if (!magazinePages || magazinePages.length === 0) return;
+    if (index < 0 || index >= magazinePages.length) return;
+
+    currentPageIndex = index;
+    const page = magazinePages[index];
+
+    const imgEl = document.getElementById('hero-img');
+    const capEl = document.getElementById('hero-caption');
+    const contentCol = document.getElementById('mag-content-col');
+
+    function updateDOM() {
+      // 1. Imagen y pie
+      if (imgEl && page.imageUrl) {
+        imgEl.src = page.imageUrl;
+        imgEl.alt = page.title;
+      }
+      const elCapStrong = document.getElementById('caption-strong');
+      if (elCapStrong) elCapStrong.textContent = page.imageCaption || page.subtitle || '';
+      const elCapCredit = document.getElementById('caption-credit');
+      if (elCapCredit) elCapCredit.textContent = page.imageCredit || '';
+
+      // 2. Textos
+      document.title = `${page.title} — TGP Magazine`;
+      const elTag = document.getElementById('tag-text');
+      if (elTag) elTag.textContent = page.tag || `FOLIO ${String(index + 1).padStart(2, '0')}`;
+      const elTitle = document.getElementById('article-title');
+      if (elTitle) elTitle.textContent = page.title;
+      const elSub = document.getElementById('article-subtitle');
+      if (elSub) elSub.textContent = page.subtitle || '';
+      const elExcerpt = document.getElementById('article-excerpt');
+      if (elExcerpt) elExcerpt.textContent = page.excerpt || '';
+      const elBody = document.getElementById('article-body');
+      if (elBody && page.body) {
+        elBody.innerHTML = page.body.split('\n\n').map(p => `<p>${p}</p>`).join('');
+      }
+
+      // 3. Metadata
+      const elDate = document.getElementById('meta-date');
+      if (elDate) elDate.textContent = page.date || new Date().toLocaleDateString('es-ES');
+      const elSlug = document.getElementById('meta-slug');
+      if (elSlug) elSlug.textContent = `/${page.slug || 'magazine'}`;
+      const elRead = document.getElementById('meta-read');
+      if (elRead) elRead.textContent = page.readingTime || '5 min lectura';
+
+      // 4. Paginador
+      const elCurNum = document.getElementById('current-page-num');
+      if (elCurNum) elCurNum.textContent = String(index + 1).padStart(2, '0');
+      const elTotNum = document.getElementById('total-pages-num');
+      if (elTotNum) elTotNum.textContent = String(magazinePages.length).padStart(2, '0');
+
+      const prevBtn = document.getElementById('prev-page-btn');
+      const nextBtn = document.getElementById('next-page-btn');
+      if (prevBtn) prevBtn.disabled = index === 0;
+      if (nextBtn) nextBtn.disabled = index === magazinePages.length - 1;
+
+      // 5. Miniaturas activas
+      const thumbs = document.querySelectorAll('.mag-spread-thumb');
+      thumbs.forEach((t, i) => {
+        if (i === index) t.classList.add('active');
+        else t.classList.remove('active');
+      });
+
+      // 6. Banner siguiente folio
+      const banner = document.getElementById('next-page-banner');
+      const bannerTitle = document.getElementById('next-page-title');
+      if (banner) {
+        if (index < magazinePages.length - 1) {
+          banner.style.display = 'flex';
+          if (bannerTitle) bannerTitle.textContent = magazinePages[index + 1].title;
+        } else {
+          banner.style.display = 'none';
+        }
+      }
+
+      // Scroll top de la columna de texto al cambiar de página
+      if (contentCol) contentCol.scrollTop = 0;
+    }
+
+    if (animate) {
+      if (imgEl) imgEl.classList.add('fade-out');
+      if (capEl) capEl.classList.add('fade-out');
+      if (contentCol) contentCol.classList.add('fade-out');
+
+      setTimeout(() => {
+        updateDOM();
+        if (imgEl) imgEl.classList.remove('fade-out');
+        if (capEl) capEl.classList.remove('fade-out');
+        if (contentCol) contentCol.classList.remove('fade-out');
+      }, 180);
+    } else {
+      updateDOM();
+    }
+  }
+
+  // Navegación relativa (+1, -1)
+  function changePage(delta) {
+    const nextIdx = currentPageIndex + delta;
+    if (nextIdx >= 0 && nextIdx < magazinePages.length) {
+      renderPage(nextIdx, true);
+    }
+  }
+
+  // Navegación absoluta a folio específico
+  function goToPage(idx) {
+    if (idx !== currentPageIndex && idx >= 0 && idx < magazinePages.length) {
+      renderPage(idx, true);
+    }
+  }
+
+  // Atajos de teclado (flechas ← y →)
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+      changePage(1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      changePage(-1);
+    }
+  });
+
+  // ─── CARGA INICIAL E HIDRATACIÓN DINÁMICA ───
+  (function initMagazine() {
     try {
       const pathParts = window.location.pathname.split('/').filter(Boolean);
       const curId = pathParts[pathParts.length - 1] || 'draft_id';
@@ -559,78 +899,129 @@ const MOCK_ARTICLE = {
                || sessionStorage.getItem('tgp_current_magazine')
                || localStorage.getItem('tgp_current_magazine');
 
-      if (!raw) return;
+      if (raw) {
+        const art = JSON.parse(raw);
+        if (art && art.titulo) {
+          console.log('[TGP Magazine] Creando revista unificada con:', art.titulo);
 
-      const art = JSON.parse(raw);
-      if (!art || !art.titulo) return;
+          // Página 1: Hero Principal
+          const pages = [
+            {
+              folio: '01',
+              tag: 'FOLIO I · SÍNTESIS COGNITIVA',
+              title: art.titulo,
+              subtitle: art.subtitulo || 'Edición Inmersiva TGP',
+              excerpt: art.excerpt || '',
+              body: art.body || '',
+              imageUrl: art.heroUrl || '/magazine-hero-gobekli.jpg',
+              imageCaption: art.heroCaption || art.subtitulo || '',
+              imageCredit: art.heroCredit || 'TGP Vault · R2 Archive',
+              date: art.date || new Date().toLocaleDateString('es-ES'),
+              slug: art.slug || 'ensayo',
+              readingTime: art.reading_time || '6 min'
+            }
+          ];
 
-      console.log('[TGP Magazine] Hidratando con artículo en vivo:', art.titulo);
+          // Páginas 2..N: Cada artefacto del slider se convierte en un folio editorial completo
+          const slider = art.galeria?.slider;
+          if (Array.isArray(slider) && slider.length > 0) {
+            slider.forEach((item, idx) => {
+              const folioNum = String(idx + 2).padStart(2, '0');
+              const rawCaption = item.caption || `Artefacto Visual ${idx + 1}`;
+              const captionParts = rawCaption.split(':');
+              const subTitle = captionParts.length > 1 ? captionParts[0].trim() : `Análisis del Artefacto ${idx + 1}`;
+              const desc = captionParts.length > 1 ? captionParts.slice(1).join(':').trim() : rawCaption;
 
-      // Título y meta
-      document.title = `${art.titulo} — TGP Magazine`;
-      const elTitle = document.getElementById('article-title');
-      if (elTitle) elTitle.textContent = art.titulo;
+              pages.push({
+                folio: folioNum,
+                tag: `FOLIO ${folioNum} · REGISTRO ARQUEOLÓGICO`,
+                title: subTitle,
+                subtitle: `Perspectiva material e iconográfica`,
+                excerpt: desc,
+                body: `Este registro fotográfico evidencia los patrones materiales preservados en la estratigrafía del yacimiento. La correlación entre la técnica constructiva y la narrativa iconográfica revela un dominio tecnológico avanzado en diálogo directo con las estructuras sagradas de la época.`,
+                imageUrl: item.url,
+                imageCaption: desc,
+                imageCredit: item.credit || art.heroCredit || 'Colección TGP Vault',
+                date: art.date || new Date().toLocaleDateString('es-ES'),
+                slug: `${art.slug || 'ensayo'}/folio-${folioNum}`,
+                readingTime: '3 min'
+              });
+            });
+          }
 
-      const elSub = document.getElementById('article-subtitle');
-      if (elSub) elSub.textContent = art.subtitulo || '';
+          magazinePages = pages;
 
-      const elExcerpt = document.getElementById('article-excerpt');
-      if (elExcerpt) elExcerpt.textContent = art.excerpt || '';
+          // Reconstruir la tira de miniaturas
+          const track = document.getElementById('spreads-track');
+          if (track) {
+            track.innerHTML = magazinePages.map((p, idx) => `
+              <button type="button" class="mag-spread-thumb ${idx === 0 ? 'active' : ''}" onclick="goToPage(${idx})">
+                <img src="${p.imageUrl}" alt="${p.title}" loading="lazy" />
+                <div class="mag-spread-thumb__info">
+                  <span class="mag-spread-thumb__num">FOLIO ${p.folio}</span>
+                  <span class="mag-spread-thumb__title">${p.title}</span>
+                </div>
+              </button>
+            `).join('');
+          }
 
-      const elBody = document.getElementById('article-body');
-      if (elBody && art.body) {
-        elBody.innerHTML = art.body.split('\n\n').map(p => `<p>${p}</p>`).join('');
+          if (art.theme) setTheme(art.theme);
+
+          renderPage(0, false);
+          return;
+        }
       }
-
-      // Hero imagen
-      const elHero = document.getElementById('hero-img');
-      if (elHero && art.heroUrl) {
-        elHero.src = art.heroUrl;
-        elHero.alt = art.titulo;
-      }
-
-      // Caption
-      const elCapStrong = document.getElementById('caption-strong');
-      if (elCapStrong) elCapStrong.textContent = art.heroCaption || art.subtitulo || '';
-
-      const elCapCredit = document.getElementById('caption-credit');
-      if (elCapCredit) elCapCredit.textContent = art.heroCredit || '';
-
-      // Tag
-      const elTag = document.getElementById('tag-text');
-      if (elTag) elTag.textContent = art.category || 'HISTORIA · TGP MIND';
-
-      // Meta
-      const elDate = document.getElementById('meta-date');
-      if (elDate) elDate.textContent = art.date || new Date().toLocaleDateString('es-ES');
-
-      const elSlug = document.getElementById('meta-slug');
-      if (elSlug) elSlug.textContent = `/${art.slug || 'magazine'}`;
-
-      const elRead = document.getElementById('meta-read');
-      if (elRead) elRead.textContent = art.reading_time || '5 min lectura';
-
-      // Galería
-      const slider = art.galeria?.slider;
-      const elGrid = document.getElementById('gallery-grid');
-      const elGallery = document.getElementById('article-gallery');
-      if (elGrid && Array.isArray(slider) && slider.length > 0) {
-        elGrid.innerHTML = slider.map(s => `
-          <div class="mag-gallery__item">
-            <img src="${s.url}" alt="${s.caption || ''}" loading="lazy" />
-            <div class="mag-gallery__caption">${s.caption || ''}</div>
-          </div>
-        `).join('');
-      } else if (!slider || slider.length === 0) {
-        if (elGallery) elGallery.style.display = 'none';
-      }
-
-      // Aplicar tema guardado
-      if (art.theme) setTheme(art.theme);
-
     } catch (e) {
       console.warn('[TGP Magazine] Error en hidratación:', e);
     }
+
+    // Si no hay datos dinámicos en storage, usar las páginas mock de Göbekli Tepe
+    magazinePages = [
+      {
+        folio: '01',
+        tag: 'FOLIO I · EL ORIGEN SAGRADO',
+        title: 'Göbekli Tepe',
+        subtitle: 'El santuario antes del tiempo',
+        excerpt: 'Doce mil años antes de que los primeros faraones pusieran la primera piedra, manos anónimas esculpieron pilares de caliza de seis toneladas en las colinas de Anatolia. Göbekli Tepe no es solo el templo más antiguo del mundo: es la evidencia de que la religión antecede a la agricultura.',
+        body: 'En 1994, el arqueólogo Klaus Schmidt llegó a una colina ondulada que los lugareños llamaban la montaña con ombligo. Lo que encontró bajo la superficie reescribió los manuales de prehistoria. Göbekli Tepe reveló un complejo de al menos veinte recintos circulares con pilares en forma de T de hasta cinco metros y dieciséis toneladas.\n\nPara levantar estas estructuras se necesitaron cientos de personas coordinadas durante generaciones. Pero no hay rastros de vivienda permanente: Göbekli Tepe era un destino ritual periódico.',
+        imageUrl: '/magazine-hero-gobekli.jpg',
+        imageCaption: 'Recinto C de Göbekli Tepe, ca. 9500 a.C. Los pilares centrales representan figuras antropomorfas estilizadas.',
+        imageCredit: 'Archaeological survey, southeast Anatolia',
+        date: '3 septiembre 2026',
+        slug: 'gobekli-tepe',
+        readingTime: '6 min'
+      },
+      {
+        folio: '02',
+        tag: 'FOLIO II · LA ARQUITECTURA CÓSMICA',
+        title: 'La Geometría de lo Sagrado',
+        subtitle: 'Estratigrafía del décimo milenio',
+        excerpt: 'Bajo la colina se entrelazan al menos veinte círculos concéntricos de piedra. Cada recinto fue deliberadamente enterrado tras siglos de uso ceremonial, como si la clausura del templo fuera tan sagrada como su consagración.',
+        body: 'La precisión geométrica de los recintos A, B, C y D sugiere alineaciones astronómicas con Sirio y las Pléyades. Los constructores del Neolítico Precerámico no solo dominaban la extracción megalítica, sino un calendario ritual vinculado a los ciclos celestes y a la memoria colectiva.',
+        imageUrl: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png/1280px-The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        imageCaption: 'Excavación general del recinto megalítico principal con estructuras circulares de soporte.',
+        imageCredit: 'Deutsches Archäologisches Institut',
+        date: '3 septiembre 2026',
+        slug: 'gobekli-tepe/estratigrafia',
+        readingTime: '4 min'
+      },
+      {
+        folio: '03',
+        tag: 'FOLIO III · EL BESTIARIO TOTÉMICO',
+        title: 'El Umbral Simbólico',
+        subtitle: 'Relieves en el corazón de la caliza',
+        excerpt: 'Leopardos, buitres sin cabeza, zorros y escorpiones pueblan la superficie de los monolitos. No son meras decoraciones cinegéticas: representan el umbral mítico entre los cazadores y el más allá.',
+        body: 'En las culturas chamánicas de Anatolia, el buitre es el psicopompo que transporta el alma de los difuntos hacia el firmamento. Los pilares de Göbekli Tepe son monolitos personificados: brazos estilizados doblados hacia el cinturón y manos talladas en bajo relieve protegiendo el centro del mundo.',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/G%C3%B6bekli_Tepe_Birthing_Woman_in_Leopard_Pillar_Building.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
+        imageCaption: 'Pilar con grabado zoomorfo de leopardo y relieves de la fauna pleistocénica.',
+        imageCredit: 'Şanlıurfa Museum Collection',
+        date: '3 septiembre 2026',
+        slug: 'gobekli-tepe/simbologia',
+        readingTime: '5 min'
+      }
+    ];
+
+    renderPage(0, false);
   })();
 </script>
 
