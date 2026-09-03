@@ -5,6 +5,8 @@
 export const TGP_MOTORES = {
   /** El herrero: Transmutación a WebP, inserción en D1 y guardado en R2 */
   vault:  import.meta.env.PUBLIC_VAULT_WEBHOOK_URL  as string | undefined,
+  /** El transmutador visual: Procesa Base64 e ingesta histórica (tgp-app) */
+  vision: import.meta.env.PUBLIC_VISION_WEBHOOK_URL as string | undefined,
   /** El explorador: Extracción de Wikimedia y scraping de sitios externos */
   proxy:  import.meta.env.PUBLIC_PROXY_URL          as string | undefined,
   /** El autómata: Análisis, generación de texto y flujos cognitivos (Gemini/Vertex) */
@@ -25,8 +27,8 @@ export interface ModoOperacion {
 export const MODOS_OPERACION: ModoOperacion[] = [
   {
     id: 'historico', label: 'Bóveda D1',
-    desc: 'Ingesta completa: Imagen + Texto histórico → D1 + R2',
-    motor: 'vault', files: true, texto: true, busqueda: false,
+    desc: 'Ingesta completa: Imagen + Texto histórico -> D1 + R2',
+    motor: 'vision', files: true, texto: true, busqueda: false,
   },
   {
     id: 'scriptorium', label: 'Scriptorium',
