@@ -9,7 +9,9 @@ import Footer from '../../components/Footer.astro';
 import ArticleKenBurnsModal from '../../components/ArticleKenBurnsModal';
 
 export async function getStaticPaths() {
-  const ensayos = await getCollection('ensayos');
+  const ensayos = await getCollection('ensayos', ({ data }) => {
+    return import.meta.env.PROD ? !data.draft : true;
+  });
   return ensayos.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
@@ -20,7 +22,7 @@ const { slug } = Astro.params;
 const ensayos = await getCollection('ensayos');
 const entry = Astro.props.entry || ensayos.find((e) => e.id === slug || e.data.slug === slug);
 
-if (!entry) {
+if (!entry || (import.meta.env.PROD && entry.data.draft)) {
   return Astro.redirect('/archivo');
 }
 

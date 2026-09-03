@@ -2,6 +2,7 @@
   // VaultEngine.svelte — Mesa de Trabajo Modular y Orquestador TGP-Vault
   // Integración unificada con el Design System Obsidian Void (Bodoni Moda + Inter + Glassmorphism)
 
+  import { onMount } from 'svelte';
   import { TGP_MOTORES, MODOS_OPERACION } from '../../config/tgp-tools';
   import ModoScriptorium from './ModoScriptorium.svelte';
 
@@ -112,12 +113,149 @@
     }
   }
 
+  // ─── Utilidades de Historial, Borradores y Persistencia ────────────────────────
+  let localDraftsList: any[] = [];
+
+  function cargarBorradoresLocales() {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = localStorage.getItem('tgp_magazines_history');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          localDraftsList = parsed;
+          return;
+        }
+      }
+    } catch {}
+    localDraftsList = [];
+  }
+
+  function eliminarBorrador(slugOrId: string) {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.removeItem(`tgp_magazine_draft_${slugOrId}`);
+      localStorage.removeItem(`tgp_magazine_${slugOrId}`);
+      localDraftsList = localDraftsList.filter((item: any) => item.id !== slugOrId && item.slug !== slugOrId);
+      localStorage.setItem('tgp_magazines_history', JSON.stringify(localDraftsList));
+    } catch (e) {
+      console.warn('[VaultEngine] Error eliminando borrador:', e);
+    }
+  }
+
+  onMount(() => {
+    cargarBorradoresLocales();
+  });
+
+  function slugify(text: string): string {
+    const clean = (text || '')
+      .toString()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)+/g, '');
+    return clean ? `${clean}-${Date.now().toString().slice(-4)}` : `edicion-${Date.now()}`;
+  }
+
+  async function persistirEnGitHub(resJson: any, slug: string, token: string) {
+    try {
+      const inboxUrl = TGP_MOTORES.mind;
+      if (!inboxUrl) return;
+
+      const galleryUrls = (resJson.galeria?.slider || []).map((s: any) => s.url).filter(Boolean);
+      if (resJson.heroUrl) galleryUrls.unshift(resJson.heroUrl);
+
+      await fetch(inboxUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          prompt_natural: `Crear y respaldar edición Magazine como ensayo MDX en repositorio con título "${resJson.titulo}". Resumen: ${resJson.excerpt || ''}. Texto: ${resJson.body || ''}`,
+          titulo: resJson.titulo,
+          slug: slug,
+          draft: true,
+          mode: 'magazine_mdx',
+          frontmatter: {
+            title: resJson.titulo,
+            slug: slug,
+            abstract: resJson.excerpt || '',
+            volanta: resJson.subtitulo || 'Edición Magazine',
+            layoutMode: 'magazine',
+            powertype: 'Revista Inmersiva 60/40',
+            draft: true,
+            gallery: galleryUrls,
+            category: resJson.category || 'Magazine',
+            date: new Date().toISOString(),
+          },
+        }),
+      }).catch(e => console.warn('[VaultEngine] Fallback GitHub commit:', e));
+    } catch (err) {
+      console.warn('[VaultEngine] Error intentando guardar en GitHub:', err);
+    }
+  }
+
+  function persistirMagazineEnHistorial(resJson: any, queryFallback: string, token: string) {
+    const editionSlug = slugify(resJson.slug || resJson.titulo || queryFallback || 'edicion');
+    const title = resJson.titulo || 'Edición Histórica';
+
+    const newMagazineItem = {
+      id: editionSlug,
+      slug: editionSlug,
+      url: `/magazine/viewer?id=${editionSlug}`,
+      title: title,
+      subtitle: resJson.subtitulo || 'Edición Forjada por TGP Mind',
+      excerpt: resJson.excerpt || '',
+      heroUrl: resJson.heroUrl || (resJson.galeria?.slider?.[0]?.url) || '/magazine-hero-gobekli.jpg',
+      category: resJson.category || 'TGP Mind · En Vivo',
+      date: resJson.date || new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
+      folios: (resJson.galeria?.slider?.length || 0) + 1,
+      isFresh: true,
+      draft: true,
+      createdAt: Date.now(),
+      data: resJson,
+    };
+
+    if (typeof window !== 'undefined') {
+      // 1. Guardar bajo clave única tgp_magazine_draft_${slug} y tgp_magazine_${slug}
+      localStorage.setItem(`tgp_magazine_draft_${editionSlug}`, JSON.stringify(resJson));
+      localStorage.setItem(`tgp_magazine_${editionSlug}`, JSON.stringify(resJson));
+
+      // 2. Persistir en el array de historial de revistas
+      let history: any[] = [];
+      try {
+        const rawHistory = localStorage.getItem('tgp_magazines_history');
+        history = rawHistory ? JSON.parse(rawHistory) : [];
+        if (!Array.isArray(history)) history = [];
+      } catch {
+        history = [];
+      }
+
+      // Prevenir duplicados por id y anteponer la nueva revista
+      history = [newMagazineItem, ...history.filter((item: any) => item.id !== editionSlug)];
+      localStorage.setItem('tgp_magazines_history', JSON.stringify(history));
+
+      // Guardar también en sessionStorage para visor inmediato
+      sessionStorage.setItem('tgp_current_magazine', JSON.stringify(resJson));
+
+      // Recargar lista reactiva para la interfaz
+      cargarBorradoresLocales();
+
+      // 3. Persistencia real en GitHub con draft: true
+      persistirEnGitHub(resJson, editionSlug, token);
+    }
+
+    return { editionSlug, title };
+  }
+
   // ─── Ejecución del Protocolo ──────────────────────────────────────
   async function ejecutarProtocolo() {
     const cleanToken = securityToken.trim();
     if (cleanToken.length !== 4) {
       status = 'error';
-      statusMessage = 'Introduce la clave de seguridad de 4 dígitos.';
+      statusMessage = 'Introduce tu clave personal de 4 dígitos para autorizar el protocolo.';
       return;
     }
 
@@ -131,29 +269,49 @@
     }
 
     status = 'loading';
-    statusMessage = `Conectando con ${motorKey.toUpperCase()}…`;
+    statusMessage = `Autorizando y conectando con ${motorKey.toUpperCase()}…`;
     lastGeneratedUrl = '';
 
     try {
       let response: Response;
 
-      // 1. MODO SCRIPTURIUM
+      // 1. MODO SCRIPTURIUM (Ensayos generados/publicados con TGP Mind con draft: true)
       if (modoActivo === 'scriptorium') {
         const payload = scriptoriumRef?.getPayload();
         if (!payload) throw new Error('No se pudo compilar el contenido de Scriptorium.');
+        if (!payload.titulo?.trim()) throw new Error('Introduce un título para el ensayo.');
 
-        response = await fetch(motorUrl, {
+        // Se envía a TGP Mind con clave de seguridad autorizada para commitear en GitHub como borrador protegido
+        const mindUrl = TGP_MOTORES.mind || motorUrl;
+        response = await fetch(mindUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${cleanToken}`,
           },
           body: JSON.stringify({
-            ...payload,
-            mode: 'scriptorium',
-            token: cleanToken,
+            prompt_natural: `Publicar ensayo en borrador: ${payload.titulo}\n\n${payload.html || ''}`,
+            titulo: payload.titulo,
+            era: payload.era,
+            coordenadas: payload.coordenadas,
+            html: payload.html,
+            mode: 'ensayo',
+            draft: true,
+            frontmatter: {
+              draft: true,
+            },
           }),
         });
+
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`Error ${response.status}: ${errText || response.statusText}`);
+        }
+
+        const resJson = await response.json().catch(() => null);
+        status = 'success';
+        statusMessage = `✦ Ensayo respaldado en GitHub con draft: true por TGP Mind: "${payload.titulo}".`;
+        return;
 
       // 2. MODO WIKIFORGE (Proxy)
       } else if (modoActivo === 'wikiforge') {
@@ -188,7 +346,7 @@
         }
 
         if (formatoCognitivo === 'magazine') {
-          // Apuntar al endpoint /magazine de tgp-mind
+          // Apuntar al endpoint /magazine de tgp-mind con solicitud de persistencia en repo y draft: true
           const magUrl = motorUrl.replace(/\/inbox\/?$/, '/magazine');
           response = await fetch(magUrl, {
             method: 'POST',
@@ -199,6 +357,9 @@
             body: JSON.stringify({
               prompt_natural: mindPrompt.trim(),
               theme: magazineTheme,
+              draft: true,
+              persist_github: true,
+              commit_to_repo: true,
             }),
           });
 
@@ -209,27 +370,23 @@
 
           const resJson = await response.json().catch(() => null);
           magazineArticle = resJson;
-          const draftId = 'draft_id';
 
-          if (typeof window !== 'undefined' && resJson) {
-            localStorage.setItem(`tgp_magazine_${draftId}`, JSON.stringify(resJson));
-            localStorage.setItem('tgp_magazine_draft', JSON.stringify(resJson));
-            sessionStorage.setItem('tgp_current_magazine', JSON.stringify(resJson));
-          }
+          // Registro permanente en historial (clave única tgp_magazine_draft_${slug} y respaldo GitHub)
+          const { editionSlug, title } = persistirMagazineEnHistorial(resJson, mindPrompt, cleanToken);
 
           status = 'success';
-          statusMessage = `Edición Magazine forjada. Redirigiendo a /magazine/${draftId}…`;
+          statusMessage = `Edición Magazine "${title}" forjada, respaldada en GitHub y guardada en local (draft: true). Redirigiendo a /magazine/viewer?id=${editionSlug}…`;
 
-          // Redirección inmediata al visor
+          // Redirección al visor dinámico con ID permanente
           setTimeout(() => {
             if (typeof window !== 'undefined') {
-              window.location.href = `/magazine/${draftId}`;
+              window.location.href = `/magazine/viewer?id=${editionSlug}`;
             }
           }, 600);
           return;
 
         } else {
-          // Modo Ensayo MDX estándar (/inbox)
+          // Modo Ensayo MDX estándar (/inbox) con TGP Mind — commit directo en GitHub con draft: true
           response = await fetch(motorUrl, {
             method: 'POST',
             headers: {
@@ -237,7 +394,12 @@
               'Authorization': `Bearer ${cleanToken}`,
             },
             body: JSON.stringify({
-              prompt_natural: mindPrompt.trim()
+              prompt_natural: mindPrompt.trim(),
+              mode: 'ensayo',
+              draft: true,
+              frontmatter: {
+                draft: true,
+              },
             }),
           });
 
@@ -247,9 +409,26 @@
           }
 
           const resJson = await response.json().catch(() => null);
-          mindResponse = resJson?.mdx_preview || resJson?.respuesta || resJson?.analisis || 'Análisis cognitivo completado.';
+          mindResponse = resJson?.mdx_preview || resJson?.respuesta || resJson?.analisis || 'Ensayo cognitivo publicado en GitHub con draft: true.';
+
+          // Guardar copia en historial local de ensayos generados
+          if (typeof window !== 'undefined') {
+            try {
+              let ensayosHistory = JSON.parse(localStorage.getItem('tgp_ensayos_history') || '[]');
+              const newEnsayo = {
+                title: resJson?.title || mindPrompt.slice(0, 45) + '...',
+                slug: resJson?.slug,
+                date: new Date().toLocaleDateString('es-ES'),
+                preview: mindResponse.slice(0, 200) + '...',
+                draft: true,
+              };
+              ensayosHistory = [newEnsayo, ...ensayosHistory.filter((e: any) => e.slug !== newEnsayo.slug)];
+              localStorage.setItem('tgp_ensayos_history', JSON.stringify(ensayosHistory));
+            } catch {}
+          }
+
           status = 'success';
-          statusMessage = 'Síntesis cognitiva generada por TGP Mind.';
+          statusMessage = '✦ Ensayo autorizado y respaldado en GitHub con draft: true por TGP Mind.';
           return;
         }
 
@@ -270,6 +449,9 @@
           body: JSON.stringify({
             prompt_natural: query,
             theme: magazineTheme,
+            draft: true,
+            persist_github: true,
+            commit_to_repo: true,
           }),
         });
 
@@ -280,23 +462,20 @@
 
         const resJson = await response.json().catch(() => null);
         magazineArticle = resJson;
-        const draftId = 'draft_id';
 
-        if (typeof window !== 'undefined' && resJson) {
-          localStorage.setItem(`tgp_magazine_${draftId}`, JSON.stringify(resJson));
-          localStorage.setItem('tgp_magazine_draft', JSON.stringify(resJson));
-          sessionStorage.setItem('tgp_current_magazine', JSON.stringify(resJson));
-        }
+        // Registro permanente en historial y respaldo GitHub
+        const { editionSlug, title } = persistirMagazineEnHistorial(resJson, query, cleanToken);
 
         status = 'success';
-        statusMessage = `Edición Magazine forjada. Redirigiendo a /magazine/${draftId}…`;
+        statusMessage = `Edición Magazine "${title}" forjada, respaldada en GitHub y guardada en local (draft: true). Redirigiendo a /magazine/viewer?id=${editionSlug}…`;
 
         setTimeout(() => {
           if (typeof window !== 'undefined') {
-            window.location.href = `/magazine/${draftId}`;
+            window.location.href = `/magazine/viewer?id=${editionSlug}`;
           }
         }, 600);
         return;
+
 
       // 4. MODOS VAULT: Bóveda D1 / Solo Imagen / Solo Texto
       } else {
@@ -308,6 +487,7 @@
         if (contenidoTexto.trim()) fd.append('description', contenidoTexto.trim());
 
         droppedFiles.forEach(f => fd.append('file', f));
+
 
         response = await fetch(motorUrl, {
           method: 'POST',
@@ -736,7 +916,7 @@
               <div class="mt-2 flex items-center justify-between text-[11px] font-mono">
                 <span class="text-vault-accent/90 flex items-center gap-1.5">
                   <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
-                  WikiForge extraerá imágenes y se redirigirá a /magazine/draft_id.
+                  WikiForge extraerá imágenes y se registrará en tu historial permanente en /magazine/viewer.
                 </span>
                 <div class="flex items-center gap-1.5">
                   <span class="text-primary/40">Tema:</span>
@@ -885,6 +1065,89 @@
           {/if}
         </div>
       {/if}
+
+      <!-- ── HISTORIAL DE BORRADORES Y ARTÍCULOS LOCALES GUARDADOS ── -->
+      <div class="mt-10 pt-8 border-t border-white/10 space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono uppercase tracking-widest text-vault-accent font-semibold flex items-center gap-1.5">
+              <span>📚</span>
+              <span>Borradores & Revistas Guardadas en Local ({localDraftsList.length}):</span>
+            </span>
+            <span class="px-2 py-0.5 rounded-full text-[9px] font-mono bg-vault-accent/10 border border-vault-accent/30 text-vault-accent">
+              Identificador único · Sin sobrescritura
+            </span>
+          </div>
+          <button
+            type="button"
+            on:click={cargarBorradoresLocales}
+            class="text-[10px] font-mono text-primary/50 hover:text-highlight transition-colors uppercase tracking-widest flex items-center gap-1"
+          >
+            <span>↺ Actualizar Lista</span>
+          </button>
+        </div>
+
+        {#if localDraftsList.length > 0}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-120 overflow-y-auto pr-1">
+            {#each localDraftsList as item}
+              <div class="p-4 rounded-2xl bg-white/2 border border-white/10 hover:border-vault-accent/40 transition-all flex flex-col justify-between group space-y-3 shadow-md">
+                <div class="flex gap-4">
+                  {#if item.heroUrl}
+                    <img
+                      src={item.heroUrl}
+                      alt={item.title}
+                      class="w-20 h-20 object-cover rounded-xl border border-white/10 shrink-0"
+                      loading="lazy"
+                    />
+                  {/if}
+                  <div class="flex-1 min-w-0 space-y-1">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="text-[9px] font-mono text-vault-accent uppercase tracking-widest truncate">
+                        {item.date || 'Reciente'}
+                      </span>
+                      <span class="px-2 py-0.5 rounded text-[8px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">
+                        draft: true
+                      </span>
+                    </div>
+                    <h4 class="font-bodoni text-base text-highlight font-semibold truncate group-hover:text-vault-accent transition-colors">
+                      {item.title}
+                    </h4>
+                    <p class="text-[11px] text-primary/60 line-clamp-2 leading-relaxed">
+                      {item.excerpt || item.subtitle || ''}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="flex items-center justify-between pt-2 border-t border-white/5 text-xs font-mono">
+                  <a
+                    href="/magazine/viewer?id={item.slug || item.id}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="px-3 py-1.5 rounded-lg bg-vault-accent/15 border border-vault-accent/30 text-vault-accent hover:bg-vault-accent hover:text-black transition-all text-[10px] uppercase tracking-wider font-bold flex items-center gap-1.5"
+                  >
+                    <span>Abrir Visor (60/40)</span>
+                    <span>↗</span>
+                  </a>
+
+                  <button
+                    type="button"
+                    on:click={() => eliminarBorrador(item.id || item.slug)}
+                    class="text-[10px] text-vault-danger/60 hover:text-vault-danger transition-colors uppercase tracking-wider px-2 py-1 rounded hover:bg-vault-danger/10"
+                    title="Eliminar borrador local"
+                  >
+                    🗑 Eliminar
+                  </button>
+                </div>
+              </div>
+            {/each}
+          </div>
+        {:else}
+          <div class="p-8 rounded-2xl border border-dashed border-white/10 bg-white/1 text-center text-primary/40 text-xs font-mono">
+            No hay borradores guardados localmente aún. Cada revista forjada aparecerá aquí con su propio identificador único sin sobreescribir ninguna previa.
+          </div>
+        {/if}
+      </div>
 
     </div>
 

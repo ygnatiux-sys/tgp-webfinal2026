@@ -108,35 +108,59 @@
   onMount(async () => {
     window.addEventListener('keydown', handleKeyDown);
 
-    // 1. Detectar si hay un Magazine recién generado en localStorage
+    // 1. Cargar el historial completo de Revistas/Magazines forjados en localStorage
     try {
-      const rawDraft = localStorage.getItem('tgp_magazine_draft_id') || localStorage.getItem('tgp_magazine_draft');
-      if (rawDraft) {
-        const draftObj = JSON.parse(rawDraft);
-        if (draftObj && draftObj.titulo) {
-          const alreadyExists = magazines.some(m => m.title === draftObj.titulo);
-          if (!alreadyExists) {
-            magazines = [
-              {
-                id: 'draft-live',
-                slug: 'draft_id',
-                url: '/magazine/draft_id',
-                title: draftObj.titulo,
-                subtitle: draftObj.subtitulo || 'Edición Forjada por TGP Mind',
-                excerpt: draftObj.excerpt || '',
-                heroUrl: draftObj.heroUrl || '/magazine-hero-gobekli.jpg',
-                category: draftObj.category || 'TGP Mind · En Vivo',
-                date: draftObj.date || 'Reciente',
-                folios: (draftObj.galeria?.slider?.length || 0) + 1,
-                isFresh: true,
-              },
-              ...magazines
-            ];
+      let history: any[] = [];
+      const rawHistory = localStorage.getItem('tgp_magazines_history');
+      if (rawHistory) {
+        try {
+          const parsed = JSON.parse(rawHistory);
+          if (Array.isArray(parsed)) history = parsed;
+        } catch {}
+      }
+
+      // Migrar borradores antiguos si existían para que no se pierdan
+      const legacyDraft = localStorage.getItem('tgp_magazine_draft_id') || localStorage.getItem('tgp_magazine_draft');
+      if (legacyDraft) {
+        try {
+          const lObj = JSON.parse(legacyDraft);
+          if (lObj && lObj.titulo && !history.some(h => h.title === lObj.titulo)) {
+            const legId = 'legado-' + Date.now().toString().slice(-4);
+            const migrated = {
+              id: legId,
+              slug: legId,
+              url: `/magazine/viewer?id=${legId}`,
+              title: lObj.titulo,
+              subtitle: lObj.subtitulo || 'Edición Forjada por TGP Mind',
+              excerpt: lObj.excerpt || '',
+              heroUrl: lObj.heroUrl || (lObj.galeria?.slider?.[0]?.url) || '/magazine-hero-gobekli.jpg',
+              category: lObj.category || 'TGP Mind · En Vivo',
+              date: lObj.date || 'Reciente',
+              folios: (lObj.galeria?.slider?.length || 0) + 1,
+              isFresh: true,
+              data: lObj,
+            };
+            history.push(migrated);
+            localStorage.setItem(`tgp_magazine_${legId}`, JSON.stringify(lObj));
+            localStorage.setItem('tgp_magazines_history', JSON.stringify(history));
           }
-        }
+        } catch {}
+      }
+
+      // Incorporar todas las ediciones forjadas al listado general (todas con isFresh: true)
+      if (history.length > 0) {
+        const mappedHistory = history.map(item => ({
+          ...item,
+          url: item.url || `/magazine/viewer?id=${item.id}`,
+          isFresh: true, // Todas las del historial activas
+        }));
+
+        // Evitar duplicados con las revistas base fijas
+        const uniqueHistory = mappedHistory.filter(h => !magazines.some(m => m.id === h.id || m.title === h.title));
+        magazines = [...uniqueHistory, ...magazines];
       }
     } catch (e) {
-      console.warn('[ArchivoHub] Error leyendo draft en localStorage:', e);
+      console.warn('[ArchivoHub] Error leyendo historial persistente en localStorage:', e);
     }
 
     // 2. Consultar registros en vivo de D1

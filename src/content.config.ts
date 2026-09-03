@@ -12,7 +12,8 @@ const ensayosCollection = defineCollection({
     date: z.string().optional(),
     gallery: z.array(z.string()).optional(),
     category: z.string().optional(),
-    themeColor: z.string().optional()
+    themeColor: z.string().optional(),
+    draft: z.boolean().default(false).optional()
   })
 });
 

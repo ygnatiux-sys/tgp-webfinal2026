@@ -33,6 +33,7 @@ export default config({
         category: fields.text({ label: 'Categoría' }),
         themeColor: fields.text({ label: 'Color de Tema (#HEX)' }),
         date: fields.date({ label: 'Fecha de Publicación' }),
+        draft: fields.checkbox({ label: 'Borrador (Draft)', defaultValue: false }),
         powertype: fields.select({
           label: 'Power Type',
           options: [

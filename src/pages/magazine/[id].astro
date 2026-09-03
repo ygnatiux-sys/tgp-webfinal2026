@@ -994,19 +994,37 @@ const initialPage = MOCK_PAGES[0];
   // ─── CARGA INICIAL E HIDRATACIÓN DINÁMICA ───
   (function initMagazine() {
     try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryId = urlParams.get('id') || urlParams.get('edition');
       const pathParts = window.location.pathname.split('/').filter(Boolean);
-      const curId = pathParts[pathParts.length - 1] || 'draft_id';
+      const pathId = pathParts[pathParts.length - 1];
+      const curId = queryId || pathId || 'viewer';
 
-      // SOLO buscar draft dinámico si es explícitamente la ruta de borrador o si existe una clave específica para este ID
-      let raw = null;
-      if (curId === 'draft' || curId === 'draft_id') {
+      // 1. Buscar directamente por clave individual de edición
+      let raw = localStorage.getItem(`tgp_magazine_${curId}`);
+
+      // 2. Si no se encuentra, buscar en el array de historial permanente
+      if (!raw) {
+        try {
+          const rawHistory = localStorage.getItem('tgp_magazines_history');
+          if (rawHistory) {
+            const history = JSON.parse(rawHistory);
+            if (Array.isArray(history)) {
+              const found = history.find((h) => h.id === curId || h.slug === curId);
+              if (found && found.data) {
+                raw = JSON.stringify(found.data);
+              }
+            }
+          }
+        } catch {}
+      }
+
+      // 3. Fallbacks de retrocompatibilidad
+      if (!raw && (curId === 'draft' || curId === 'draft_id' || curId === 'viewer')) {
         raw = localStorage.getItem(`tgp_magazine_${curId}`)
            || localStorage.getItem('tgp_magazine_draft')
            || sessionStorage.getItem('tgp_current_magazine')
            || localStorage.getItem('tgp_current_magazine');
-      } else {
-        // Para revistas publicadas, sólo leer si hay una versión guardada explícitamente para ese ID específico
-        raw = localStorage.getItem(`tgp_magazine_${curId}`);
       }
 
       if (raw) {
