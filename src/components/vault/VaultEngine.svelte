@@ -181,17 +181,15 @@
           throw new Error('Introduce una consulta o adjunta un artefacto para el análisis cognitivo.');
         }
 
-        const fd = new FormData();
-        fd.append('prompt', mindPrompt.trim());
-        fd.append('mode', 'cognitivo');
-        droppedFiles.forEach(f => fd.append('file', f));
-
         response = await fetch(motorUrl, {
           method: 'POST',
           headers: {
+            'Content-Type': 'application/json',
             'Authorization': `Bearer ${cleanToken}`,
           },
-          body: fd,
+          body: JSON.stringify({
+            prompt_natural: mindPrompt.trim()
+          }),
         });
 
         if (!response.ok) {
@@ -200,7 +198,7 @@
         }
 
         const resJson = await response.json().catch(() => null);
-        mindResponse = resJson?.respuesta || resJson?.analisis || resJson?.text || 'Análisis cognitivo completado.';
+        mindResponse = resJson?.mdx_preview || resJson?.respuesta || resJson?.analisis || 'Análisis cognitivo completado.';
         status = 'success';
         statusMessage = 'Síntesis cognitiva generada por TGP Mind.';
         return;
