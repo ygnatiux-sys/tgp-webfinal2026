@@ -16,7 +16,14 @@ export async function getStaticPaths() {
   }));
 }
 
-const { entry } = Astro.props;
+const { slug } = Astro.params;
+const ensayos = await getCollection('ensayos');
+const entry = Astro.props.entry || ensayos.find((e) => e.id === slug || e.data.slug === slug);
+
+if (!entry) {
+  return Astro.redirect('/archivo');
+}
+
 const { Content } = await render(entry);
 const data = entry.data;
 

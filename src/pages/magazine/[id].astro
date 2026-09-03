@@ -10,12 +10,15 @@ export function getStaticPaths() {
     { params: { id: 'draft' } },
     { params: { id: 'draft_id' } },
     { params: { id: 'gobekli-tepe' } },
+    { params: { id: 'pompeya' } },
+    { params: { id: 'pompeya-vesubio' } },
+    { params: { id: 'biblioteca-alejandria' } },
   ];
 }
 
 const { id } = Astro.params;
 
-const MOCK_PAGES = [
+const GOBEKLI_PAGES = [
   {
     folio: '01',
     tag: 'FOLIO I · EL ORIGEN SAGRADO',
@@ -60,6 +63,106 @@ const MOCK_PAGES = [
   }
 ];
 
+const POMPEYA_PAGES = [
+  {
+    folio: '01',
+    tag: 'FOLIO I · LA CATÁSTROFE Y LA ROCA',
+    title: 'Pompeya y el Vesubio',
+    subtitle: 'La paradoja de la piedra y la eternidad',
+    excerpt: 'Bajo el manto de cenizas del 79 d.C., una civilización quedó petrificada en un diálogo suspendido entre la fragilidad humana y la fuerza geológica.',
+    body: 'En el otoño del 79 d.C., el Vesubio despertó con una fuerza descomunal. La lluvia de piedra pómez y los flujos piroclásticos sellaron una ciudad viva en el cenit de su dinamismo comercial y artístico.\n\nPompeya no es solo una ruina: es una fotografía geológica tridimensional de la vida romana cotidiana, donde los frescos aún respiran con el rojo cinabrio intacto.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/magazine/pompeya-y-el-vesubio/vesuvius-from-pompeii-hires-version-2png.webp',
+    imageCaption: 'El cono del Vesubio recortado contra el horizonte desde el Foro civil de Pompeya.',
+    imageCredit: 'Archivo TGP Vault / Wikimedia Commons',
+    date: '3 septiembre 2026',
+    slug: 'pompeya/vesubio',
+    readingTime: '5 min'
+  },
+  {
+    folio: '02',
+    tag: 'FOLIO II · LA INTIMIDAD EN LOS MUROS',
+    title: 'El Cuarto Estilo Pompeyano',
+    subtitle: 'Mitos, dioses y pasiones cotidianas',
+    excerpt: 'Los muros domésticos y los espacios públicos se transformaron en complejas arquitecturas ilusionistas. Desde los cultos a Príapo e Isis hasta los frescos del Lupanar, la sexualidad y la religión convivían sin la censura moderna.',
+    body: 'El arte pompeyano del Cuarto Estilo desafía la rigidez del mármol. En las casas de los Vettii y del Fauno, los pintores anónimos crearon perspectivas fantásticas y representaciones mitológicas que servían tanto de talismanes apotropaicos como de manifiestos de estatus.\n\nCada pigmento extraído de minerales orientales testimonia las vastas redes comerciales del Mediterráneo antiguo.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Pirito_e_ippodamia_ricevono_l%27omaggio_dei_centauri%2C_9044%2C_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original',
+    imageCaption: 'Fresco de Pirítoo e Hipodamía recibiendo el homenaje de los centauros, Museo Arqueológico Nacional de Nápoles.',
+    imageCredit: 'MANN Collection / Dominio Público',
+    date: '3 septiembre 2026',
+    slug: 'pompeya/frescos',
+    readingTime: '4 min'
+  },
+  {
+    folio: '03',
+    tag: 'FOLIO III · LA ESTRATIGRAFÍA DEL OLVIDO',
+    title: 'El Silencio de la Ceniza',
+    subtitle: 'Memoria preservada por la destrucción',
+    excerpt: 'La misma capa piroclástica que aniquiló la vida preservó las cartas, los grafitis electorales, las recetas de cocina y los moldes de yeso de los últimos habitantes.',
+    body: 'La paradoja de Pompeya es que su supervivencia histórica dependió de su destrucción total. Mientras el resto del Imperio Romano se degradó por el expolio medieval y las sucesivas reconstrucciones, Pompeya quedó detenida en una cápsula hermética.\n\nCaminar hoy por la Vía de la Abundancia es escuchar los ecos de una conversación interrumpida hace dos mil años.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Fresco_Isis_Pompeya_02.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original',
+    imageCaption: 'Estructuras ornamentales con iconografía isíaca en las domus de Pompeya.',
+    imageCredit: 'Parco Archeologico di Pompei',
+    date: '3 septiembre 2026',
+    slug: 'pompeya/memoria',
+    readingTime: '4 min'
+  }
+];
+
+const ALEJANDRIA_PAGES = [
+  {
+    folio: '01',
+    tag: 'FOLIO I · LA UTOPÍA EPISTEMOLÓGICA',
+    title: 'La Biblioteca de Alejandría',
+    subtitle: 'El sueño del conocimiento universal',
+    excerpt: 'El intento más ambicioso de la antigüedad por concentrar todo el saber del mundo conocido en un solo espacio sagrado de papiros y filosofía.',
+    body: 'En la desembocadura del Nilo, los Ptolomeos no erigieron un mero archivo, sino un palacio del pensamiento. Los navíos que fondeaban en el puerto eran obligados a entregar cualquier manuscrito para ser copiado con fervor.\n\nAlejandría demostró que el saber no es una acumulación pasiva, sino una arquitectura activa que conecta civilizaciones.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Ancient_Library_of_Alexandria.jpg/1280px-Ancient_Library_of_Alexandria.jpg',
+    imageCaption: 'Reconstrucción histórica del interior de la Gran Biblioteca de Alejandría.',
+    imageCredit: 'Archivo Histórico Clásico / Wikimedia Commons',
+    date: 'Agosto 2026',
+    slug: 'alejandria/origen',
+    readingTime: '5 min'
+  },
+  {
+    folio: '02',
+    tag: 'FOLIO II · EL MAPA DEL SABER',
+    title: 'Calímaco y los Pinakes',
+    subtitle: 'La invención de la memoria clasificada',
+    excerpt: 'Al ordenar miles de rollos por disciplinas, Calímaco inventó el catálogo bibliográfico y demostró que pensar es clasificar y conectar fragmentos dispersos.',
+    body: 'En las salas del Museo alejandrino, Eratóstenes calculó la circunferencia de la Tierra con una vara y una sombra, mientras Euclides sistematizaba la geometría del espacio.\n\nAquel centro del mundo helénico fue la cuna donde la ciencia moderna aprendió a formular sus preguntas cardinales.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Dusk_landscape_high_resolution.jpg',
+    imageCaption: 'Atardecer sobre las aguas del Mediterráneo oriental frente al antiguo Faro de Alejandría.',
+    imageCredit: 'Wikimedia Commons · Dominio Público',
+    date: 'Agosto 2026',
+    slug: 'alejandria/pinakes',
+    readingTime: '4 min'
+  },
+  {
+    folio: '03',
+    tag: 'FOLIO III · LA MEMORIA ROTA',
+    title: 'El Mito del Fuego',
+    subtitle: 'La disolución del diálogo entre los siglos',
+    excerpt: 'Más allá de la leyenda del incendio dramático, la biblioteca se desvaneció lentamente en el polvo del abandono, recordándonos que el saber muere cuando se deja de leer.',
+    body: 'La pérdida de Alejandría nos legó una advertencia indeleble para la era digital: ningún servidor ni soporte físico es invulnerable al olvido institucional si se quiebra la voluntad de preservar el sentido colectivo.',
+    imageUrl: '/magazine-hero-gobekli.jpg',
+    imageCaption: 'Monolito megalítico evocador de las primeras inscripciones de la memoria humana.',
+    imageCredit: 'The Great Puzzle Project Archive',
+    date: 'Agosto 2026',
+    slug: 'alejandria/olvido',
+    readingTime: '4 min'
+  }
+];
+
+const MAGAZINES_DATABASE: Record<string, typeof GOBEKLI_PAGES> = {
+  'gobekli-tepe': GOBEKLI_PAGES,
+  'test': GOBEKLI_PAGES,
+  'pompeya': POMPEYA_PAGES,
+  'pompeya-vesubio': POMPEYA_PAGES,
+  'biblioteca-alejandria': ALEJANDRIA_PAGES,
+  'viewer': ALEJANDRIA_PAGES,
+};
+
+const MOCK_PAGES = MAGAZINES_DATABASE[id as string] || GOBEKLI_PAGES;
 const initialPage = MOCK_PAGES[0];
 ---
 <!DOCTYPE html>
@@ -747,9 +850,9 @@ const initialPage = MOCK_PAGES[0];
 </div>
 
 <!-- ─── SCRIPT DE CONTROL EDITORIAL MULTI-PÁGINA & TEMAS ─── -->
-<script is:inline>
+<script is:inline define:vars={{ defaultPages: MOCK_PAGES }}>
   // Estado global de páginas
-  let magazinePages = [];
+  let magazinePages = defaultPages || [];
   let currentPageIndex = 0;
 
   function setTheme(t) {
@@ -894,15 +997,22 @@ const initialPage = MOCK_PAGES[0];
       const pathParts = window.location.pathname.split('/').filter(Boolean);
       const curId = pathParts[pathParts.length - 1] || 'draft_id';
 
-      const raw = localStorage.getItem(`tgp_magazine_${curId}`)
-               || localStorage.getItem('tgp_magazine_draft')
-               || sessionStorage.getItem('tgp_current_magazine')
-               || localStorage.getItem('tgp_current_magazine');
+      // SOLO buscar draft dinámico si es explícitamente la ruta de borrador o si existe una clave específica para este ID
+      let raw = null;
+      if (curId === 'draft' || curId === 'draft_id') {
+        raw = localStorage.getItem(`tgp_magazine_${curId}`)
+           || localStorage.getItem('tgp_magazine_draft')
+           || sessionStorage.getItem('tgp_current_magazine')
+           || localStorage.getItem('tgp_current_magazine');
+      } else {
+        // Para revistas publicadas, sólo leer si hay una versión guardada explícitamente para ese ID específico
+        raw = localStorage.getItem(`tgp_magazine_${curId}`);
+      }
 
       if (raw) {
         const art = JSON.parse(raw);
         if (art && art.titulo) {
-          console.log('[TGP Magazine] Creando revista unificada con:', art.titulo);
+          console.log('[TGP Magazine] Cargando edición dinámica:', art.titulo);
 
           // Página 1: Hero Principal
           const pages = [
@@ -966,7 +1076,6 @@ const initialPage = MOCK_PAGES[0];
           }
 
           if (art.theme) setTheme(art.theme);
-
           renderPage(0, false);
           return;
         }
@@ -975,52 +1084,8 @@ const initialPage = MOCK_PAGES[0];
       console.warn('[TGP Magazine] Error en hidratación:', e);
     }
 
-    // Si no hay datos dinámicos en storage, usar las páginas mock de Göbekli Tepe
-    magazinePages = [
-      {
-        folio: '01',
-        tag: 'FOLIO I · EL ORIGEN SAGRADO',
-        title: 'Göbekli Tepe',
-        subtitle: 'El santuario antes del tiempo',
-        excerpt: 'Doce mil años antes de que los primeros faraones pusieran la primera piedra, manos anónimas esculpieron pilares de caliza de seis toneladas en las colinas de Anatolia. Göbekli Tepe no es solo el templo más antiguo del mundo: es la evidencia de que la religión antecede a la agricultura.',
-        body: 'En 1994, el arqueólogo Klaus Schmidt llegó a una colina ondulada que los lugareños llamaban la montaña con ombligo. Lo que encontró bajo la superficie reescribió los manuales de prehistoria. Göbekli Tepe reveló un complejo de al menos veinte recintos circulares con pilares en forma de T de hasta cinco metros y dieciséis toneladas.\n\nPara levantar estas estructuras se necesitaron cientos de personas coordinadas durante generaciones. Pero no hay rastros de vivienda permanente: Göbekli Tepe era un destino ritual periódico.',
-        imageUrl: '/magazine-hero-gobekli.jpg',
-        imageCaption: 'Recinto C de Göbekli Tepe, ca. 9500 a.C. Los pilares centrales representan figuras antropomorfas estilizadas.',
-        imageCredit: 'Archaeological survey, southeast Anatolia',
-        date: '3 septiembre 2026',
-        slug: 'gobekli-tepe',
-        readingTime: '6 min'
-      },
-      {
-        folio: '02',
-        tag: 'FOLIO II · LA ARQUITECTURA CÓSMICA',
-        title: 'La Geometría de lo Sagrado',
-        subtitle: 'Estratigrafía del décimo milenio',
-        excerpt: 'Bajo la colina se entrelazan al menos veinte círculos concéntricos de piedra. Cada recinto fue deliberadamente enterrado tras siglos de uso ceremonial, como si la clausura del templo fuera tan sagrada como su consagración.',
-        body: 'La precisión geométrica de los recintos A, B, C y D sugiere alineaciones astronómicas con Sirio y las Pléyades. Los constructores del Neolítico Precerámico no solo dominaban la extracción megalítica, sino un calendario ritual vinculado a los ciclos celestes y a la memoria colectiva.',
-        imageUrl: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png/1280px-The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
-        imageCaption: 'Excavación general del recinto megalítico principal con estructuras circulares de soporte.',
-        imageCredit: 'Deutsches Archäologisches Institut',
-        date: '3 septiembre 2026',
-        slug: 'gobekli-tepe/estratigrafia',
-        readingTime: '4 min'
-      },
-      {
-        folio: '03',
-        tag: 'FOLIO III · EL BESTIARIO TOTÉMICO',
-        title: 'El Umbral Simbólico',
-        subtitle: 'Relieves en el corazón de la caliza',
-        excerpt: 'Leopardos, buitres sin cabeza, zorros y escorpiones pueblan la superficie de los monolitos. No son meras decoraciones cinegéticas: representan el umbral mítico entre los cazadores y el más allá.',
-        body: 'En las culturas chamánicas de Anatolia, el buitre es el psicopompo que transporta el alma de los difuntos hacia el firmamento. Los pilares de Göbekli Tepe son monolitos personificados: brazos estilizados doblados hacia el cinturón y manos talladas en bajo relieve protegiendo el centro del mundo.',
-        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/G%C3%B6bekli_Tepe_Birthing_Woman_in_Leopard_Pillar_Building.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
-        imageCaption: 'Pilar con grabado zoomorfo de leopardo y relieves de la fauna pleistocénica.',
-        imageCredit: 'Şanlıurfa Museum Collection',
-        date: '3 septiembre 2026',
-        slug: 'gobekli-tepe/simbologia',
-        readingTime: '5 min'
-      }
-    ];
-
+    // Si no hay datos dinámicos en storage, usar las páginas estáticas correspondientes a esta edición
+    magazinePages = defaultPages || [];
     renderPage(0, false);
   })();
 </script>
