@@ -19,7 +19,7 @@ try {
   if (Array.isArray(ensayos)) {
     initialEnsayos = ensayos.map((ensayo) => {
       const data = ensayo.data;
-      const cover = data.gallery && data.gallery.length > 0 ? data.gallery[0] : undefined;
+      const cover = data.coverImage || data.heroUrl || (data.gallery && data.gallery.length > 0 ? data.gallery[0] : undefined);
       const snippet = data.abstract || (ensayo.body ? ensayo.body.slice(0, 180).replace(/<[^>]*>?/gm, '').replace(/^[#\s*]+/gm, '') + '...' : '');
 
       return {

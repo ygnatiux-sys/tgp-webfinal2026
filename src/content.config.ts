@@ -11,6 +11,8 @@ const ensayosCollection = defineCollection({
     powertype: z.string().optional(),
     date: z.string().optional(),
     gallery: z.array(z.string()).optional(),
+    coverImage: z.string().optional(),
+    heroUrl: z.string().optional(),
     category: z.string().optional(),
     themeColor: z.string().optional(),
     draft: z.boolean().default(false).optional()
