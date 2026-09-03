@@ -1,0 +1,638 @@
+---
+// src/pages/magazine/[id].astro
+// Visor Editorial Inmersivo 60/40 — The Great Puzzle Project
+// Soporta hidratación dinámica en vivo (sessionStorage) y renderizado estático
+
+export function getStaticPaths() {
+  return [
+    { params: { id: 'test' } },
+    { params: { id: 'viewer' } },
+    { params: { id: 'draft' } },
+    { params: { id: 'draft_id' } },
+    { params: { id: 'gobekli-tepe' } },
+  ];
+}
+
+const { id } = Astro.params;
+
+const MOCK_ARTICLE = {
+  theme: 'charcoal',
+  title: 'Göbekli Tepe',
+  subtitle: 'El santuario antes del tiempo',
+  category: 'ARQUEOLOGÍA COGNITIVA · TGP MIND',
+  date: '3 septiembre 2026',
+  excerpt: 'Doce mil años antes de que los primeros faraones pusieran la primera piedra, manos anónimas esculpieron pilares de caliza de seis toneladas en las colinas del sureste de Anatolia. Göbekli Tepe no es solo el templo más antiguo del mundo conocido: es la evidencia perturbadora de que la religión antecede a la agricultura.',
+  body: 'En 1994, el arqueólogo Klaus Schmidt llegó a una colina ondulada que los lugareños llamaban la montaña con ombligo. Lo que encontró bajo la superficie reescribió los manuales de prehistoria. Göbekli Tepe reveló un complejo de al menos veinte recintos circulares, con pilares en forma de T de hasta cinco metros y dieciséis toneladas, con relieves de zorros, escorpiones, grullas y buitres con una maestría que desafía cualquier narrativa lineal del progreso humano.\n\nLo que perturba profundamente no es la complejidad técnica sino la implicación sociológica. Para levantar estas estructuras se necesitaron cientos de personas organizadas durante generaciones. Pero no hay rastros de vivienda permanente en el sitio. Göbekli Tepe era un destino, no una residencia: un punto de convergencia periódico para comunidades de cazadores-recolectores.',
+  heroUrl: '/magazine-hero-gobekli.jpg',
+  heroCaption: 'Recinto C de Göbekli Tepe, ca. 9500 a.C. Los pilares centrales representan figuras antropomorfas estilizadas.',
+  heroCredit: 'Archaeological survey, southeast Anatolia',
+  slug: 'gobekli-tepe',
+  reading_time: '6 min',
+  galeria: {
+    slider: [
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png/1280px-The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Excavación general del recinto megalítico principal'
+      },
+      {
+        url: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/G%C3%B6bekli_Tepe_Birthing_Woman_in_Leopard_Pillar_Building.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
+        caption: 'Pilar con grabado de leopardo y relieves zoomorfos'
+      }
+    ]
+  }
+};
+---
+<!DOCTYPE html>
+<html lang="es" class="theme-charcoal">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">{MOCK_ARTICLE.title} — TGP Magazine</title>
+  <meta id="page-desc" name="description" content={MOCK_ARTICLE.excerpt} />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* TEMAS DUALES */
+    html.theme-charcoal {
+      --bg: #111111;
+      --text-primary: #f0ede8;
+      --text-muted: rgba(240, 237, 232, 0.65);
+      --text-dim: rgba(240, 237, 232, 0.45);
+      --accent: #c9a96e;
+      --accent-glow: rgba(201, 169, 110, 0.15);
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow: rgba(0, 0, 0, 0.8);
+      --caption-bg: rgba(17, 17, 17, 0.75);
+      --tag-bg: rgba(201, 169, 110, 0.12);
+      --tag-color: #c9a96e;
+      --close-bg: rgba(255, 255, 255, 0.06);
+      --close-hover: rgba(255, 255, 255, 0.14);
+      --card-bg: rgba(255, 255, 255, 0.03);
+    }
+
+    html.theme-paper {
+      --bg: #f5f2eb;
+      --text-primary: #181715;
+      --text-muted: rgba(24, 23, 21, 0.75);
+      --text-dim: rgba(24, 23, 21, 0.55);
+      --accent: #8b6b38;
+      --accent-glow: rgba(139, 107, 56, 0.15);
+      --border: rgba(0, 0, 0, 0.1);
+      --shadow: rgba(0, 0, 0, 0.15);
+      --caption-bg: rgba(245, 242, 235, 0.85);
+      --tag-bg: rgba(139, 107, 56, 0.1);
+      --tag-color: #8b6b38;
+      --close-bg: rgba(0, 0, 0, 0.05);
+      --close-hover: rgba(0, 0, 0, 0.12);
+      --card-bg: rgba(0, 0, 0, 0.02);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* Brillo fotográfico para Charcoal */
+    html.theme-charcoal body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 65% 50% at 85% 10%, rgba(201,169,110,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Textura de papel para Paper Glow */
+    html.theme-paper body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .mag-viewer {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+
+    .mag-grid {
+      display: grid;
+      grid-template-columns: 6fr 4fr;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── BLOQUE VISUAL 60% ── */
+    .mag-visual {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      animation: fadeLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .mag-visual__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 0 24px 24px 0;
+      box-shadow: 12px 0 70px var(--shadow);
+      transition: transform 6s ease;
+    }
+
+    .mag-visual:hover .mag-visual__img {
+      transform: scale(1.03);
+    }
+
+    .mag-visual__overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 0 24px 24px 0;
+      background: linear-gradient(to right, rgba(0,0,0,0) 60%, rgba(0,0,0,0.3) 100%),
+                  linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 45%);
+      pointer-events: none;
+    }
+
+    .mag-visual__caption {
+      position: absolute;
+      bottom: 32px;
+      left: 32px;
+      right: 32px;
+      padding: 16px 20px;
+      background: var(--caption-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .mag-visual__caption strong {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 3px;
+      color: var(--accent);
+    }
+
+    /* ── BLOQUE CONTENIDO 40% ── */
+    .mag-content {
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 56px 52px 64px;
+      display: flex;
+      flex-direction: column;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+      animation: fadeRight 0.8s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .mag-content::-webkit-scrollbar { width: 4px; }
+    .mag-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .mag-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      background: var(--tag-bg);
+      color: var(--tag-color);
+      border-radius: 30px;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      width: fit-content;
+    }
+
+    .mag-tag__dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--tag-color);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .mag-title {
+      font-family: 'Bodoni Moda', Georgia, serif;
+      font-size: clamp(2.6rem, 4.2vw, 4.8rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .mag-subtitle {
+      font-family: 'Bodoni Moda', Georgia, serif;
+      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      line-height: 1.4;
+    }
+
+    .mag-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--accent);
+      margin-bottom: 32px;
+      opacity: 0.7;
+    }
+
+    .mag-excerpt {
+      font-size: clamp(0.9rem, 1.15vw, 1.02rem);
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .mag-body {
+      font-size: clamp(0.85rem, 1.05vw, 0.92rem);
+      font-weight: 300;
+      line-height: 1.95;
+      color: var(--text-dim);
+    }
+
+    .mag-body p + p { margin-top: 18px; }
+
+    /* Galería secundaria / Slider previews */
+    .mag-gallery {
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .mag-gallery__title {
+      font-size: 10px;
+      font-mono: monospace;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .mag-gallery__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .mag-gallery__item {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .mag-gallery__item:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .mag-gallery__item img {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .mag-gallery__caption {
+      padding: 6px 8px;
+      font-size: 9px;
+      line-height: 1.35;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mag-spacer { flex: 1; min-height: 40px; }
+
+    .mag-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+    }
+
+    .mag-meta__date, .mag-meta__read {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .mag-meta__slug {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* ── BARRA SUPERIOR DE CONTROLES ── */
+    .mag-topbar {
+      position: fixed;
+      top: 24px;
+      left: 28px;
+      right: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .mag-topbar > * {
+      pointer-events: auto;
+    }
+
+    /* Theme Toggle Switcher */
+    .mag-theme-switcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--caption-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 4px 6px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+    }
+
+    .mag-theme-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mag-theme-btn.active {
+      background: var(--accent);
+      color: #111;
+      font-weight: 600;
+    }
+
+    .mag-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--close-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      color: var(--text-primary);
+    }
+
+    .mag-close:hover {
+      background: var(--close-hover);
+      transform: scale(1.08);
+    }
+
+    .mag-close svg { width: 16px; height: 16px; }
+
+    @keyframes fadeLeft { from{opacity:0;transform:translateX(-24px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes fadeRight { from{opacity:0;transform:translateX(24px)} to{opacity:1;transform:translateX(0)} }
+
+    /* Mobile */
+    @media(max-width: 820px){
+      html, body { overflow: auto; }
+      .mag-viewer, .mag-grid { height: auto; }
+      .mag-grid { grid-template-columns: 1fr; }
+      .mag-visual { height: 60vw; min-height: 280px; max-height: 460px; }
+      .mag-visual__img, .mag-visual__overlay { border-radius: 0 0 24px 24px; }
+      .mag-content { height: auto; overflow: visible; padding: 40px 24px 60px; }
+      .mag-title { font-size: 2.3rem; }
+      .mag-topbar { top: 16px; left: 16px; right: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mag-viewer">
+
+  <!-- Barra superior con selector de tema y botón cerrar -->
+  <div class="mag-topbar">
+    <div class="mag-theme-switcher" role="group" aria-label="Cambiar tema">
+      <button type="button" class="mag-theme-btn active" id="btn-charcoal" onclick="setTheme('charcoal')">✦ Charcoal</button>
+      <button type="button" class="mag-theme-btn" id="btn-paper" onclick="setTheme('paper')">◈ Paper</button>
+    </div>
+
+    <a href="/tgp-vault" class="mag-close" aria-label="Volver a la Bóveda">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="mag-grid">
+
+    <!-- ─── BLOQUE VISUAL 60% ─── -->
+    <div class="mag-visual">
+      <img
+        id="hero-img"
+        class="mag-visual__img"
+        src={MOCK_ARTICLE.heroUrl}
+        alt={MOCK_ARTICLE.title}
+        loading="eager"
+      />
+      <div class="mag-visual__overlay"></div>
+      <div class="mag-visual__caption" id="hero-caption">
+        <strong id="caption-strong">{MOCK_ARTICLE.heroCaption}</strong>
+        <span id="caption-credit">{MOCK_ARTICLE.heroCredit}</span>
+      </div>
+    </div>
+
+    <!-- ─── BLOQUE CONTENIDO 40% ─── -->
+    <div class="mag-content">
+      <span class="mag-tag" id="article-tag">
+        <span class="mag-tag__dot"></span>
+        <span id="tag-text">{MOCK_ARTICLE.category}</span>
+      </span>
+
+      <h1 class="mag-title" id="article-title">{MOCK_ARTICLE.title}</h1>
+      <p class="mag-subtitle" id="article-subtitle">{MOCK_ARTICLE.subtitle}</p>
+
+      <div class="mag-divider"></div>
+
+      <p class="mag-excerpt" id="article-excerpt">{MOCK_ARTICLE.excerpt}</p>
+
+      <div class="mag-body" id="article-body">
+        {MOCK_ARTICLE.body.split('\n\n').map((p: string) => <p>{p}</p>)}
+      </div>
+
+      <!-- Galería secundaria si existe -->
+      <div class="mag-gallery" id="article-gallery">
+        <div class="mag-gallery__title">✦ Galería de Artefactos</div>
+        <div class="mag-gallery__grid" id="gallery-grid">
+          {MOCK_ARTICLE.galeria.slider.map((item: any) => (
+            <div class="mag-gallery__item">
+              <img src={item.url} alt={item.caption} loading="lazy" />
+              <div class="mag-gallery__caption">{item.caption}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="mag-spacer"></div>
+
+      <div class="mag-meta">
+        <span class="mag-meta__date" id="meta-date">{MOCK_ARTICLE.date}</span>
+        <span class="mag-meta__slug" id="meta-slug">/{MOCK_ARTICLE.slug}</span>
+        <span class="mag-meta__read" id="meta-read">{MOCK_ARTICLE.reading_time}</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── SCRIPT DE HIDRATACIÓN DINÁMICA & TEMAS ─── -->
+<script is:inline>
+  function setTheme(t) {
+    const html = document.documentElement;
+    const btnC = document.getElementById('btn-charcoal');
+    const btnP = document.getElementById('btn-paper');
+
+    if (t === 'paper') {
+      html.className = 'theme-paper';
+      btnP?.classList.add('active');
+      btnC?.classList.remove('active');
+    } else {
+      html.className = 'theme-charcoal';
+      btnC?.classList.add('active');
+      btnP?.classList.remove('active');
+    }
+  }
+
+  // Hidratación desde localStorage / sessionStorage (si fue generado en vivo por TGP Mind)
+  (function hydrateLiveArticle() {
+    try {
+      const pathParts = window.location.pathname.split('/').filter(Boolean);
+      const curId = pathParts[pathParts.length - 1] || 'draft_id';
+
+      const raw = localStorage.getItem(`tgp_magazine_${curId}`)
+               || localStorage.getItem('tgp_magazine_draft')
+               || sessionStorage.getItem('tgp_current_magazine')
+               || localStorage.getItem('tgp_current_magazine');
+
+      if (!raw) return;
+
+      const art = JSON.parse(raw);
+      if (!art || !art.titulo) return;
+
+      console.log('[TGP Magazine] Hidratando con artículo en vivo:', art.titulo);
+
+      // Título y meta
+      document.title = `${art.titulo} — TGP Magazine`;
+      const elTitle = document.getElementById('article-title');
+      if (elTitle) elTitle.textContent = art.titulo;
+
+      const elSub = document.getElementById('article-subtitle');
+      if (elSub) elSub.textContent = art.subtitulo || '';
+
+      const elExcerpt = document.getElementById('article-excerpt');
+      if (elExcerpt) elExcerpt.textContent = art.excerpt || '';
+
+      const elBody = document.getElementById('article-body');
+      if (elBody && art.body) {
+        elBody.innerHTML = art.body.split('\n\n').map(p => `<p>${p}</p>`).join('');
+      }
+
+      // Hero imagen
+      const elHero = document.getElementById('hero-img');
+      if (elHero && art.heroUrl) {
+        elHero.src = art.heroUrl;
+        elHero.alt = art.titulo;
+      }
+
+      // Caption
+      const elCapStrong = document.getElementById('caption-strong');
+      if (elCapStrong) elCapStrong.textContent = art.heroCaption || art.subtitulo || '';
+
+      const elCapCredit = document.getElementById('caption-credit');
+      if (elCapCredit) elCapCredit.textContent = art.heroCredit || '';
+
+      // Tag
+      const elTag = document.getElementById('tag-text');
+      if (elTag) elTag.textContent = art.category || 'HISTORIA · TGP MIND';
+
+      // Meta
+      const elDate = document.getElementById('meta-date');
+      if (elDate) elDate.textContent = art.date || new Date().toLocaleDateString('es-ES');
+
+      const elSlug = document.getElementById('meta-slug');
+      if (elSlug) elSlug.textContent = `/${art.slug || 'magazine'}`;
+
+      const elRead = document.getElementById('meta-read');
+      if (elRead) elRead.textContent = art.reading_time || '5 min lectura';
+
+      // Galería
+      const slider = art.galeria?.slider;
+      const elGrid = document.getElementById('gallery-grid');
+      const elGallery = document.getElementById('article-gallery');
+      if (elGrid && Array.isArray(slider) && slider.length > 0) {
+        elGrid.innerHTML = slider.map(s => `
+          <div class="mag-gallery__item">
+            <img src="${s.url}" alt="${s.caption || ''}" loading="lazy" />
+            <div class="mag-gallery__caption">${s.caption || ''}</div>
+          </div>
+        `).join('');
+      } else if (!slider || slider.length === 0) {
+        if (elGallery) elGallery.style.display = 'none';
+      }
+
+      // Aplicar tema guardado
+      if (art.theme) setTheme(art.theme);
+
+    } catch (e) {
+      console.warn('[TGP Magazine] Error en hidratación:', e);
+    }
+  })();
+</script>
+
+</body>
+</html>

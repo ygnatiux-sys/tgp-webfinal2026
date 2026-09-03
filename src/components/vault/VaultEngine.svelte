@@ -34,6 +34,11 @@
   let mindPrompt = '';
   let mindResponse = '';
 
+  // TGP Magazine
+  let magazinePrompt = '';
+  let magazineArticle: any = null;
+  let magazineTheme: 'charcoal' | 'paper' = 'charcoal';
+
   // Ref a Scriptorium
   let scriptoriumRef: any;
 
@@ -201,6 +206,39 @@
         mindResponse = resJson?.mdx_preview || resJson?.respuesta || resJson?.analisis || 'Análisis cognitivo completado.';
         status = 'success';
         statusMessage = 'Síntesis cognitiva generada por TGP Mind.';
+        return;
+
+      // 3B. MODO TGP MAGAZINE (WikiForge + Gemini + R2 60/40)
+      } else if (modoActivo === 'magazine') {
+        const query = (magazinePrompt || mindPrompt).trim();
+        if (!query) {
+          throw new Error('Introduce un tema para forjar la edición Magazine.');
+        }
+
+        response = await fetch(motorUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${cleanToken}`,
+          },
+          body: JSON.stringify({
+            prompt_natural: query,
+            theme: magazineTheme,
+          }),
+        });
+
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`Error ${response.status}: ${errText || response.statusText}`);
+        }
+
+        const resJson = await response.json().catch(() => null);
+        magazineArticle = resJson;
+        if (typeof window !== 'undefined' && resJson) {
+          sessionStorage.setItem('tgp_current_magazine', JSON.stringify(resJson));
+        }
+        status = 'success';
+        statusMessage = `Edición Magazine "${resJson?.titulo || query}" forjada con éxito.`;
         return;
 
       // 4. MODOS VAULT: Bóveda D1 / Solo Imagen / Solo Texto
@@ -667,6 +705,78 @@
               </div>
               <div class="text-sm leading-relaxed text-primary/90 whitespace-pre-wrap font-inter">
                 {mindResponse}
+              </div>
+            </div>
+          {/if}
+        </div>
+
+      <!-- MODO 7: TGP MAGAZINE (VISOR EDITORIAL 60/40) -->
+      {:else if modoActivo === 'magazine'}
+        <div class="space-y-6">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="vault-label mb-0" for="mag-topic">Tema o Asunto para la Edición Magazine</label>
+              <div class="flex items-center gap-2 text-[10px] font-mono">
+                <span class="text-primary/40">Tema visual:</span>
+                <button
+                  type="button"
+                  on:click={() => magazineTheme = 'charcoal'}
+                  class="px-2.5 py-1 rounded-full transition-all {magazineTheme === 'charcoal' ? 'bg-vault-accent text-black font-bold' : 'bg-white/5 text-primary/60 hover:bg-white/10'}"
+                >
+                  ✦ Charcoal
+                </button>
+                <button
+                  type="button"
+                  on:click={() => magazineTheme = 'paper'}
+                  class="px-2.5 py-1 rounded-full transition-all {magazineTheme === 'paper' ? 'bg-vault-accent text-black font-bold' : 'bg-white/5 text-primary/60 hover:bg-white/10'}"
+                >
+                  ◈ Paper
+                </button>
+              </div>
+            </div>
+            <input
+              id="mag-topic"
+              type="text"
+              class="vault-input text-xs"
+              placeholder="Ej. Göbekli Tepe, El Colapso de la Edad del Bronce, Pompeya, Zenobia de Palmira..."
+              bind:value={magazinePrompt}
+              on:keydown={(e) => e.key === 'Enter' && ejecutarProtocolo()}
+            />
+            <p class="mt-2 text-[11px] text-primary/40 font-mono">
+              ✦ WikiForge rastreará artefactos fotográficos de alta resolución y Gemini estructurará la edición 60/40.
+            </p>
+          </div>
+
+          {#if magazineArticle}
+            <div class="p-6 rounded-2xl bg-white/3 border border-vault-accent/30 space-y-4 shadow-[0_0_40px_rgba(201,169,110,0.1)]">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-xs font-mono uppercase tracking-widest text-vault-accent flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-vault-accent animate-pulse"></span>
+                  Edición Magazine Forjada:
+                </span>
+                <a
+                  href="/magazine/viewer"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="px-4 py-1.5 rounded-full bg-vault-accent text-black text-xs font-mono uppercase tracking-wider font-bold hover:bg-vault-accent/90 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(201,169,110,0.3)] hover:scale-105"
+                >
+                  ✦ Abrir en Magazine Viewer (60/40) ↗
+                </a>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+                {#if magazineArticle.heroUrl}
+                  <img
+                    src={magazineArticle.heroUrl}
+                    alt={magazineArticle.titulo}
+                    class="w-full h-36 object-cover rounded-xl border border-white/10 shadow-lg"
+                  />
+                {/if}
+                <div class="sm:col-span-2 space-y-2">
+                  <h3 class="font-bodoni text-xl text-highlight font-normal">{magazineArticle.titulo}</h3>
+                  <p class="text-xs italic text-vault-accent/90">{magazineArticle.subtitulo || ''}</p>
+                  <p class="text-xs text-primary/70 line-clamp-3 leading-relaxed">{magazineArticle.excerpt}</p>
+                </div>
               </div>
             </div>
           {/if}

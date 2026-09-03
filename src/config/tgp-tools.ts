@@ -11,6 +11,8 @@ export const TGP_MOTORES = {
   proxy:  import.meta.env.PUBLIC_PROXY_URL          as string | undefined,
   /** El autómata: Análisis, generación de texto y flujos cognitivos (Gemini/Vertex) */
   mind:   import.meta.env.PUBLIC_IA_WEBHOOK_URL     as string | undefined,
+  /** El editor inmersivo: WikiForge + R2 + Gemini Magazine 60/40 */
+  magazine: (import.meta.env.PUBLIC_IA_WEBHOOK_URL ? import.meta.env.PUBLIC_IA_WEBHOOK_URL.replace(/\/inbox\/?$/, '/magazine') : 'https://tgp-mind-713934653057.us-central1.run.app/magazine') as string,
 } as const;
 
 // ─── Definición de Modos de Operación ──────────────────────────────────────
@@ -54,5 +56,10 @@ export const MODOS_OPERACION: ModoOperacion[] = [
     id: 'cognitivo', label: 'TGP Mind',
     desc: 'Análisis de artefactos vía Inteligencia Artificial (Gemini/Vertex)',
     motor: 'mind', files: true, texto: true, busqueda: false,
+  },
+  {
+    id: 'magazine', label: 'TGP Magazine',
+    desc: 'Edición inmersiva 60/40 · WikiForge + Gemini + R2',
+    motor: 'magazine', files: false, texto: true, busqueda: false,
   },
 ];
