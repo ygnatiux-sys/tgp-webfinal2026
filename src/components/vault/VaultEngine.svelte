@@ -143,9 +143,75 @@
     }
   }
 
+  async function publicarBorrador(item: any) {
+    const cleanToken = securityToken.trim();
+    if (cleanToken.length !== 4) {
+      status = 'error';
+      statusMessage = 'Introduce tu clave personal de 4 dígitos abajo para autorizar la publicación de este borrador.';
+      return;
+    }
+
+    status = 'loading';
+    statusMessage = `Autorizando y publicando "${item.title}" en GitHub (draft: false)…`;
+
+    try {
+      // 1. Actualizar estado local a draft: false
+      item.draft = false;
+      item.isPublished = true;
+      if (item.data) item.data.draft = false;
+
+      localStorage.setItem(`tgp_magazine_draft_${item.slug || item.id}`, JSON.stringify(item.data || item));
+      localStorage.setItem(`tgp_magazine_${item.slug || item.id}`, JSON.stringify(item.data || item));
+
+      localDraftsList = localDraftsList.map(d => d.id === item.id ? { ...d, draft: false, isPublished: true } : d);
+      localStorage.setItem('tgp_magazines_history', JSON.stringify(localDraftsList));
+
+      // 2. Transmitir a TGP Mind para publicar en GitHub con draft: false
+      const inboxUrl = TGP_MOTORES.mind;
+      if (inboxUrl) {
+        const galleryUrls = (item.data?.galeria?.slider || []).map((s: any) => s.url).filter(Boolean);
+        if (item.heroUrl) galleryUrls.unshift(item.heroUrl);
+
+        await fetch(inboxUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${cleanToken}`,
+          },
+          body: JSON.stringify({
+            prompt_natural: `Publicar oficialmente edición Magazine en repositorio GitHub con título "${item.title}". Resumen: ${item.excerpt || ''}. Texto: ${item.data?.body || ''}`,
+            titulo: item.title,
+            slug: item.slug || item.id,
+            draft: false,
+            mode: 'magazine_mdx',
+            frontmatter: {
+              title: item.title,
+              slug: item.slug || item.id,
+              abstract: item.excerpt || '',
+              volanta: item.subtitle || 'Edición Magazine',
+              layoutMode: 'magazine',
+              powertype: 'Revista Inmersiva 60/40',
+              draft: false,
+              gallery: galleryUrls,
+              category: item.category || 'Magazine',
+              date: new Date().toISOString(),
+            },
+          }),
+        });
+      }
+
+      status = 'success';
+      statusMessage = `✦ "${item.title}" ha sido autorizado y publicado como definitivo (draft: false).`;
+    } catch (e: any) {
+      status = 'error';
+      statusMessage = `Error autorizando borrador: ${e?.message || e}`;
+    }
+  }
+
   onMount(() => {
     cargarBorradoresLocales();
   });
+
 
   function slugify(text: string): string {
     const clean = (text || '')
@@ -355,7 +421,11 @@
               'Authorization': `Bearer ${cleanToken}`,
             },
             body: JSON.stringify({
-              prompt_natural: mindPrompt.trim(),
+              prompt_natural: `Edición monográfica de revista inmersiva 60/40 sobre: ${mindPrompt.trim()}. Requisito obligatorio: Extrae con WikiForge una galería completa de al menos 5 imágenes históricas de alta resolución en galeria.slider con sus títulos y análisis iconográficos para estructurar 5 folios editoriales.`,
+              tema: mindPrompt.trim(),
+              min_images: 5,
+              images_count: 5,
+              num_folios: 5,
               theme: magazineTheme,
               draft: true,
               persist_github: true,
@@ -447,7 +517,11 @@
             'Authorization': `Bearer ${cleanToken}`,
           },
           body: JSON.stringify({
-            prompt_natural: query,
+            prompt_natural: `Edición monográfica de revista inmersiva 60/40 sobre: ${query}. Requisito obligatorio: Extrae con WikiForge una galería completa de al menos 5 imágenes históricas de alta resolución en galeria.slider con sus títulos y análisis iconográficos para estructurar 5 folios editoriales.`,
+            tema: query,
+            min_images: 5,
+            images_count: 5,
+            num_folios: 5,
             theme: magazineTheme,
             draft: true,
             persist_github: true,
@@ -1105,9 +1179,15 @@
                       <span class="text-[9px] font-mono text-vault-accent uppercase tracking-widest truncate">
                         {item.date || 'Reciente'}
                       </span>
-                      <span class="px-2 py-0.5 rounded text-[8px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">
-                        draft: true
-                      </span>
+                      {#if item.draft === false || item.isPublished}
+                        <span class="px-2 py-0.5 rounded text-[8px] font-mono bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold">
+                          ✓ Publicado
+                        </span>
+                      {:else}
+                        <span class="px-2 py-0.5 rounded text-[8px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">
+                          draft: true
+                        </span>
+                      {/if}
                     </div>
                     <h4 class="font-bodoni text-base text-highlight font-semibold truncate group-hover:text-vault-accent transition-colors">
                       {item.title}
@@ -1119,16 +1199,33 @@
                 </div>
 
                 <!-- Botones de Acción -->
-                <div class="flex items-center justify-between pt-2 border-t border-white/5 text-xs font-mono">
-                  <a
-                    href="/magazine/viewer?id={item.slug || item.id}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="px-3 py-1.5 rounded-lg bg-vault-accent/15 border border-vault-accent/30 text-vault-accent hover:bg-vault-accent hover:text-black transition-all text-[10px] uppercase tracking-wider font-bold flex items-center gap-1.5"
-                  >
-                    <span>Abrir Visor (60/40)</span>
-                    <span>↗</span>
-                  </a>
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/5 text-xs font-mono">
+                  <div class="flex items-center gap-2">
+                    <a
+                      href="/magazine/viewer?id={item.slug || item.id}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="px-3 py-1.5 rounded-lg bg-vault-accent/15 border border-vault-accent/30 text-vault-accent hover:bg-vault-accent hover:text-black transition-all text-[10px] uppercase tracking-wider font-bold flex items-center gap-1.5"
+                    >
+                      <span>Abrir Visor (60/40)</span>
+                      <span>↗</span>
+                    </a>
+
+                    {#if item.draft !== false && !item.isPublished}
+                      <button
+                        type="button"
+                        on:click={() => publicarBorrador(item)}
+                        class="px-3 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-black transition-all text-[10px] uppercase tracking-wider font-bold flex items-center gap-1.5 shadow-sm"
+                        title="Autorizar y consolidar como público en GitHub (draft: false)"
+                      >
+                        <span>🚀 Publicar</span>
+                      </button>
+                    {:else}
+                      <span class="text-[10px] text-emerald-400/80 font-mono flex items-center gap-1 px-1">
+                        <span>✓ Consolidado</span>
+                      </span>
+                    {/if}
+                  </div>
 
                   <button
                     type="button"
