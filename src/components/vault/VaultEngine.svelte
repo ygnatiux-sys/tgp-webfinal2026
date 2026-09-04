@@ -43,6 +43,7 @@
 
   // ─── Tiered Routing ───────────────────────────────────────────────
   let engineMode: 'flash' | 'pro' = 'flash';
+  let editorRole = 'historiador';
 
   // ─── Cinematic Proposal ───────────────────────────────────────────
   let cinematicProposal: { template: string; badge: string; palette: string[]; rhythm: string } | null = null;
