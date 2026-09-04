@@ -41,6 +41,14 @@
   let magazineArticle: any = null;
   let magazineTheme: 'charcoal' | 'paper' = 'charcoal';
 
+  // ─── Tiered Routing ───────────────────────────────────────────────
+  let engineMode: 'flash' | 'pro' = 'flash';
+
+  // ─── Cinematic Proposal ───────────────────────────────────────────
+  let cinematicProposal: { template: string; badge: string; palette: string[]; rhythm: string } | null = null;
+  let renderStatus: 'idle' | 'loading' | 'queued' | 'done' | 'error' = 'idle';
+  let renderResult: { jobId?: string; mp4Url?: string; estimatedDuration?: string } | null = null;
+
   // Ref a Scriptorium
   let scriptoriumRef: any;
 
@@ -212,6 +220,55 @@
     cargarBorradoresLocales();
   });
 
+
+  // ─── Generar Render Cinemático ────────────────────────────────────
+  async function generarRenderCinematico() {
+    if (!cinematicProposal || !magazineArticle) return;
+    const cleanToken = securityToken.trim();
+    if (cleanToken.length !== 4) {
+      status = 'error';
+      statusMessage = 'Introduce tu clave personal de 4 dígitos para autorizar el render.';
+      return;
+    }
+
+    renderStatus = 'loading';
+
+    try {
+      const magUrl = TGP_MOTORES.mind
+        ? TGP_MOTORES.mind.replace(/\/inbox\/?$/, '/render-cinematico')
+        : 'https://tgp-mind-713934653057.us-central1.run.app/render-cinematico';
+
+      const galleryUrls = (magazineArticle.galeria?.slider || []).map((s: any) => s.url).filter(Boolean);
+      if (magazineArticle.heroUrl) galleryUrls.unshift(magazineArticle.heroUrl);
+
+      const res = await fetch(magUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cleanToken,
+        },
+        body: JSON.stringify({
+          imageUrls: galleryUrls,
+          texto: magazineArticle.body || magazineArticle.excerpt || '',
+          template: cinematicProposal.template,
+          palette: cinematicProposal.palette,
+          rhythm: cinematicProposal.rhythm,
+          titulo: magazineArticle.titulo || '',
+          slug: magazineArticle.slug || '',
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Error en el render cinemático.');
+
+      renderStatus = 'queued';
+      renderResult = { jobId: data.jobId, mp4Url: data.mp4Url, estimatedDuration: data.estimatedDuration };
+    } catch (e: any) {
+      renderStatus = 'error';
+      console.error('[CinematicBadge] Render error:', e.message);
+    }
+  }
 
   function slugify(text: string): string {
     const clean = (text || '')
@@ -411,7 +468,6 @@
         }
 
         if (formatoCognitivo === 'magazine') {
-          // Apuntar al endpoint /magazine de tgp-mind con solicitud de persistencia en repo y draft: true
           const magUrl = motorUrl.replace(/\/inbox\/?$/, '/magazine');
           response = await fetch(magUrl, {
             method: 'POST',
@@ -429,6 +485,7 @@
               draft: true,
               persist_github: true,
               commit_to_repo: true,
+              engine: engineMode,
             }),
           });
 
@@ -440,22 +497,21 @@
           const resJson = await response.json().catch(() => null);
           magazineArticle = resJson;
 
-          // Registro permanente en historial (clave única tgp_magazine_draft_${slug} y respaldo GitHub)
+          // Capturar propuesta cinemática del servidor
+          if (resJson?.cinematic_proposal) {
+            cinematicProposal = resJson.cinematic_proposal;
+            renderStatus = 'idle';
+            renderResult = null;
+          }
+
           const { editionSlug, title } = persistirMagazineEnHistorial(resJson, mindPrompt, cleanToken);
 
           status = 'success';
-          statusMessage = `Edición Magazine "${title}" forjada, respaldada en GitHub y guardada en local (draft: true). Redirigiendo a /magazine/viewer?id=${editionSlug}…`;
-
-          // Redirección al visor dinámico con ID permanente
-          setTimeout(() => {
-            if (typeof window !== 'undefined') {
-              window.location.href = `/magazine/viewer?id=${editionSlug}`;
-            }
-          }, 600);
+          statusMessage = `Edición Magazine "${title}" forjada, respaldada en GitHub y guardada en local (draft: true).`;
+          // No redirigir automáticamente — mostrar CinematicBadge primero
           return;
 
         } else {
-          // Modo Ensayo MDX estándar: El cliente solo envía prompt y mode; el servidor orquesta WikiForge, R2 y GitHub
           statusMessage = 'Conectando con TGP Mind para orquestación completa en el servidor…';
 
           response = await fetch(motorUrl, {
@@ -468,6 +524,7 @@
               prompt_natural: mindPrompt.trim(),
               mode: 'ensayo',
               draft: true,
+              engine: engineMode,
             }),
           });
 
@@ -515,15 +572,13 @@
             'Authorization': `Bearer ${cleanToken}`,
           },
           body: JSON.stringify({
-            prompt_natural: `Edición monográfica de revista inmersiva 60/40 sobre: ${query}. Requisito obligatorio: Extrae con WikiForge una galería completa de al menos 5 imágenes históricas de alta resolución en galeria.slider con sus títulos y análisis iconográficos para estructurar 5 folios editoriales.`,
             tema: query,
             min_images: 5,
-            images_count: 5,
             num_folios: 5,
             theme: magazineTheme,
             draft: true,
             persist_github: true,
-            commit_to_repo: true,
+            engine: engineMode,
           }),
         });
 
@@ -535,17 +590,17 @@
         const resJson = await response.json().catch(() => null);
         magazineArticle = resJson;
 
-        // Registro permanente en historial y respaldo GitHub
+        // Capturar propuesta cinemática
+        if (resJson?.cinematic_proposal) {
+          cinematicProposal = resJson.cinematic_proposal;
+          renderStatus = 'idle';
+          renderResult = null;
+        }
+
         const { editionSlug, title } = persistirMagazineEnHistorial(resJson, query, cleanToken);
 
         status = 'success';
-        statusMessage = `Edición Magazine "${title}" forjada, respaldada en GitHub y guardada en local (draft: true). Redirigiendo a /magazine/viewer?id=${editionSlug}…`;
-
-        setTimeout(() => {
-          if (typeof window !== 'undefined') {
-            window.location.href = `/magazine/viewer?id=${editionSlug}`;
-          }
-        }, 600);
+        statusMessage = `Edición Magazine "${title}" forjada y respaldada en GitHub (draft: true).`;
         return;
 
 
@@ -954,6 +1009,41 @@
       <!-- MODO 6: TGP MIND (ANÁLISIS COGNITIVO IA) -->
       {:else if modoActivo === 'cognitivo'}
         <div class="space-y-6">
+
+          <!-- ── SELECTOR DE MOTOR (Tiered Routing) ── -->
+          <div class="flex items-center gap-1 p-1 rounded-xl bg-black/30 border border-white/8 w-fit">
+            <button
+              type="button"
+              id="engine-flash-cognitivo"
+              on:click={() => engineMode = 'flash'}
+              class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono uppercase tracking-wider transition-all duration-200
+                     {engineMode === 'flash'
+                       ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300 shadow-[0_0_16px_rgba(245,158,11,0.2)]'
+                       : 'text-primary/50 hover:text-highlight border border-transparent'}"
+            >
+              <span class="text-sm">⚡</span>
+              <div class="text-left">
+                <div class="font-bold">Estándar</div>
+                <div class="text-[9px] opacity-70 normal-case tracking-normal">Ensayo Breve · Flash</div>
+              </div>
+            </button>
+            <button
+              type="button"
+              id="engine-pro-cognitivo"
+              on:click={() => engineMode = 'pro'}
+              class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono uppercase tracking-wider transition-all duration-200
+                     {engineMode === 'pro'
+                       ? 'bg-vault-accent/20 border border-vault-accent/40 text-vault-accent shadow-[0_0_16px_rgba(201,169,110,0.25)]'
+                       : 'text-primary/50 hover:text-highlight border border-transparent'}"
+            >
+              <span class="text-sm">✦</span>
+              <div class="text-left">
+                <div class="font-bold">Premium</div>
+                <div class="text-[9px] opacity-70 normal-case tracking-normal">Ensayo Extenso · Pro</div>
+              </div>
+            </button>
+          </div>
+
           <div>
             <div class="flex items-center justify-between mb-2">
               <label class="vault-label mb-0" for="mind-prompt">Instrucción Cognitiva / Consulta</label>
@@ -1068,6 +1158,41 @@
       <!-- MODO 7: TGP MAGAZINE (VISOR EDITORIAL 60/40) -->
       {:else if modoActivo === 'magazine'}
         <div class="space-y-6">
+
+          <!-- ── SELECTOR DE MOTOR (Tiered Routing) ── -->
+          <div class="flex items-center gap-1 p-1 rounded-xl bg-black/30 border border-white/8 w-fit">
+            <button
+              type="button"
+              id="engine-flash-magazine"
+              on:click={() => engineMode = 'flash'}
+              class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono uppercase tracking-wider transition-all duration-200
+                     {engineMode === 'flash'
+                       ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300 shadow-[0_0_16px_rgba(245,158,11,0.2)]'
+                       : 'text-primary/50 hover:text-highlight border border-transparent'}"
+            >
+              <span class="text-sm">⚡</span>
+              <div class="text-left">
+                <div class="font-bold">Estándar</div>
+                <div class="text-[9px] opacity-70 normal-case tracking-normal">Revista Breve · Flash</div>
+              </div>
+            </button>
+            <button
+              type="button"
+              id="engine-pro-magazine"
+              on:click={() => engineMode = 'pro'}
+              class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono uppercase tracking-wider transition-all duration-200
+                     {engineMode === 'pro'
+                       ? 'bg-vault-accent/20 border border-vault-accent/40 text-vault-accent shadow-[0_0_16px_rgba(201,169,110,0.25)]'
+                       : 'text-primary/50 hover:text-highlight border border-transparent'}"
+            >
+              <span class="text-sm">✦</span>
+              <div class="text-left">
+                <div class="font-bold">Premium</div>
+                <div class="text-[9px] opacity-70 normal-case tracking-normal">Revista Extensa · Pro</div>
+              </div>
+            </button>
+          </div>
+
           <div>
             <div class="flex items-center justify-between mb-2">
               <label class="vault-label mb-0" for="mag-topic">Tema o Asunto para la Edición Magazine</label>
@@ -1135,6 +1260,100 @@
               </div>
             </div>
           {/if}
+
+          <!-- ── CINEMATIC BADGE (aparece solo si existe cinematic_proposal) ── -->
+          {#if cinematicProposal && (modoActivo === 'magazine' || modoActivo === 'cognitivo')}
+            <div
+              class="mt-6 p-5 rounded-2xl border border-white/15 bg-gradient-to-br from-[{cinematicProposal.palette[0]}15] to-black/60 backdrop-blur-md shadow-[0_8px_40px_rgba(0,0,0,0.5)] space-y-4"
+              style="border-color: {cinematicProposal.palette[0]}40;"
+            >
+              <!-- Cabecera -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="text-[10px] font-mono uppercase tracking-[0.3em] text-white/40">◈ Propuesta Cinemática</span>
+                  <span
+                    class="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-widest border"
+                    style="background-color: {cinematicProposal.palette[0]}25; border-color: {cinematicProposal.palette[0]}60; color: {cinematicProposal.palette[0]};"
+                  >
+                    {cinematicProposal.template}
+                  </span>
+                  <span
+                    class="px-2 py-0.5 rounded text-[9px] font-mono uppercase tracking-widest border border-white/10 text-primary/50"
+                  >
+                    {cinematicProposal.rhythm}
+                  </span>
+                </div>
+                <!-- Paleta de colores -->
+                <div class="flex items-center gap-1.5">
+                  {#each cinematicProposal.palette as color}
+                    <div
+                      class="w-5 h-5 rounded-full border border-white/20 shadow-sm"
+                      style="background-color: {color};"
+                      title={color}
+                    ></div>
+                  {/each}
+                </div>
+              </div>
+
+              <!-- Badge / Justificación -->
+              <p class="text-sm font-inter text-white/80 italic leading-relaxed pl-1">
+                &ldquo;{cinematicProposal.badge}&rdquo;
+              </p>
+
+              <!-- Botón de render + Estado -->
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-1 border-t border-white/8">
+                {#if renderStatus === 'idle' || renderStatus === 'error'}
+                  <button
+                    id="btn-generar-cinematico"
+                    type="button"
+                    on:click={generarRenderCinematico}
+                    class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 border
+                           hover:scale-[1.02] active:scale-[0.98]"
+                    style="background: linear-gradient(135deg, {cinematicProposal.palette[0]}20, {cinematicProposal.palette[1]}10); border-color: {cinematicProposal.palette[0]}50; color: {cinematicProposal.palette[0]};"
+                  >
+                    <span>▶</span>
+                    <span>Generar Ensayo Cinemático en MP4</span>
+                  </button>
+                  {#if renderStatus === 'error'}
+                    <span class="text-[10px] font-mono text-vault-danger">⚠ Error al iniciar el render. Reintenta.</span>
+                  {/if}
+
+                {:else if renderStatus === 'loading'}
+                  <span class="text-xs font-mono text-white/60 animate-pulse flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full animate-ping" style="background-color: {cinematicProposal.palette[0]};"></span>
+                    Enviando a Remotion Engine…
+                  </span>
+
+                {:else if renderStatus === 'queued'}
+                  <div class="space-y-1.5">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                      <span class="text-xs font-mono text-emerald-400 font-semibold">Render en cola · {renderResult?.estimatedDuration || ''} aprox.</span>
+                    </div>
+                    {#if renderResult?.jobId}
+                      <p class="text-[10px] font-mono text-primary/40">Job ID: {renderResult.jobId}</p>
+                    {/if}
+                    {#if renderResult?.mp4Url}
+                      <a
+                        href={renderResult.mp4Url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition-all"
+                      >
+                        ↓ Descargar MP4
+                      </a>
+                    {/if}
+                  </div>
+                {/if}
+
+                <p class="text-[9px] font-mono text-primary/30 ml-auto hidden sm:block">
+                  La publicación web es independiente y ya fue completada.
+                </p>
+              </div>
+            </div>
+          {/if}
+          <!-- ── FIN CINEMATIC BADGE ─────────────────────────────────── -->
+
         </div>
       {/if}
 
