@@ -341,7 +341,7 @@
     try {
       let response: Response;
 
-      // 1. MODO SCRIPTURIUM (Ensayos generados/publicados con TGP Mind con portada R2 y draft: true)
+      // 1. MODO SCRIPTURIUM
       if (modoActivo === 'scriptorium') {
         const payload = scriptoriumRef?.getPayload();
         if (!payload) throw new Error('No se pudo compilar el contenido de Scriptorium.');
@@ -350,28 +350,6 @@
           throw new Error('Introduce un título descriptivo y específico para el ensayo histórico.');
         }
 
-        // Extraer imágenes existentes de Scriptorium o buscar en WikiForge
-        const imgMatches = [...(payload.html?.matchAll(/<img[^>]+src="([^">]+)"/gi) || [])];
-        let scriptoriumImages = imgMatches.map((m: any) => m[1]);
-
-        // Si no hay imágenes en Scriptorium, consultar WikiForge para obtener portada R2
-        if (scriptoriumImages.length === 0 && TGP_MOTORES.proxy) {
-          try {
-            statusMessage = 'Obteniendo artefacto visual en R2 para portada de Scriptorium…';
-            const wikiRes = await fetch(TGP_MOTORES.proxy, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${cleanToken}` },
-              body: JSON.stringify({ buscar: cleanTitle }),
-            });
-            if (wikiRes.ok) {
-              const wData = await wikiRes.json();
-              const items = Array.isArray(wData) ? wData : wData.imagenes || wData.resultados || [];
-              scriptoriumImages = items.map((it: any) => it.url || it.r2_url || it.imageUrl).filter(Boolean);
-            }
-          } catch {}
-        }
-
-        const coverImage = scriptoriumImages[0] || undefined;
         const mindUrl = TGP_MOTORES.mind || motorUrl;
         response = await fetch(mindUrl, {
           method: 'POST',
@@ -380,24 +358,13 @@
             'Authorization': `Bearer ${cleanToken}`,
           },
           body: JSON.stringify({
-            prompt_natural: `Publicar ensayo: ${cleanTitle}\n\n${payload.html || ''}`,
+            prompt_natural: cleanTitle,
             titulo: cleanTitle,
-            title: cleanTitle,
             era: payload.era,
             coordenadas: payload.coordenadas,
             html: payload.html,
             mode: 'ensayo',
             draft: true,
-            coverImage: coverImage,
-            heroUrl: coverImage,
-            gallery: scriptoriumImages.slice(0, 5),
-            frontmatter: {
-              title: cleanTitle,
-              coverImage: coverImage,
-              heroUrl: coverImage,
-              gallery: scriptoriumImages.slice(0, 5),
-              draft: true,
-            },
           }),
         });
 
@@ -408,7 +375,7 @@
 
         const resJson = await response.json().catch(() => null);
         status = 'success';
-        statusMessage = `✦ Ensayo respaldado en GitHub con draft: true por TGP Mind: "${payload.titulo}".`;
+        statusMessage = `✦ Ensayo respaldado en GitHub con draft: true por TGP Mind: "${cleanTitle}".`;
         return;
 
       // 2. MODO WIKIFORGE (Proxy)
@@ -488,40 +455,8 @@
           return;
 
         } else {
-          // Modo Ensayo MDX estándar: Pipeline unificado WikiForge -> R2 -> TGP Mind
-          statusMessage = 'Buscando artefactos visuales en WikiForge y transmutando a R2…';
-          let essayR2Images: string[] = [];
-          try {
-            const proxyUrl = TGP_MOTORES.proxy;
-            if (proxyUrl) {
-              const wikiRes = await fetch(proxyUrl, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${cleanToken}`,
-                },
-                body: JSON.stringify({ buscar: mindPrompt.trim() }),
-              });
-              if (wikiRes.ok) {
-                const wData = await wikiRes.json();
-                const items = Array.isArray(wData) ? wData : wData.imagenes || wData.resultados || [];
-                essayR2Images = items.map((it: any) => it.url || it.r2_url || it.url_r2 || it.imageUrl).filter(Boolean);
-              }
-            }
-          } catch (err) {
-            console.warn('[VaultEngine] Búsqueda WikiForge para ensayo:', err);
-          }
-
-          const coverImageUrl = essayR2Images[0] || undefined;
-
-          // Asignar obligatoriamente un título descriptivo limpio
-          let cleanTitle = mindPrompt.trim().replace(/^¿|^\?|^Escribe un ensayo sobre:?|^Analiza:?/i, '').trim();
-          cleanTitle = cleanTitle.charAt(0).toUpperCase() + cleanTitle.slice(1);
-          if (cleanTitle.length > 70) {
-            cleanTitle = cleanTitle.slice(0, 67) + '...';
-          }
-
-          statusMessage = `Forjando ensayo "${cleanTitle}" con portada R2 y comiteando en GitHub…`;
+          // Modo Ensayo MDX estándar: El cliente solo envía prompt y mode; el servidor orquesta WikiForge, R2 y GitHub
+          statusMessage = 'Conectando con TGP Mind para orquestación completa en el servidor…';
 
           response = await fetch(motorUrl, {
             method: 'POST',
@@ -530,27 +465,9 @@
               'Authorization': `Bearer ${cleanToken}`,
             },
             body: JSON.stringify({
-              prompt_natural: `Redactar ensayo monográfico de alta densidad cognitiva sobre "${cleanTitle}".
-Instrucción de Frontmatter estricta:
-title: "${cleanTitle}"
-coverImage: "${coverImageUrl || ''}"
-heroUrl: "${coverImageUrl || ''}"
-gallery: ${JSON.stringify(essayR2Images.slice(0, 5))}
-draft: true`,
-              title: cleanTitle,
-              titulo: cleanTitle,
+              prompt_natural: mindPrompt.trim(),
               mode: 'ensayo',
               draft: true,
-              coverImage: coverImageUrl,
-              heroUrl: coverImageUrl,
-              gallery: essayR2Images.slice(0, 5),
-              frontmatter: {
-                title: cleanTitle,
-                coverImage: coverImageUrl,
-                heroUrl: coverImageUrl,
-                gallery: essayR2Images.slice(0, 5),
-                draft: true,
-              },
             }),
           });
 
