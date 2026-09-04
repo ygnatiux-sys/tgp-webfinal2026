@@ -342,7 +342,7 @@
               href={mag.url}
               target="_blank"
               rel="noopener noreferrer"
-              class="bento-glass rounded-3xl overflow-hidden border border-white/10 hover:border-vault-accent/60 transition-all duration-500 flex flex-col justify-between group shadow-xl hover:shadow-[0_12px_40px_rgba(0,0,0,0.7)] cursor-pointer text-left block"
+              class="bento-glass rounded-3xl overflow-hidden border border-white/10 hover:border-vault-accent/60 transition-all duration-500 flex flex-col justify-between group shadow-xl hover:shadow-[0_12px_40px_rgba(0,0,0,0.7)] cursor-pointer text-left"
             >
               <div>
                 <!-- Portada con badge -->
@@ -443,7 +443,7 @@
           {#each filteredEnsayos as ensayo}
             <a
               href={ensayo.url}
-              class="bento-glass rounded-3xl overflow-hidden border border-white/10 hover:border-vault-accent/60 transition-all duration-500 flex flex-col justify-between group shadow-xl hover:shadow-[0_12px_40px_rgba(0,0,0,0.7)] cursor-pointer text-left block"
+              class="bento-glass rounded-3xl overflow-hidden border border-white/10 hover:border-vault-accent/60 transition-all duration-500 flex flex-col justify-between group shadow-xl hover:shadow-[0_12px_40px_rgba(0,0,0,0.7)] cursor-pointer text-left"
             >
               <div>
                 <!-- Portada con badge -->
