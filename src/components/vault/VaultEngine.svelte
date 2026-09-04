@@ -48,6 +48,7 @@
   let cinematicProposal: { template: string; badge: string; palette: string[]; rhythm: string } | null = null;
   let renderStatus: 'idle' | 'loading' | 'queued' | 'done' | 'error' = 'idle';
   let renderResult: { jobId?: string; mp4Url?: string; estimatedDuration?: string } | null = null;
+  let lastEditionSlug = ''; // URL slug del último magazine generado (para botón Leer Ensayo)
 
   // Ref a Scriptorium
   let scriptoriumRef: any;
@@ -505,10 +506,11 @@
           }
 
           const { editionSlug, title } = persistirMagazineEnHistorial(resJson, mindPrompt, cleanToken);
+          lastEditionSlug = editionSlug;
 
           status = 'success';
-          statusMessage = `Edición Magazine "${title}" forjada, respaldada en GitHub y guardada en local (draft: true).`;
-          // No redirigir automáticamente — mostrar CinematicBadge primero
+          statusMessage = `Edición Magazine "${title}" forjada y respaldada en GitHub (draft: true).`;
+          // No redirigir automáticamente — el botón 'Leer Ensayo' aparece en el badge
           return;
 
         } else {
@@ -598,6 +600,7 @@
         }
 
         const { editionSlug, title } = persistirMagazineEnHistorial(resJson, query, cleanToken);
+        lastEditionSlug = editionSlug;
 
         status = 'success';
         statusMessage = `Edición Magazine "${title}" forjada y respaldada en GitHub (draft: true).`;
@@ -1300,8 +1303,33 @@
                 &ldquo;{cinematicProposal.badge}&rdquo;
               </p>
 
+              <!-- ─── Botón Primario: Leer Ensayo ─────────────────────── -->
+              {#if lastEditionSlug}
+                <a
+                  id="btn-leer-ensayo"
+                  href="/magazine/viewer?id={lastEditionSlug}"
+                  class="group flex items-center gap-3 w-full px-6 py-4 rounded-2xl transition-all duration-300
+                         hover:scale-[1.01] active:scale-[0.99] shadow-[0_4px_30px_rgba(0,0,0,0.4)]
+                         border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 backdrop-blur-md"
+                >
+                  <div
+                    class="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 shadow-inner"
+                    style="background: linear-gradient(135deg, {cinematicProposal.palette[0]}30, {cinematicProposal.palette[2]}50);"
+                  >
+                    ✦
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs font-mono uppercase tracking-[0.25em] text-white/50 mb-0.5">Artículo listo</p>
+                    <p class="text-base font-bodoni text-white font-semibold leading-tight truncate group-hover:text-vault-accent transition-colors">
+                      {magazineArticle?.titulo || 'Leer Ensayo'}
+                    </p>
+                  </div>
+                  <span class="text-white/50 group-hover:text-vault-accent group-hover:translate-x-1 transition-all text-lg font-light">→</span>
+                </a>
+              {/if}
+
               <!-- Botón de render + Estado -->
-              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-1 border-t border-white/8">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-2 border-t border-white/8">
                 {#if renderStatus === 'idle' || renderStatus === 'error'}
                   <button
                     id="btn-generar-cinematico"
