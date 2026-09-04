@@ -1048,6 +1048,33 @@
             </button>
           </div>
 
+          {#if engineMode === 'pro'}
+            <div class="flex items-center gap-2 p-1 mt-2 rounded-xl bg-black/30 border border-white/8 w-fit" transition:slide>
+              <span class="text-[10px] uppercase font-mono text-primary/50 pl-2">Voz:</span>
+              <button
+                type="button"
+                on:click={() => editorRole = 'historiador'}
+                class="px-3 py-1.5 rounded-lg text-xs font-mono uppercase transition-all {editorRole === 'historiador' ? 'bg-white/10 text-white shadow-sm' : 'text-primary/50 hover:text-white/80'}"
+              >
+                🏛️ Historiador
+              </button>
+              <button
+                type="button"
+                on:click={() => editorRole = 'filosofo'}
+                class="px-3 py-1.5 rounded-lg text-xs font-mono uppercase transition-all {editorRole === 'filosofo' ? 'bg-white/10 text-white shadow-sm' : 'text-primary/50 hover:text-white/80'}"
+              >
+                👁️ Filósofo
+              </button>
+              <button
+                type="button"
+                on:click={() => editorRole = 'periodista'}
+                class="px-3 py-1.5 rounded-lg text-xs font-mono uppercase transition-all {editorRole === 'periodista' ? 'bg-white/10 text-white shadow-sm' : 'text-primary/50 hover:text-white/80'}"
+              >
+                🕵️ Periodista
+              </button>
+            </div>
+          {/if}
+
           <div>
             <div class="flex items-center justify-between mb-2">
               <label class="vault-label mb-0" for="mind-prompt">Instrucción Cognitiva / Consulta</label>
@@ -1196,6 +1223,33 @@
               </div>
             </button>
           </div>
+
+          {#if engineMode === 'pro'}
+            <div class="flex items-center gap-2 p-1 mt-2 rounded-xl bg-black/30 border border-white/8 w-fit" transition:slide>
+              <span class="text-[10px] uppercase font-mono text-primary/50 pl-2">Voz:</span>
+              <button
+                type="button"
+                on:click={() => editorRole = 'historiador'}
+                class="px-3 py-1.5 rounded-lg text-xs font-mono uppercase transition-all {editorRole === 'historiador' ? 'bg-white/10 text-white shadow-sm' : 'text-primary/50 hover:text-white/80'}"
+              >
+                🏛️ Historiador
+              </button>
+              <button
+                type="button"
+                on:click={() => editorRole = 'filosofo'}
+                class="px-3 py-1.5 rounded-lg text-xs font-mono uppercase transition-all {editorRole === 'filosofo' ? 'bg-white/10 text-white shadow-sm' : 'text-primary/50 hover:text-white/80'}"
+              >
+                👁️ Filósofo
+              </button>
+              <button
+                type="button"
+                on:click={() => editorRole = 'periodista'}
+                class="px-3 py-1.5 rounded-lg text-xs font-mono uppercase transition-all {editorRole === 'periodista' ? 'bg-white/10 text-white shadow-sm' : 'text-primary/50 hover:text-white/80'}"
+              >
+                🕵️ Periodista
+              </button>
+            </div>
+          {/if}
 
           <div>
             <div class="flex items-center justify-between mb-2">
