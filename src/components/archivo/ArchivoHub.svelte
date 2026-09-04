@@ -353,7 +353,7 @@
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     loading="lazy"
                   />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
+                  <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
 
                   <!-- Badges superiores -->
                   <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-10 pointer-events-none">
@@ -454,7 +454,7 @@
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     loading="lazy"
                   />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent pointer-events-none"></div>
+                  <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/25 to-transparent pointer-events-none"></div>
 
                   <!-- Badges superiores -->
                   <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-10 pointer-events-none">

@@ -1,5 +1,5 @@
 // src/components/KenBurnsWikimedia.tsx
-// Visor Cinemático Ken Burns en pantalla completa (w-full h-[100dvh])
+// Visor Cinemático Ken Burns en pantalla completa (w-full h-dvh)
 // Aplica interpolación de paneo y zoom (1.0x a 1.3x) sobre imágenes en alta resolución de Wikimedia / Bóveda / Artículos.
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -203,7 +203,7 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 			aria-label="Visor Cinemático Ken Burns"
 			className={`
 				${isModal ? 'fixed inset-0 z-50 bg-black' : 'relative'}
-				w-full h-[100dvh] min-h-[100dvh] overflow-hidden select-none bg-black text-[#f0ede8] font-sans flex flex-col justify-between
+				w-full h-dvh min-h-dvh overflow-hidden select-none bg-black text-[#f0ede8] font-sans flex flex-col justify-between
 				${className}
 			`}
 			style={{ backgroundColor: '#050505' }}
@@ -243,14 +243,14 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 						'radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 75%, rgba(0,0,0,0.85) 100%)',
 				}}
 			/>
-			<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/70 pointer-events-none" />
+			<div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-black/70 pointer-events-none" />
 
 			{/* ── CAPA 3: BARRA SUPERIOR DE CONTROL (HEADER ULTRA SLIM OBSIDIAN) ── */}
-			<header className="relative z-30 w-full px-6 py-5 flex items-center justify-between backdrop-blur-xs bg-gradient-to-b from-black/60 to-transparent">
+			<header className="relative z-30 w-full px-6 py-5 flex items-center justify-between backdrop-blur-xs bg-linear-to-b from-black/60 to-transparent">
 				<div className="flex items-center gap-3">
-					<span className="w-2 h-2 rounded-full bg-[#c9a96e] animate-pulse" />
+					<span className="w-2 h-2 rounded-full bg-vault-accent animate-pulse" />
 					<div className="flex flex-col">
-						<span className="text-[10px] uppercase font-mono tracking-[0.3em] text-[#c9a96e] font-semibold">
+						<span className="text-[10px] uppercase font-mono tracking-[0.3em] text-vault-accent font-semibold">
 							Ken Burns Visor 100dvh
 						</span>
 						<span className="text-[9px] uppercase font-mono tracking-widest text-white/50">
@@ -268,7 +268,7 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 						title="Mostrar/Ocultar información (I)"
 						className={`px-3 py-1.5 rounded-full border text-[10px] font-mono uppercase tracking-widest transition-all cursor-pointer ${
 							showInfo
-								? 'border-[#c9a96e] bg-[#c9a96e]/15 text-[#f0ede8]'
+								? 'border-vault-accent bg-vault-accent/15 text-[#f0ede8]'
 								: 'border-white/10 text-white/60 hover:text-white hover:border-white/30'
 						}`}
 					>
@@ -283,7 +283,7 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 							title="Ver galería de miniaturas"
 							className={`px-3 py-1.5 rounded-full border text-[10px] font-mono uppercase tracking-widest transition-all cursor-pointer ${
 								showThumbnails
-									? 'border-[#c9a96e] bg-[#c9a96e]/15 text-[#f0ede8]'
+									? 'border-vault-accent bg-vault-accent/15 text-[#f0ede8]'
 									: 'border-white/10 text-white/60 hover:text-white hover:border-white/30'
 							}`}
 						>
@@ -296,7 +296,7 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 						type="button"
 						onClick={toggleFullscreen}
 						title="Pantalla completa (F)"
-						className="p-2 rounded-full border border-white/10 hover:border-[#c9a96e] bg-black/40 hover:bg-[#c9a96e]/20 text-white/80 hover:text-[#c9a96e] transition-all cursor-pointer"
+						className="p-2 rounded-full border border-white/10 hover:border-vault-accent bg-black/40 hover:bg-vault-accent/20 text-white/80 hover:text-vault-accent transition-all cursor-pointer"
 					>
 						{isFullscreen ? (
 							<svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -331,7 +331,7 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 						type="button"
 						onClick={handlePrev}
 						aria-label="Registro anterior"
-						className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-white/10 hover:border-[#c9a96e] bg-black/40 hover:bg-[#c9a96e]/20 backdrop-blur-md text-white/80 hover:text-[#c9a96e] transition-all flex items-center justify-center cursor-pointer group"
+						className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-white/10 hover:border-vault-accent bg-black/40 hover:bg-vault-accent/20 backdrop-blur-md text-white/80 hover:text-vault-accent transition-all flex items-center justify-center cursor-pointer group"
 					>
 						<span className="text-lg group-hover:-translate-x-0.5 transition-transform">←</span>
 					</button>
@@ -340,7 +340,7 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 						type="button"
 						onClick={handleNext}
 						aria-label="Siguiente registro"
-						className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-white/10 hover:border-[#c9a96e] bg-black/40 hover:bg-[#c9a96e]/20 backdrop-blur-md text-white/80 hover:text-[#c9a96e] transition-all flex items-center justify-center cursor-pointer group"
+						className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-white/10 hover:border-vault-accent bg-black/40 hover:bg-vault-accent/20 backdrop-blur-md text-white/80 hover:text-vault-accent transition-all flex items-center justify-center cursor-pointer group"
 					>
 						<span className="text-lg group-hover:translate-x-0.5 transition-transform">→</span>
 					</button>
@@ -352,7 +352,7 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 				{/* Información de la imagen activa */}
 				{showInfo && (
 					<div className="max-w-3xl space-y-2 transition-all duration-300">
-						<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/70 border border-[#c9a96e]/30 backdrop-blur-md text-[9px] font-mono text-[#c9a96e] uppercase tracking-widest">
+						<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/70 border border-vault-accent/30 backdrop-blur-md text-[9px] font-mono text-vault-accent uppercase tracking-widest">
 							<span>◈ {currentItem.subtitle || 'Registro de Ensayo'}</span>
 						</div>
 
@@ -385,7 +385,7 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 							type="button"
 							onClick={() => setIsPlaying((p) => !p)}
 							title={isPlaying ? 'Pausar efecto Ken Burns (Espacio)' : 'Reanudar efecto Ken Burns (Espacio)'}
-							className="px-4 py-2 rounded-full border border-white/15 hover:border-[#c9a96e] bg-white/5 hover:bg-[#c9a96e]/15 text-xs font-mono uppercase tracking-widest transition-all cursor-pointer flex items-center gap-2 text-white"
+							className="px-4 py-2 rounded-full border border-white/15 hover:border-vault-accent bg-white/5 hover:bg-vault-accent/15 text-xs font-mono uppercase tracking-widest transition-all cursor-pointer flex items-center gap-2 text-white"
 						>
 							<span>{isPlaying ? '⏸ Pausar' : '▶ Animar'}</span>
 						</button>
@@ -414,7 +414,7 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 									}}
 									aria-label={`Ir a registro ${idx + 1}`}
 									className={`h-1.5 rounded-full transition-all cursor-pointer ${
-										idx === currentIndex ? 'w-8 bg-[#c9a96e]' : 'w-2 bg-white/20 hover:bg-white/40'
+										idx === currentIndex ? 'w-8 bg-vault-accent' : 'w-2 bg-white/20 hover:bg-white/40'
 									}`}
 								/>
 							))}
@@ -433,9 +433,9 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 									setCurrentIndex(idx);
 									setMotionStyleIndex((p) => p + 1);
 								}}
-								className={`relative flex-shrink-0 w-24 h-16 rounded-xl overflow-hidden border transition-all cursor-pointer ${
+								className={`relative shrink-0 w-24 h-16 rounded-xl overflow-hidden border transition-all cursor-pointer ${
 									idx === currentIndex
-										? 'border-[#c9a96e] ring-2 ring-[#c9a96e]/40 scale-105'
+										? 'border-vault-accent ring-2 ring-vault-accent/40 scale-105'
 										: 'border-white/10 opacity-50 hover:opacity-100'
 								}`}
 							>

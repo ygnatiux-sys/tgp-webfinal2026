@@ -1322,7 +1322,7 @@
           <!-- ── CINEMATIC BADGE (aparece solo si existe cinematic_proposal) ── -->
           {#if cinematicProposal && (modoActivo === 'magazine' || modoActivo === 'cognitivo')}
             <div
-              class="mt-6 p-5 rounded-2xl border border-white/15 bg-gradient-to-br from-[{cinematicProposal.palette[0]}15] to-black/60 backdrop-blur-md shadow-[0_8px_40px_rgba(0,0,0,0.5)] space-y-4"
+              class="mt-6 p-5 rounded-2xl border border-white/15 bg-linear-to-br from-[{cinematicProposal.palette[0]}15] to-black/60 backdrop-blur-md shadow-[0_8px_40px_rgba(0,0,0,0.5)] space-y-4"
               style="border-color: {cinematicProposal.palette[0]}40;"
             >
               <!-- Cabecera -->

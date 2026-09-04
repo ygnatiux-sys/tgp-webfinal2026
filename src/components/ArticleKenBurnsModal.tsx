@@ -67,10 +67,10 @@ export const ArticleKenBurnsModal: React.FC<ArticleKenBurnsModalProps> = ({
 					setSelectedImageIndex(0);
 					setIsOpen(true);
 				}}
-				className="group inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-[#c9a96e]/40 bg-black/60 hover:bg-[#c9a96e]/15 hover:border-[#c9a96e] text-[10px] font-mono uppercase tracking-[0.2em] text-[#c9a96e] hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(201,169,110,0.15)] cursor-pointer backdrop-blur-md"
+				className="group inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-vault-accent/40 bg-black/60 hover:bg-vault-accent/15 hover:border-vault-accent text-[10px] font-mono uppercase tracking-[0.2em] text-vault-accent hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(201,169,110,0.15)] cursor-pointer backdrop-blur-md"
 				title="Ver imágenes en animación cinemática Ken Burns (100dvh)"
 			>
-				<span className="w-1.5 h-1.5 rounded-full bg-[#c9a96e] animate-pulse" />
+				<span className="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse" />
 				<span>{buttonLabel}</span>
 				<span className="opacity-60 text-xs group-hover:translate-x-0.5 transition-transform">↗</span>
 			</button>
