@@ -2,7 +2,8 @@
 // Visor Cinemático Ken Burns en pantalla completa (w-full h-dvh)
 // Aplica interpolación de paneo y zoom (1.0x a 1.3x) sobre imágenes en alta resolución de Wikimedia / Bóveda / Artículos.
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import * as React from 'react';
+const { useState, useEffect, useRef, useCallback } = React;
 
 export interface KenBurnsItem {
 	url: string;

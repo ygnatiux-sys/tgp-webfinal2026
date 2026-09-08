@@ -3,6 +3,7 @@
   // Integración unificada con el Design System Obsidian Void (Bodoni Moda + Inter + Glassmorphism)
 
   import { onMount } from 'svelte';
+  import { slide, fade } from 'svelte/transition';
   import { TGP_MOTORES, MODOS_OPERACION } from '../../config/tgp-tools';
   import ModoScriptorium from './ModoScriptorium.svelte';
 

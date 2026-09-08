@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 const ensayos = await getCollection('ensayos');
-const entry = Astro.props.entry || ensayos.find((e) => e.id === slug || e.data.slug === slug);
+const entry = Astro.props.entry || ensayos.find((e) => e.id === slug);
 
 if (!entry || (import.meta.env.PROD && entry.data.draft)) {
   return Astro.redirect('/archivo');
@@ -61,9 +61,9 @@ if (entry.body) {
 }
 
 // 3. Fallback fotográfico temático de alta resolución para que todo artículo tenga registro visual
-const defaultFallback = (entry.id === 'the-caterpillar' || data.slug === 'the-caterpillar')
+const defaultFallback = (entry.id === 'the-caterpillar')
   ? 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Dusk_landscape_high_resolution.jpg'
-  : (entry.id === 'la-biblioteca-de-alejandria' || data.slug === 'la-biblioteca-de-alejandria')
+  : (entry.id === 'la-biblioteca-de-alejandria')
   ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Ancient_Library_of_Alexandria.jpg/1280px-Ancient_Library_of_Alexandria.jpg'
   : '/magazine-hero-gobekli.jpg';
 
