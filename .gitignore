@@ -1,34 +1,16 @@
-# Build output
-dist/
-
-# Generated types & Astro cache
-.astro/
-
-# Cloudflare & Wrangler local state (Miniflare SQLite databases, KV, sessions)
-.wrangler/
-
-# Dependencies
-node_modules/
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Environment variables & secrets
+# Entornos y secretos
 .env
 .env.*
 !.env.example
 
-# IDE & Editor history / backups (protects VS Code Local History snapshots of .env)
-.history/
-.vscode/
-.idea/
+# Dependencias y compilaciones
+node_modules/
+dist/
+.astro/
+.vercel/
+.wrangler/
 
-# OS specific files
+# Sistema y logs
+*.log
 .DS_Store
 Thumbs.db
-
-# Local placeholder images
-/public/images/posts/
