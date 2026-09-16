@@ -38,8 +38,19 @@ declare module 'react' {
   export interface ChangeEvent<T = Element> {
     target: T & { value: string };
   }
+  export interface KeyboardEvent<T = Element> {
+    key: string;
+    code: string;
+    preventDefault(): void;
+    stopPropagation(): void;
+  }
+  export type FC<P = {}> = (props: P) => any;
+  export type RefObject<T> = { current: T | null };
   export function useState<T>(initialState: T | (() => T)): [T, (newState: T | ((prev: T) => T)) => void];
   export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
+  export function useRef<T>(initialValue?: T | null): { current: T | null };
+  export function useCallback<T extends (...args: any[]) => any>(callback: T, deps?: readonly any[]): T;
+  export function useMemo<T>(factory: () => T, deps?: readonly any[]): T;
   const React: any;
   export default React;
 }

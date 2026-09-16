@@ -2,8 +2,7 @@
 // Visor Cinemático Ken Burns en pantalla completa (w-full h-dvh)
 // Aplica interpolación de paneo y zoom (1.0x a 1.3x) sobre imágenes en alta resolución de Wikimedia / Bóveda / Artículos.
 
-import * as React from 'react';
-const { useState, useEffect, useRef, useCallback } = React;
+import React, { useState, useEffect, useRef, useCallback, useMemo, type FC } from 'react';
 
 export interface KenBurnsItem {
 	url: string;
@@ -36,7 +35,7 @@ export interface KenBurnsWikimediaProps {
 const DEFAULT_WIKIMEDIA_IMAGE =
 	'https://upload.wikimedia.org/wikipedia/commons/4/4e/Dusk_landscape_high_resolution.jpg';
 
-export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
+export const KenBurnsWikimedia: FC<KenBurnsWikimediaProps> = ({
 	src,
 	images = [],
 	title = 'Paisaje al atardecer',
@@ -49,9 +48,9 @@ export const KenBurnsWikimedia: React.FC<KenBurnsWikimediaProps> = ({
 	isOpen = true,
 	onClose,
 	className = '',
-}) => {
+}: KenBurnsWikimediaProps) => {
 	// Normalizar lista de imágenes
-	const normalizedItems: KenBurnsItem[] = React.useMemo(() => {
+	const normalizedItems: KenBurnsItem[] = useMemo(() => {
 		if (images && images.length > 0) {
 			return images.map((item, idx) => {
 				if (typeof item === 'string') {
