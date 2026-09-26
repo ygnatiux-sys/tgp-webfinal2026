@@ -13,6 +13,7 @@ export function getStaticPaths() {
     { params: { id: 'pompeya' } },
     { params: { id: 'pompeya-vesubio' } },
     { params: { id: 'biblioteca-alejandria' } },
+    { params: { id: 'los-ultimos-tanos' } },
   ];
 }
 
@@ -153,6 +154,65 @@ const ALEJANDRIA_PAGES = [
   }
 ];
 
+const TANOS_PAGES = [
+  {
+    folio: '01',
+    tag: 'FOLIO I · EL EXILIO LÍRICO',
+    title: 'Gian Franco Pagliaro',
+    subtitle: 'La voz rebelde de la balada italo-porteña',
+    excerpt: 'Llegado de Nápoles a Buenos Aires a los 15 años, Pagliaro convirtió el dolor del desarraigo y la épica de la libertad en himnos que definieron a dos generaciones.',
+    body: 'Ganador del IV Festival Buenos Aires de la Canción con «Las cosas que me alejan de ti», Gian Franco Pagliaro nunca aceptó ser un mero cantor de baladas complacientes. Con «Yo te nombro, Libertad» desafió la censura y fundó una poética ítalo-argentina sin precedentes.',
+    imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Sesión discográfica en los estudios de grabación de Buenos Aires, circa 1974.',
+    imageCredit: 'Archivo Fonográfico Rioplatense / TGP Hemeroteca',
+    date: 'Septiembre 2026',
+    slug: 'los-ultimos-tanos/pagliaro',
+    readingTime: '5 min'
+  },
+  {
+    folio: '02',
+    tag: 'FOLIO II · LA NOSTALGIA DE SANREMO',
+    title: 'Nicola Di Bari',
+    subtitle: 'El vagabundo que conquistó el Río de la Plata',
+    excerpt: 'Doble ganador consagrado del Festival de Sanremo, Nicola Di Bari encontró en Argentina su segundo hogar espiritual, donde sus vinilos de RCA batieron récords de venta.',
+    body: 'Temas como «El corazón es un gitano», «Los días del arco iris» y «Lisa de los ojos azules» sonaron en los tocadiscos Winco de millones de hogares. Su timbre desgarrado sintetizaba la melancolía del sur italiano trasladada a la pampa húmeda.',
+    imageUrl: 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Presentación en vivo televisada en Canal 9 Libertad, Buenos Aires.',
+    imageCredit: 'Colección Revistas Radiolandia / Archivo TGP',
+    date: 'Septiembre 2026',
+    slug: 'los-ultimos-tanos/di-bari',
+    readingTime: '4 min'
+  },
+  {
+    folio: '03',
+    tag: 'FOLIO III · LA REVOLUCIÓN DEL CANTO',
+    title: 'Domenico Modugno',
+    subtitle: 'La tempestad mediterránea en el Luna Park',
+    excerpt: 'Con los brazos abiertos hacia el cielo, Modugno demolió la tradición estática del bel canto. Sus visitas a Buenos Aires colmaron estadios y teatros.',
+    body: 'Cuando Modugno entonó «Nel blu dipinto di blu» y «La distancia es como el viento» frente al público porteño, selló un pacto cultural indestructible. Esta edición documenta las cintas maestras y programas de mano de su histórica serie de conciertos.',
+    imageUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Domenico Modugno dirigiendo la orquesta en su gira sudamericana.',
+    imageCredit: 'Hemeroteca Editorial TGP',
+    date: 'Septiembre 2026',
+    slug: 'los-ultimos-tanos/modugno',
+    readingTime: '6 min'
+  },
+  {
+    folio: '04',
+    tag: 'FOLIO IV · EL POETA DE LA CANCIÓN',
+    title: 'Franco Simone',
+    subtitle: 'La poesía intimista que musicalizó el continente',
+    excerpt: 'Autor de «Paisaje» y «Respiro», Franco Simone tradujo la sensibilidad lírica del Salento a melodías que ingresaron para siempre en el cancionero popular latinoamericano.',
+    body: 'Su voz inconfundible y su rigor literario lo distanciaron de la música ligera. Simone compuso álbumes enteros en español grabados con los mejores músicos de sesión de Sudamérica, consolidando el puente dorado entre Roma y Buenos Aires.',
+    imageUrl: 'https://images.unsplash.com/photo-1520523839898-50712b4d7c36?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Tapa del vinilo LP promocional editado en Argentina, 1978.',
+    imageCredit: 'Bóveda Sonora TGP Vault',
+    date: 'Septiembre 2026',
+    slug: 'los-ultimos-tanos/franco-simone',
+    readingTime: '4 min'
+  }
+];
+
 const MAGAZINES_DATABASE: Record<string, typeof GOBEKLI_PAGES> = {
   'gobekli-tepe': GOBEKLI_PAGES,
   'test': GOBEKLI_PAGES,
@@ -160,6 +220,7 @@ const MAGAZINES_DATABASE: Record<string, typeof GOBEKLI_PAGES> = {
   'pompeya-vesubio': POMPEYA_PAGES,
   'biblioteca-alejandria': ALEJANDRIA_PAGES,
   'viewer': ALEJANDRIA_PAGES,
+  'los-ultimos-tanos': TANOS_PAGES,
 };
 
 const MOCK_PAGES = MAGAZINES_DATABASE[id as string] || GOBEKLI_PAGES;

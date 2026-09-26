@@ -15,6 +15,7 @@ export default config({
     },
     navigation: {
       'Colecciones Editoriales': ['ensayos', 'arquetipos', 'cinematicos'],
+      'Series & Hemeroteca': ['series_hemeroteca'],
       'Archivo & Bóveda': ['vault_entries'],
     },
   },
@@ -108,6 +109,59 @@ export default config({
         coordenadas: fields.text({ label: 'Coordenadas' }),
         image_url: fields.url({ label: 'URL WebP en Cloudflare R2' }),
         content: tgpDocumentEditor('Transcripción / Contenido del Registro'),
+      },
+    }),
+
+    // ─── 5. Series Editoriales & Época (Cantantes Italianos, etc.) ────────────
+    series_hemeroteca: collection({
+      label: 'Series Editoriales',
+      slugField: 'title',
+      path: 'src/content/series_hemeroteca/**',
+      entryLayout: 'content',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Título de la Serie' } }),
+        subtitulo: fields.text({ label: 'Subtítulo / Bajada Editorial' }),
+        era: fields.text({ label: 'Época / Años (ej. 1968-1985)' }),
+        urgencia: fields.select({
+          label: 'Nivel de Urgencia',
+          options: [
+            { label: 'Urgencia Alta (Mastering & Restauración)', value: 'alta' },
+            { label: 'Urgencia Media (Catalogación Activa)', value: 'media' },
+            { label: 'Urgencia Baja (Reserva de Hemeroteca)', value: 'baja' },
+          ],
+          defaultValue: 'alta',
+        }),
+        paletteTheme: fields.select({
+          label: 'Paleta Cromática de Época',
+          options: [
+            { label: 'Rojo Terracota (#a93f2f) & Mostaza (#e6c229)', value: 'terracota-mostaza' },
+            { label: 'Mostaza (#e6c229) & Terracota (#a93f2f)', value: 'mostaza-terracota' },
+            { label: 'Obsidiana Editorial TGP', value: 'editorial-dark' },
+          ],
+          defaultValue: 'terracota-mostaza',
+        }),
+        quoteDestacada: fields.text({
+          label: 'Cita / Quote Editorial de Época (Outfit)',
+          multiline: true,
+        }),
+        autores: fields.array(
+          fields.text({ label: 'Nombre del Artista / Intérprete' }),
+          {
+            label: 'Artistas Integrantes de la Serie',
+            itemLabel: (props) => props.value || 'Artista',
+          }
+        ),
+        flipbookSlug: fields.text({
+          label: 'Slug de Flipbook / Magazine (ej. los-ultimos-tanos)',
+        }),
+        coverImageUrl: fields.text({
+          label: 'URL de Portada / Tapa de Vinilo (R2 o Local)',
+        }),
+        content: tgpDocumentEditor(
+          'Texto Crítico y Reseña de la Serie',
+          'Escribe el análisis histórico y musical de la serie editorial...'
+        ),
       },
     }),
   },

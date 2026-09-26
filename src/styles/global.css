@@ -3,11 +3,22 @@
 @theme {
   --font-bodoni: "Bodoni Moda", serif;
   --font-inter: "Inter", sans-serif;
+  --font-outfit: "Outfit", sans-serif;
   
   --color-bg: #11141c;
   --color-primary: #d5d5d5;
   --color-highlight: #fdfbf7;
   --color-border: #2a2e3d;
+
+  /* Paleta de Época Vintage / Hemeroteca 70s-80s */
+  --color-terracota: #a93f2f;
+  --color-terracota-dark: #6e2419;
+  --color-terracota-light: #c25342;
+  --color-mostaza: #e6c229;
+  --color-mostaza-dark: #b89714;
+  --color-mostaza-light: #f5d64e;
+  --color-vintage-cream: #faf5ea;
+  --color-vintage-black: #171412;
 }
 
 @layer base {
@@ -24,6 +35,10 @@
 
   .font-gloock {
     font-family: 'Gloock', serif;
+  }
+
+  .font-outfit {
+    font-family: 'Outfit', sans-serif;
   }
 
   h1, h2, h3, h4, h5, .font-bodoni {
