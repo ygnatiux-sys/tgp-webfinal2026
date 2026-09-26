@@ -1,0 +1,585 @@
+---
+// src/components/VinylTurntableExperience.astro
+// Experiencia Inmersiva: Batea de Vinilos & Tocadiscos Vintage 33 RPM
+// Colección: "Los Últimos Tanos" — Cantantes Italianos en Argentina (1968-1985)
+
+interface Track {
+  id: string;
+  artist: string;
+  albumTitle: string;
+  year: string;
+  label: string;
+  catalogNumber: string;
+  songTitle: string;
+  duration: string;
+  accentColor: string;
+  coverUrl: string;
+  quote: string;
+  audioUrl?: string;
+  flipbookFolio: string;
+}
+
+const TANOS_ALBUMS: Track[] = [
+  {
+    id: "pagliaro",
+    artist: "Gian Franco Pagliaro",
+    albumTitle: "Yo te nombro, Libertad",
+    year: "1974",
+    label: "RCA Víctor · Serie Victor Black",
+    catalogNumber: "AVS-4210",
+    songTitle: "«Yo te nombro, Libertad»",
+    duration: "3:42",
+    accentColor: "#a93f2f",
+    coverUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+    quote: "La voz contestataria y poética que unió a Nápoles con el asfalto de Buenos Aires desafiando el silencio de una época.",
+    flipbookFolio: "01"
+  },
+  {
+    id: "di-bari",
+    artist: "Nicola Di Bari",
+    albumTitle: "El Corazón es un Gitano",
+    year: "1971",
+    label: "RCA Italiana / Edición Rioplatense",
+    catalogNumber: "LPUS-1029",
+    songTitle: "«El corazón es un gitano»",
+    duration: "3:58",
+    accentColor: "#e6c229",
+    coverUrl: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=800&q=80",
+    quote: "Doble consagración en Sanremo y furor absoluto en las emisoras de radio y tocadiscos Winco de toda la Argentina.",
+    flipbookFolio: "02"
+  },
+  {
+    id: "modugno",
+    artist: "Domenico Modugno",
+    albumTitle: "En Vivo en Buenos Aires",
+    year: "1973",
+    label: "Microfón / Curci Records",
+    catalogNumber: "SUP-8041",
+    songTitle: "«Nel blu dipinto di blu (Volare)»",
+    duration: "4:15",
+    accentColor: "#c25342",
+    coverUrl: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80",
+    quote: "Con los brazos abiertos en el Luna Park, Modugno selló un romance popular eterno con la audiencia porteña.",
+    flipbookFolio: "03"
+  },
+  {
+    id: "simone",
+    artist: "Franco Simone",
+    albumTitle: "Paisaje & Poesía del Salento",
+    year: "1978",
+    label: "Ri-Fi / Epic Argentina",
+    catalogNumber: "EPC-28014",
+    songTitle: "«Paisaje»",
+    duration: "3:35",
+    accentColor: "#d4a719",
+    coverUrl: "https://images.unsplash.com/photo-1520523839898-50712b4d7c36?auto=format&fit=crop&w=800&q=80",
+    quote: "Melodías de terciopelo que trascendieron la balada ligera para convertirse en parte del ADN sentimental latinoamericano.",
+    flipbookFolio: "04"
+  }
+];
+---
+
+<div class="vinyl-experience-root relative w-full my-12 overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[#181412] via-[#120f0e] to-[#0a0808] p-4 sm:p-8 lg:p-12 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
+  
+  <!-- CABECERA DE LA EXPERIENCIA -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-white/10">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#a93f2f]/20 border border-[#a93f2f]/40 text-[#faf5ea] font-outfit text-[11px] font-bold uppercase tracking-[0.25em] mb-3">
+        <span class="w-2 h-2 rounded-full bg-[#e6c229] animate-pulse"></span>
+        Fonoteca Rioplatense · Bóveda Sonora TGP
+      </div>
+      <h2 class="font-bodoni text-3xl sm:text-4xl md:text-5xl font-bold text-[#faf5ea] tracking-tight">
+        La Batea & el Tocadiscos <span class="italic font-normal text-[#e6c229]">33 ⅓ RPM</span>
+      </h2>
+      <p class="font-outfit text-sm text-[#faf5ea]/75 max-w-2xl mt-2">
+        Selecciona un vinilo de la caja de archivo de <em>Los Últimos Tanos</em> para deslizarlo sobre el plato de tracción directa.
+      </p>
+    </div>
+
+    <!-- Toggle de Escenarios -->
+    <div class="flex items-center gap-2 bg-black/50 p-1.5 rounded-2xl border border-white/10 self-start md:self-auto">
+      <button 
+        id="btn-view-crate" 
+        class="tab-view-btn active px-4 py-2 rounded-xl text-xs font-outfit font-bold uppercase tracking-wider transition-all duration-300 bg-[#e6c229] text-[#171412]"
+      >
+        🗂️ Batea de Discos
+      </button>
+      <button 
+        id="btn-view-turntable" 
+        class="tab-view-btn px-4 py-2 rounded-xl text-xs font-outfit font-bold uppercase tracking-wider transition-all duration-300 text-[#faf5ea]/70 hover:text-white"
+      >
+        📻 Tocadiscos
+      </button>
+    </div>
+  </div>
+
+  <!-- ======================================================================== -->
+  <!-- ESCENARIO 1: LA BATEA DE VINILOS (CRATE DIGGER RETRO)                     -->
+  <!-- ======================================================================== -->
+  <div id="stage-crate" class="stage-container transition-all duration-700 opacity-100 block">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      {TANOS_ALBUMS.map((album, idx) => (
+        <div 
+          class="album-crate-item group relative cursor-pointer flex flex-col"
+          data-album-id={album.id}
+          data-album-idx={idx}
+        >
+          <!-- Contenedor con efecto de funda y vinilo que asoma -->
+          <div class="relative w-full aspect-square rounded-2xl p-2 bg-black/40 border border-white/10 group-hover:border-[#e6c229] group-hover:shadow-[0_15px_40px_rgba(230,194,41,0.2)] transition-all duration-500">
+            
+            <!-- Vinilo que asoma por detrás hacia la derecha -->
+            <div class="vinyl-peek absolute top-4 -right-2 sm:-right-4 w-[85%] h-[85%] rounded-full bg-[#0d0d0d] border border-white/10 shadow-2xl flex items-center justify-center transition-all duration-500 group-hover:translate-x-6 group-hover:rotate-45 z-0">
+              <!-- Surcos concéntricos -->
+              <div class="absolute inset-1 rounded-full border border-white/5 opacity-40"></div>
+              <div class="absolute inset-3 rounded-full border border-white/5 opacity-30"></div>
+              <div class="absolute inset-5 rounded-full border border-white/5 opacity-20"></div>
+              <!-- Galleta Central (Center Label) -->
+              <div 
+                class="w-16 h-16 rounded-full border-2 border-white/20 flex flex-col items-center justify-center text-center p-1 shadow-inner"
+                style={`background-color: ${album.accentColor};`}
+              >
+                <span class="text-[7px] font-black uppercase text-white font-mono leading-none">TGP 33</span>
+                <span class="text-[6px] font-bold text-white/80 uppercase truncate max-w-[50px] mt-0.5">{album.artist.split(' ')[0]}</span>
+              </div>
+            </div>
+
+            <!-- Funda de Cartón Frontal (Album Sleeve) -->
+            <div class="relative z-10 w-full h-full rounded-xl overflow-hidden shadow-2xl bg-[#1a1715] border border-white/10 flex flex-col justify-end">
+              <img 
+                src={album.coverUrl} 
+                alt={album.albumTitle}
+                class="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" 
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+              
+              <!-- Badges de la tapa -->
+              <div class="relative z-20 p-4">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  <span class="px-2 py-0.5 rounded bg-black/70 border border-white/20 text-[#e6c229] font-mono text-[9px] uppercase">
+                    {album.label.split('·')[0]}
+                  </span>
+                  <span class="text-white/80 font-mono text-[9px]">{album.year}</span>
+                </div>
+                <h3 class="font-bodoni text-lg font-bold text-[#faf5ea] leading-snug group-hover:text-[#e6c229] transition-colors">
+                  {album.albumTitle}
+                </h3>
+                <p class="font-outfit text-xs font-semibold text-[#faf5ea]/80">{album.artist}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metadatos y Botón de Acción -->
+          <div class="mt-4 flex flex-col flex-grow">
+            <p class="font-outfit text-xs text-[#faf5ea]/70 italic line-clamp-2 mb-3">
+              «{album.quote}»
+            </p>
+            
+            <button 
+              class="btn-cue-turntable w-full py-2.5 px-3 rounded-xl bg-[#e6c229] text-[#171412] hover:bg-white font-outfit text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-md mt-auto"
+              data-album-idx={idx}
+            >
+              <span>Colocar en Tocadiscos</span>
+              <span class="text-sm">▶</span>
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- ======================================================================== -->
+  <!-- ESCENARIO 2: EL TOCADISCOS ANALÓGICO HI-FI (NOGAL Y LATÓN)                -->
+  <!-- ======================================================================== -->
+  <div id="stage-turntable" class="stage-container transition-all duration-700 opacity-0 hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      
+      <!-- LADO IZQUIERDO / CENTRO: EL DECK DEL TOCADISCOS -->
+      <div class="lg:col-span-8 flex justify-center">
+        <!-- Gabinete de madera de nogal pulida -->
+        <div class="turntable-chassis relative w-full max-w-[620px] aspect-[4/3] rounded-3xl p-6 sm:p-10 shadow-[0_30px_90px_rgba(0,0,0,0.95)] border-4 border-[#331c12] bg-gradient-to-br from-[#3b2014] via-[#24130b] to-[#140b06] flex items-center justify-between overflow-hidden">
+          
+          <!-- Textura de veta de madera vintage -->
+          <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#d4915d_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none"></div>
+
+          <!-- PLATO GIRATORIO (PLATTER) -->
+          <div class="relative w-[280px] sm:w-[340px] aspect-square rounded-full p-3 bg-gradient-to-tr from-[#1a1a1a] to-[#2e2e2e] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_10px_35px_rgba(0,0,0,0.8)] border-4 border-[#444] flex items-center justify-center shrink-0">
+            
+            <!-- Puntos estroboscópicos perimetrales -->
+            <div class="absolute inset-1 rounded-full border border-dashed border-[#666] opacity-30"></div>
+
+            <!-- DISCO DE VINILO 33 RPM GIRANDO -->
+            <div id="tt-platter-vinyl" class="turntable-vinyl relative w-full h-full rounded-full bg-[#0a0a0a] shadow-[0_0_20px_rgba(0,0,0,0.9)] flex items-center justify-center cursor-pointer transition-transform duration-700">
+              
+              <!-- Surcos y reflejos de acetato -->
+              <div class="absolute inset-2 rounded-full border border-white/5 opacity-50"></div>
+              <div class="absolute inset-6 rounded-full border border-white/5 opacity-40"></div>
+              <div class="absolute inset-10 rounded-full border border-white/5 opacity-30"></div>
+              <div class="absolute inset-14 rounded-full border border-white/5 opacity-20"></div>
+
+              <!-- Reflejo anamórfico tipo arco de luz de vinilo -->
+              <div class="vinyl-light-reflection absolute inset-0 rounded-full pointer-events-none"></div>
+
+              <!-- Galleta Central / Etiqueta del Sello -->
+              <div id="tt-center-label" class="relative z-10 w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-black/80 flex flex-col items-center justify-center text-center p-2 shadow-2xl transition-colors duration-500 bg-[#a93f2f] text-white">
+                <div class="text-[8px] font-black tracking-widest uppercase font-mono mb-0.5 text-white/90">THE GREAT PUZZLE</div>
+                <div id="tt-label-artist" class="font-bodoni font-black text-xs uppercase leading-tight line-clamp-1">Pagliaro</div>
+                <div id="tt-label-track" class="font-outfit text-[8px] text-white/80 uppercase truncate max-w-[85px]">Yo te nombro</div>
+                <div class="mt-1 flex items-center gap-1">
+                  <span class="text-[7px] font-mono bg-black/40 px-1 py-0.2 rounded font-bold">33 ⅓</span>
+                  <span class="text-[7px] font-mono text-[#e6c229]">STEREO</span>
+                </div>
+                <!-- Eje central cromado -->
+                <div class="w-3.5 h-3.5 rounded-full bg-[#e0e0e0] border-2 border-[#555] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-md"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BRAZO FONOCAPTOR (TONEARM ASSEMBLY) -->
+          <div class="relative w-28 sm:w-36 h-full flex flex-col items-center justify-center shrink-0">
+            <!-- Base circular del brazo -->
+            <div class="absolute top-8 right-4 w-16 h-16 rounded-full bg-gradient-to-b from-[#888] via-[#444] to-[#111] border-2 border-[#999] shadow-2xl flex items-center justify-center">
+              <div class="w-8 h-8 rounded-full bg-[#111] border border-[#666]"></div>
+            </div>
+
+            <!-- Brazo que pivota (Tonearm) -->
+            <div id="tt-tonearm" class="tonearm-rod absolute top-14 right-10 w-3 h-[220px] sm:h-[260px] origin-top transition-transform duration-1000 ease-in-out -rotate-[28deg] z-20 pointer-events-none">
+              <!-- Tubo de aluminio cromado pulido -->
+              <div class="w-full h-full bg-gradient-to-r from-[#d1d1d1] via-[#ffffff] to-[#777] rounded-full shadow-[2px_4px_10px_rgba(0,0,0,0.6)]"></div>
+              <!-- Cabezal / Cápsula Fonográfica con Púa -->
+              <div class="absolute -bottom-3 -left-3 w-8 h-12 bg-[#171412] border border-[#e6c229] rounded-md shadow-xl rotate-[18deg] flex flex-col items-center justify-end pb-1">
+                <!-- Luz guía de la aguja -->
+                <div class="w-1.5 h-1.5 rounded-full bg-[#e6c229] animate-ping mb-1"></div>
+                <div class="w-1 h-3 bg-[#ccc] rounded-full"></div>
+              </div>
+            </div>
+
+            <!-- Mandos y Botones Analógicos en la parte inferior del Deck -->
+            <div class="absolute bottom-6 right-4 flex items-center gap-3">
+              <!-- Selector 33 / 45 RPM -->
+              <button 
+                id="btn-rpm-toggle" 
+                class="px-2.5 py-1 rounded bg-[#111] border border-white/20 text-[#e6c229] font-mono text-[10px] font-bold uppercase hover:border-[#e6c229] transition-all cursor-pointer"
+                title="Alternar velocidad de giro"
+              >
+                33 RPM
+              </button>
+              <!-- Palanca Start / Stop -->
+              <button 
+                id="btn-tt-power" 
+                class="px-3 py-1.5 rounded-lg bg-[#a93f2f] text-white font-outfit text-xs font-black uppercase tracking-wider hover:bg-[#c25342] shadow-lg transition-all cursor-pointer flex items-center gap-1.5"
+              >
+                <span id="tt-power-icon">▶</span>
+                <span id="tt-power-text">Start</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LADO DERECHO: PANEL DE REPRODUCCIÓN, VÚMETROS & CRÉDITOS -->
+      <div class="lg:col-span-4 flex flex-col justify-between h-full bg-[#171412] p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl">
+        <div>
+          <!-- Indicador de aguja en surco -->
+          <div class="flex items-center justify-between mb-4">
+            <span class="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-[#e6c229] font-semibold">
+              <span id="needle-indicator" class="w-2.5 h-2.5 rounded-full bg-white/20"></span>
+              <span id="needle-status-text">Aguja en Reposo</span>
+            </span>
+            <span id="tt-meta-catalog" class="text-[10px] font-mono text-[#faf5ea]/50">AVS-4210</span>
+          </div>
+
+          <h3 id="tt-meta-track" class="font-bodoni text-2xl sm:text-3xl font-bold text-[#e6c229] leading-tight mb-1">
+            «Yo te nombro, Libertad»
+          </h3>
+
+          <p id="tt-meta-artist" class="font-outfit text-base font-semibold text-[#faf5ea] mb-3">
+            Gian Franco Pagliaro
+          </p>
+
+          <p id="tt-meta-album" class="font-outfit text-xs text-[#faf5ea]/60 uppercase tracking-wider mb-6">
+            Álbum: <em>Yo te nombro, Libertad</em> (1974) · RCA Víctor
+          </p>
+
+          <!-- VU METER ANALÓGICO RETRO (Medidor de decibeles con agujas) -->
+          <div class="bg-[#0c0a0a] p-4 rounded-2xl border border-white/10 mb-6">
+            <div class="flex justify-between items-center text-[9px] font-mono text-white/50 mb-2 uppercase tracking-widest">
+              <span>Nivel de Salida (VU)</span>
+              <span class="text-[#e6c229]">Canal L/R</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="relative h-12 bg-[#1f1a17] rounded-lg border border-white/10 overflow-hidden flex items-end p-1">
+                <div id="vu-bar-left" class="w-full h-2 bg-gradient-to-r from-[#34c759] via-[#e6c229] to-[#ff3b30] rounded-sm transition-all duration-100"></div>
+                <div class="absolute top-1 left-2 text-[8px] font-mono text-white/40">CH-L</div>
+              </div>
+              <div class="relative h-12 bg-[#1f1a17] rounded-lg border border-white/10 overflow-hidden flex items-end p-1">
+                <div id="vu-bar-right" class="w-full h-2 bg-gradient-to-r from-[#34c759] via-[#e6c229] to-[#ff3b30] rounded-sm transition-all duration-100"></div>
+                <div class="absolute top-1 left-2 text-[8px] font-mono text-white/40">CH-R</div>
+              </div>
+            </div>
+          </div>
+
+          <blockquote id="tt-meta-quote" class="font-outfit text-xs text-[#faf5ea]/75 italic border-l-2 border-[#e6c229] pl-3 py-1 mb-6">
+            «La voz contestataria y poética que unió a Nápoles con el asfalto de Buenos Aires desafiando el silencio de una época.»
+          </blockquote>
+        </div>
+
+        <!-- Acciones: Flipbook & Volver a la Batea -->
+        <div class="flex flex-col gap-3 pt-4 border-t border-white/10">
+          <a 
+            id="tt-btn-flipbook" 
+            href="/magazine/los-ultimos-tanos"
+            class="w-full py-3 px-4 rounded-xl bg-[#e6c229] text-[#171412] font-outfit text-xs font-black uppercase tracking-widest hover:bg-white transition-all text-center flex items-center justify-center gap-2 shadow-lg"
+          >
+            <span>Ver Folio en el Flipbook</span>
+            <span>↗</span>
+          </a>
+
+          <button 
+            id="btn-back-to-crate" 
+            class="w-full py-2.5 px-4 rounded-xl bg-transparent border border-white/20 text-[#faf5ea] font-outfit text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all text-center cursor-pointer"
+          >
+            🗂️ Explorar Otro Vinilo
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<style>
+  /* Animación realista de rotación del disco de vinilo */
+  .turntable-vinyl.is-spinning-33 {
+    animation: spinVinyl 1.818s linear infinite; /* 33.33 RPM = ~1.818s por vuelta */
+  }
+
+  .turntable-vinyl.is-spinning-45 {
+    animation: spinVinyl 1.333s linear infinite; /* 45 RPM = ~1.333s por vuelta */
+  }
+
+  @keyframes spinVinyl {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Reflejo de luz en el acetato */
+  .vinyl-light-reflection {
+    background: conic-gradient(
+      from 45deg,
+      transparent 0deg,
+      rgba(255, 255, 255, 0.08) 35deg,
+      transparent 70deg,
+      transparent 180deg,
+      rgba(255, 255, 255, 0.08) 215deg,
+      transparent 250deg
+    );
+  }
+
+  /* Brazo fonocaptor: posición de reproducción sobre el disco */
+  .tonearm-rod.on-groove {
+    transform: rotate(8deg) !important;
+  }
+</style>
+
+<script is:inline define:vars={{ TANOS_ALBUMS }}>
+  // Lógica de interactividad y emulación sonora del tocadiscos
+  document.addEventListener('DOMContentLoaded', () => {
+    let currentAlbumIdx = 0;
+    let isPlaying = false;
+    let is45RPM = false;
+    let audioContext = null;
+    let hissNode = null;
+    let vuInterval = null;
+
+    // Elementos del DOM
+    const stageCrate = document.getElementById('stage-crate');
+    const stageTurntable = document.getElementById('stage-turntable');
+    const btnViewCrate = document.getElementById('btn-view-crate');
+    const btnViewTurntable = document.getElementById('btn-view-turntable');
+    const btnBackToCrate = document.getElementById('btn-back-to-crate');
+    
+    const vinylPlatter = document.getElementById('tt-platter-vinyl');
+    const tonearm = document.getElementById('tt-tonearm');
+    const btnPower = document.getElementById('btn-tt-power');
+    const powerIcon = document.getElementById('tt-power-icon');
+    const powerText = document.getElementById('tt-power-text');
+    const btnRpm = document.getElementById('btn-rpm-toggle');
+    const needleIndicator = document.getElementById('needle-indicator');
+    const needleStatusText = document.getElementById('needle-status-text');
+
+    const labelCenter = document.getElementById('tt-center-label');
+    const labelArtist = document.getElementById('tt-label-artist');
+    const labelTrack = document.getElementById('tt-label-track');
+    const metaTrack = document.getElementById('tt-meta-track');
+    const metaArtist = document.getElementById('tt-meta-artist');
+    const metaAlbum = document.getElementById('tt-meta-album');
+    const metaCatalog = document.getElementById('tt-meta-catalog');
+    const metaQuote = document.getElementById('tt-meta-quote');
+    const btnFlipbook = document.getElementById('tt-btn-flipbook');
+
+    const vuBarLeft = document.getElementById('vu-bar-left');
+    const vuBarRight = document.getElementById('vu-bar-right');
+
+    // Cambiar entre Batea y Tocadiscos
+    function showCrate() {
+      stageTurntable.classList.add('opacity-0', 'hidden');
+      stageCrate.classList.remove('hidden');
+      setTimeout(() => stageCrate.classList.remove('opacity-0'), 50);
+
+      btnViewCrate.classList.add('bg-[#e6c229]', 'text-[#171412]');
+      btnViewCrate.classList.remove('text-[#faf5ea]/70');
+      btnViewTurntable.classList.remove('bg-[#e6c229]', 'text-[#171412]');
+      btnViewTurntable.classList.add('text-[#faf5ea]/70');
+    }
+
+    function showTurntable() {
+      stageCrate.classList.add('opacity-0', 'hidden');
+      stageTurntable.classList.remove('hidden');
+      setTimeout(() => stageTurntable.classList.remove('opacity-0'), 50);
+
+      btnViewTurntable.classList.add('bg-[#e6c229]', 'text-[#171412]');
+      btnViewTurntable.classList.remove('text-[#faf5ea]/70');
+      btnViewCrate.classList.remove('bg-[#e6c229]', 'text-[#171412]');
+      btnViewCrate.classList.add('text-[#faf5ea]/70');
+    }
+
+    btnViewCrate.addEventListener('click', showCrate);
+    btnViewTurntable.addEventListener('click', showTurntable);
+    btnBackToCrate.addEventListener('click', () => {
+      stopPlayback();
+      showCrate();
+    });
+
+    // Iniciar o detener reproducción del tocadiscos
+    function startPlayback() {
+      isPlaying = true;
+      powerIcon.textContent = '■';
+      powerText.textContent = 'Stop';
+      btnPower.classList.replace('bg-[#a93f2f]', 'bg-[#111]');
+
+      // 1. El brazo viaja hacia el surco
+      tonearm.classList.add('on-groove');
+      needleStatusText.textContent = 'Posando aguja...';
+
+      // 2. Tras contacto con el surco, gira el plato y se activa el VU meter
+      setTimeout(() => {
+        if (!isPlaying) return;
+        vinylPlatter.classList.add(is45RPM ? 'is-spinning-45' : 'is-spinning-33');
+        needleIndicator.classList.replace('bg-white/20', 'bg-[#34c759]');
+        needleStatusText.textContent = 'Reproduciendo 33 ⅓ RPM';
+        startVUMeter();
+        playVinylHiss();
+      }, 950);
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      powerIcon.textContent = '▶';
+      powerText.textContent = 'Start';
+      btnPower.classList.replace('bg-[#111]', 'bg-[#a93f2f]');
+
+      // Retirar brazo y detener giro
+      tonearm.classList.remove('on-groove');
+      vinylPlatter.classList.remove('is-spinning-33', 'is-spinning-45');
+      needleIndicator.classList.replace('bg-[#34c759]', 'bg-white/20');
+      needleStatusText.textContent = 'Aguja en Reposo';
+      stopVUMeter();
+      stopVinylHiss();
+    }
+
+    btnPower.addEventListener('click', () => {
+      if (isPlaying) stopPlayback();
+      else startPlayback();
+    });
+
+    // Alternar 33 RPM y 45 RPM
+    btnRpm.addEventListener('click', () => {
+      is45RPM = !is45RPM;
+      btnRpm.textContent = is45RPM ? '45 RPM' : '33 RPM';
+      btnRpm.classList.toggle('text-[#ff3b30]', is45RPM);
+
+      if (isPlaying) {
+        vinylPlatter.classList.remove('is-spinning-33', 'is-spinning-45');
+        vinylPlatter.classList.add(is45RPM ? 'is-spinning-45' : 'is-spinning-33');
+        needleStatusText.textContent = `Reproduciendo ${is45RPM ? '45' : '33 ⅓'} RPM`;
+      }
+    });
+
+    // Cargar álbum en el tocadiscos
+    function loadAlbum(idx) {
+      currentAlbumIdx = idx;
+      const album = TANOS_ALBUMS[idx];
+      if (!album) return;
+
+      labelCenter.style.backgroundColor = album.accentColor;
+      labelArtist.textContent = album.artist.split(' ')[0];
+      labelTrack.textContent = album.songTitle.replace(/[«»]/g, '');
+
+      metaTrack.textContent = album.songTitle;
+      metaArtist.textContent = album.artist;
+      metaAlbum.innerHTML = `Álbum: <em>${album.albumTitle}</em> (${album.year}) · ${album.label}`;
+      metaCatalog.textContent = album.catalogNumber;
+      metaQuote.textContent = `«${album.quote}»`;
+
+      if (btnFlipbook) {
+        btnFlipbook.href = `/magazine/los-ultimos-tanos`;
+      }
+
+      showTurntable();
+      setTimeout(startPlayback, 400);
+    }
+
+    // Vincular botones de la batea
+    document.querySelectorAll('.btn-cue-turntable').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.getAttribute('data-album-idx') || '0', 10);
+        loadAlbum(idx);
+      });
+    });
+
+    document.querySelectorAll('.album-crate-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const idx = parseInt(item.getAttribute('data-album-idx') || '0', 10);
+        loadAlbum(idx);
+      });
+    });
+
+    // Simulación de VU Meter analógico
+    function startVUMeter() {
+      stopVUMeter();
+      vuInterval = setInterval(() => {
+        const leftVal = Math.floor(Math.random() * 85) + 15;
+        const rightVal = Math.floor(Math.random() * 85) + 15;
+        if (vuBarLeft) vuBarLeft.style.height = `${leftVal}%`;
+        if (vuBarRight) vuBarRight.style.height = `${rightVal}%`;
+      }, 120);
+    }
+
+    function stopVUMeter() {
+      if (vuInterval) clearInterval(vuInterval);
+      if (vuBarLeft) vuBarLeft.style.height = '4px';
+      if (vuBarRight) vuBarRight.style.height = '4px';
+    }
+
+    // Generador sutil de audio analógico (Vinyl Hiss con Web Audio API)
+    function playVinylHiss() {
+      try {
+        if (!audioContext) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) audioContext = new AudioContextClass();
+        }
+        if (audioContext && audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+      } catch (err) {
+        console.warn('Web Audio no disponible:', err);
+      }
+    }
+
+    function stopVinylHiss() {
+      // Silenciar
+    }
+  });
+</script>

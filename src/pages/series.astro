@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import VinylTurntableExperience from '../components/VinylTurntableExperience.astro';
 import { getCollection } from 'astro:content';
 
 // Cargar las series registradas en Astro Content Layer
@@ -110,6 +111,9 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
         </div>
       </div>
     </header>
+
+    <!-- EXPERIENCIA INMERSIVA DE VINILOS & TOCADISCOS VINTAGE -->
+    <VinylTurntableExperience />
 
     <!-- GRID DE TARJETAS DE SERIES CON PALETAS ALTERNADAS -->
     <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="series-grid">
