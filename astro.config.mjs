@@ -17,6 +17,20 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        onwarn(warning, defaultHandler) {
+          // Silenciar advertencia de directiva interna use astro:head-inject en MDX v8
+          if (
+            warning.code === 'MODULE_LEVEL_DIRECTIVE' &&
+            (warning.message?.includes('astro:head-inject') || (warning.text && warning.text.includes('astro:head-inject')))
+          ) {
+            return;
+          }
+          defaultHandler(warning);
+        },
+      },
+    },
     server: {
       watch: {
         ignored: [
