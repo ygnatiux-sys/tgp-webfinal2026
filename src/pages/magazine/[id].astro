@@ -14,6 +14,8 @@ export function getStaticPaths() {
     { params: { id: 'pompeya-vesubio' } },
     { params: { id: 'biblioteca-alejandria' } },
     { params: { id: 'los-ultimos-tanos' } },
+    { params: { id: 'grandes-enigmas' } },
+    { params: { id: 'la-curva-moderna' } },
   ];
 }
 
@@ -221,6 +223,8 @@ const MAGAZINES_DATABASE: Record<string, typeof GOBEKLI_PAGES> = {
   'biblioteca-alejandria': ALEJANDRIA_PAGES,
   'viewer': ALEJANDRIA_PAGES,
   'los-ultimos-tanos': TANOS_PAGES,
+  'grandes-enigmas': GOBEKLI_PAGES,
+  'la-curva-moderna': POMPEYA_PAGES,
 };
 
 const MOCK_PAGES = MAGAZINES_DATABASE[id as string] || GOBEKLI_PAGES;
