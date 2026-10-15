@@ -28,6 +28,7 @@ const seriesHemerotecaCollection = defineCollection({
     urgencia: z.enum(['alta', 'media', 'baja']).default('alta'),
     paletteTheme: z.enum(['terracota-mostaza', 'mostaza-terracota', 'editorial-dark']).default('terracota-mostaza'),
     quoteDestacada: z.string().optional(),
+    descripcion: z.string().optional(),
     autores: z.array(z.string()).optional(),
     flipbookSlug: z.string().optional(),
     coverImageUrl: z.string().optional(),

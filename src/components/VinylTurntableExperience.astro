@@ -78,19 +78,19 @@ const TANOS_ALBUMS: Track[] = [
 ];
 ---
 
-<div class="vinyl-experience-root relative w-full my-12 overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[#181412] via-[#120f0e] to-[#0a0808] p-4 sm:p-8 lg:p-12 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
+<div class="vinyl-experience-root relative w-full my-12 overflow-hidden rounded-3xl border border-white/15 bg-linear-to-b from-[#181412] via-[#120f0e] to-[#0a0808] p-4 sm:p-8 lg:p-12 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
   
   <!-- CABECERA DE LA EXPERIENCIA -->
   <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-white/10">
     <div>
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#a93f2f]/20 border border-[#a93f2f]/40 text-[#faf5ea] font-outfit text-[11px] font-bold uppercase tracking-[0.25em] mb-3">
-        <span class="w-2 h-2 rounded-full bg-[#e6c229] animate-pulse"></span>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-terracota/20 border border-terracota/40 text-vintage-cream font-outfit text-[11px] font-bold uppercase tracking-[0.25em] mb-3">
+        <span class="w-2 h-2 rounded-full bg-mostaza animate-pulse"></span>
         Fonoteca Rioplatense · Bóveda Sonora TGP
       </div>
-      <h2 class="font-bodoni text-3xl sm:text-4xl md:text-5xl font-bold text-[#faf5ea] tracking-tight">
-        La Batea & el Tocadiscos <span class="italic font-normal text-[#e6c229]">33 ⅓ RPM</span>
+      <h2 class="font-bodoni text-3xl sm:text-4xl md:text-5xl font-bold text-vintage-cream tracking-tight">
+        La Batea & el Tocadiscos <span class="italic font-normal text-mostaza">33 ⅓ RPM</span>
       </h2>
-      <p class="font-outfit text-sm text-[#faf5ea]/75 max-w-2xl mt-2">
+      <p class="font-outfit text-sm text-vintage-cream/75 max-w-2xl mt-2">
         Hojea los discos en la batea retro desplazando las fundas hacia adelante, o colócalos directamente en el tocadiscos analógico.
       </p>
     </div>
@@ -99,13 +99,13 @@ const TANOS_ALBUMS: Track[] = [
     <div class="flex items-center gap-2 bg-black/50 p-1.5 rounded-2xl border border-white/10 self-start md:self-auto">
       <button 
         id="btn-view-crate" 
-        class="tab-view-btn active px-4 py-2 rounded-xl text-xs font-outfit font-bold uppercase tracking-wider transition-all duration-300 bg-[#e6c229] text-[#171412]"
+        class="tab-view-btn active px-4 py-2 rounded-xl text-xs font-outfit font-bold uppercase tracking-wider transition-all duration-300 bg-mostaza text-vintage-black"
       >
         🗂️ Batea de Discos
       </button>
       <button 
         id="btn-view-turntable" 
-        class="tab-view-btn px-4 py-2 rounded-xl text-xs font-outfit font-bold uppercase tracking-wider transition-all duration-300 text-[#faf5ea]/70 hover:text-white"
+        class="tab-view-btn px-4 py-2 rounded-xl text-xs font-outfit font-bold uppercase tracking-wider transition-all duration-300 text-vintage-cream/70 hover:text-white"
       >
         📻 Tocadiscos
       </button>
@@ -120,7 +120,7 @@ const TANOS_ALBUMS: Track[] = [
     <div class="flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-14">
       
       <!-- CONTENEDOR PRINCIPAL DE LA BATEA: w-80 h-[52vh] -->
-      <div class="relative w-80 h-[52vh] min-h-[440px] max-h-[580px] rounded-3xl p-4 shadow-[0_25px_60px_rgba(0,0,0,0.9)] border-4 border-[#3a2014] overflow-hidden flex flex-col justify-between shrink-0 group select-none">
+      <div class="relative w-80 h-[52vh] min-h-110 max-h-145 rounded-3xl p-4 shadow-[0_25px_60px_rgba(0,0,0,0.9)] border-4 border-[#3a2014] overflow-hidden flex flex-col justify-between shrink-0 group select-none">
         
         <!-- FOTO DE STOCK GRATUITA DE DISQUERÍA / TIENDA DE VINILOS -->
         <div 
@@ -130,24 +130,24 @@ const TANOS_ALBUMS: Track[] = [
 
         <!-- BOKEH GRADIENT: DE VISIBLE A LEVE BLUR -->
         <!-- Capa 1: Desenfoque progresivo con máscara de gradiente -->
-        <div class="absolute inset-0 backdrop-blur-[6px] [mask-image:linear-gradient(to_bottom,transparent_10%,black_75%)] pointer-events-none z-1"></div>
+        <div class="absolute inset-0 backdrop-blur-[6px] mask-[linear-gradient(to_bottom,transparent_10%,black_75%)] pointer-events-none z-1"></div>
         <!-- Capa 2: Tinte cálido de época terracota / ámbar con viñeta -->
-        <div class="absolute inset-0 bg-gradient-to-t from-[#120c09] via-[#1c120d]/60 to-transparent opacity-90 pointer-events-none z-2"></div>
+        <div class="absolute inset-0 bg-linear-to-t from-[#120c09] via-[#1c120d]/60 to-transparent opacity-90 pointer-events-none z-2"></div>
         <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,transparent_30%,rgba(10,8,7,0.7)_100%)] pointer-events-none z-2"></div>
 
         <!-- ETIQUETA SUPERIOR DE LA BATEA -->
         <div class="relative z-10 flex items-center justify-between px-2 pt-1 text-white">
-          <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-[#e6c229] font-mono text-[10px] uppercase font-bold tracking-wider">
+          <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-mostaza font-mono text-[10px] uppercase font-bold tracking-wider">
             <span>Batea TGP</span>
             <span class="text-white/40">·</span>
             <span id="crate-counter">1 / 4</span>
           </div>
-          <span class="text-[10px] font-mono text-[#faf5ea]/70 bg-black/40 px-2 py-0.5 rounded border border-white/10">33 ⅓ RPM</span>
+          <span class="text-[10px] font-mono text-vintage-cream/70 bg-black/40 px-2 py-0.5 rounded border border-white/10">33 ⅓ RPM</span>
         </div>
 
         <!-- CONTENEDOR 3D DE LOS DISCOS QUE SE DESPLAZAN HACIA ADELANTE -->
         <div class="relative z-10 w-full h-[65%] my-auto perspective-[1000px] flex items-center justify-center">
-          <div id="vinyl-stack-container" class="relative w-[240px] h-[240px] preserve-3d">
+          <div id="vinyl-stack-container" class="relative w-60 h-60 preserve-3d">
             {TANOS_ALBUMS.map((album, idx) => (
               <div 
                 class="crate-record-card absolute inset-0 cursor-pointer transition-all duration-600 ease-out"
@@ -155,7 +155,7 @@ const TANOS_ALBUMS: Track[] = [
                 id={`record-card-${idx}`}
               >
                 <!-- Tarjeta / Funda del Disco con textura de cartón vinilo -->
-                <div class="relative w-full h-full rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.8)] border border-white/15 bg-[#171412] flex flex-col justify-end transition-transform duration-300 hover:border-[#e6c229]">
+                <div class="relative w-full h-full rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.8)] border border-white/15 bg-vintage-black flex flex-col justify-end transition-transform duration-300 hover:border-mostaza">
                   
                   <!-- Arte de Tapa del Álbum -->
                   <img 
@@ -171,17 +171,17 @@ const TANOS_ALBUMS: Track[] = [
                     <div class="absolute bottom-0 w-12 h-6 rounded-t-full border-t border-x border-white/30" style={`background-color: ${album.accentColor};`}></div>
                   </div>
 
-                  <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                  <div class="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent"></div>
 
                   <!-- Información en el pie de la funda -->
-                  <div class="relative z-10 p-3 bg-gradient-to-t from-black/90 to-transparent">
-                    <div class="text-[9px] font-mono text-[#e6c229] uppercase tracking-wider mb-0.5 truncate">
+                  <div class="relative z-10 p-3 bg-linear-to-t from-black/90 to-transparent">
+                    <div class="text-[9px] font-mono text-mostaza uppercase tracking-wider mb-0.5 truncate">
                       {album.label.split('·')[0]}
                     </div>
-                    <div class="font-bodoni text-base font-bold text-[#faf5ea] leading-tight truncate">
+                    <div class="font-bodoni text-base font-bold text-vintage-cream leading-tight truncate">
                       {album.albumTitle}
                     </div>
-                    <div class="font-outfit text-xs text-[#faf5ea]/80 font-medium truncate">
+                    <div class="font-outfit text-xs text-vintage-cream/80 font-medium truncate">
                       {album.artist}
                     </div>
                   </div>
@@ -195,20 +195,20 @@ const TANOS_ALBUMS: Track[] = [
         <div class="relative z-10 flex items-center justify-between px-2 pb-1 pt-2 border-t border-white/10 bg-black/40 backdrop-blur-md rounded-2xl">
           <button 
             id="btn-crate-prev" 
-            class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-[#e6c229] hover:text-[#171412] text-[#faf5ea] font-outfit text-xs font-bold uppercase transition-all flex items-center gap-1 cursor-pointer"
+            class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-mostaza hover:text-vintage-black text-vintage-cream font-outfit text-xs font-bold uppercase transition-all flex items-center gap-1 cursor-pointer"
             title="Volver al disco anterior"
           >
             <span>❮</span>
             <span>Atrás</span>
           </button>
 
-          <span class="text-[11px] font-outfit text-[#faf5ea]/75 uppercase tracking-wider font-semibold">
+          <span class="text-[11px] font-outfit text-vintage-cream/75 uppercase tracking-wider font-semibold">
             Haz click para hojear
           </span>
 
           <button 
             id="btn-crate-next" 
-            class="px-3 py-1.5 rounded-lg bg-[#e6c229] text-[#171412] hover:bg-white font-outfit text-xs font-black uppercase transition-all flex items-center gap-1 cursor-pointer shadow-md"
+            class="px-3 py-1.5 rounded-lg bg-mostaza text-vintage-black hover:bg-white font-outfit text-xs font-black uppercase transition-all flex items-center gap-1 cursor-pointer shadow-md"
             title="Desplazar disco hacia adelante"
           >
             <span>Hojear</span>
@@ -219,28 +219,28 @@ const TANOS_ALBUMS: Track[] = [
       </div>
 
       <!-- PANEL LATERAL DE DETALLES DEL DISCO EN FOCO -->
-      <div class="w-full max-w-md flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-[#171412] border border-white/10 shadow-2xl">
+      <div class="w-full max-w-md flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-vintage-black border border-white/10 shadow-2xl">
         <div>
           <div class="flex items-center justify-between mb-4">
-            <span class="px-3 py-1 rounded-full bg-[#a93f2f] text-white font-outfit text-[10px] font-black uppercase tracking-wider">
+            <span class="px-3 py-1 rounded-full bg-terracota text-white font-outfit text-[10px] font-black uppercase tracking-wider">
               En Foco en la Batea
             </span>
-            <span id="focus-catalog" class="font-mono text-xs text-[#e6c229]">AVS-4210</span>
+            <span id="focus-catalog" class="font-mono text-xs text-mostaza">AVS-4210</span>
           </div>
 
-          <h3 id="focus-title" class="font-bodoni text-3xl sm:text-4xl font-bold text-[#faf5ea] leading-tight mb-1">
+          <h3 id="focus-title" class="font-bodoni text-3xl sm:text-4xl font-bold text-vintage-cream leading-tight mb-1">
             Yo te nombro, Libertad
           </h3>
 
-          <p id="focus-artist" class="font-outfit text-lg font-semibold text-[#e6c229] mb-3">
+          <p id="focus-artist" class="font-outfit text-lg font-semibold text-mostaza mb-3">
             Gian Franco Pagliaro
           </p>
 
-          <p id="focus-meta" class="font-outfit text-xs text-[#faf5ea]/70 uppercase tracking-widest mb-6">
+          <p id="focus-meta" class="font-outfit text-xs text-vintage-cream/70 uppercase tracking-widest mb-6">
             RCA Víctor · Serie Victor Black (1974) · 33 ⅓ RPM
           </p>
 
-          <blockquote id="focus-quote" class="font-outfit text-sm text-[#faf5ea]/90 italic border-l-2 border-[#e6c229] pl-4 py-1.5 mb-8 bg-black/20 rounded-r-xl">
+          <blockquote id="focus-quote" class="font-outfit text-sm text-vintage-cream/90 italic border-l-2 border-mostaza pl-4 py-1.5 mb-8 bg-black/20 rounded-r-xl">
             «La voz contestataria y poética que unió a Nápoles con el asfalto de Buenos Aires desafiando el silencio de una época.»
           </blockquote>
         </div>
@@ -249,7 +249,7 @@ const TANOS_ALBUMS: Track[] = [
         <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-white/10">
           <button 
             id="btn-play-focused"
-            class="flex-1 py-3 px-4 rounded-xl bg-[#e6c229] text-[#171412] font-outfit text-xs font-black uppercase tracking-wider hover:bg-white transition-all text-center flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+            class="flex-1 py-3 px-4 rounded-xl bg-mostaza text-vintage-black font-outfit text-xs font-black uppercase tracking-wider hover:bg-white transition-all text-center flex items-center justify-center gap-2 shadow-lg cursor-pointer"
           >
             <span>Poner en Tocadiscos</span>
             <span class="text-sm">▶</span>
@@ -258,7 +258,7 @@ const TANOS_ALBUMS: Track[] = [
           <a 
             id="btn-flipbook-focused"
             href="/magazine/los-ultimos-tanos"
-            class="py-3 px-4 rounded-xl bg-transparent border border-white/20 text-[#faf5ea] font-outfit text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all text-center flex items-center justify-center gap-1.5"
+            class="py-3 px-4 rounded-xl bg-transparent border border-white/20 text-vintage-cream font-outfit text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all text-center flex items-center justify-center gap-1.5"
           >
             <span>Folio Flipbook</span>
             <span>↗</span>
@@ -279,13 +279,13 @@ const TANOS_ALBUMS: Track[] = [
       <!-- LADO IZQUIERDO / CENTRO: EL DECK DEL TOCADISCOS -->
       <div class="lg:col-span-8 flex justify-center">
         <!-- Gabinete de madera de nogal pulida -->
-        <div class="turntable-chassis relative w-full max-w-[620px] aspect-[4/3] rounded-3xl p-6 sm:p-10 shadow-[0_30px_90px_rgba(0,0,0,0.95)] border-4 border-[#331c12] bg-gradient-to-br from-[#3b2014] via-[#24130b] to-[#140b06] flex items-center justify-between overflow-hidden">
+        <div class="turntable-chassis relative w-full max-w-155 aspect-4/3 rounded-3xl p-6 sm:p-10 shadow-[0_30px_90px_rgba(0,0,0,0.95)] border-4 border-[#331c12] bg-linear-to-br from-[#3b2014] via-[#24130b] to-[#140b06] flex items-center justify-between overflow-hidden">
           
           <!-- Textura de veta de madera vintage -->
-          <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#d4915d_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none"></div>
+          <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#d4915d_1px,transparent_1px)] bg-size-[12px_12px] pointer-events-none"></div>
 
           <!-- PLATO GIRATORIO (PLATTER) -->
-          <div class="relative w-[280px] sm:w-[340px] aspect-square rounded-full p-3 bg-gradient-to-tr from-[#1a1a1a] to-[#2e2e2e] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_10px_35px_rgba(0,0,0,0.8)] border-4 border-[#444] flex items-center justify-center shrink-0">
+          <div class="relative w-70 sm:w-85 aspect-square rounded-full p-3 bg-linear-to-tr from-[#1a1a1a] to-[#2e2e2e] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_10px_35px_rgba(0,0,0,0.8)] border-4 border-[#444] flex items-center justify-center shrink-0">
             
             <!-- Puntos estroboscópicos perimetrales -->
             <div class="absolute inset-1 rounded-full border border-dashed border-[#666] opacity-30"></div>
@@ -303,13 +303,13 @@ const TANOS_ALBUMS: Track[] = [
               <div class="vinyl-light-reflection absolute inset-0 rounded-full pointer-events-none"></div>
 
               <!-- Galleta Central / Etiqueta del Sello -->
-              <div id="tt-center-label" class="relative z-10 w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-black/80 flex flex-col items-center justify-center text-center p-2 shadow-2xl transition-colors duration-500 bg-[#a93f2f] text-white">
+              <div id="tt-center-label" class="relative z-10 w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-black/80 flex flex-col items-center justify-center text-center p-2 shadow-2xl transition-colors duration-500 bg-terracota text-white">
                 <div class="text-[8px] font-black tracking-widest uppercase font-mono mb-0.5 text-white/90">THE GREAT PUZZLE</div>
                 <div id="tt-label-artist" class="font-bodoni font-black text-xs uppercase leading-tight line-clamp-1">Pagliaro</div>
-                <div id="tt-label-track" class="font-outfit text-[8px] text-white/80 uppercase truncate max-w-[85px]">Yo te nombro</div>
+                <div id="tt-label-track" class="font-outfit text-[8px] text-white/80 uppercase truncate max-w-21.25">Yo te nombro</div>
                 <div class="mt-1 flex items-center gap-1">
                   <span class="text-[7px] font-mono bg-black/40 px-1 py-0.2 rounded font-bold">33 ⅓</span>
-                  <span class="text-[7px] font-mono text-[#e6c229]">STEREO</span>
+                  <span class="text-[7px] font-mono text-mostaza">STEREO</span>
                 </div>
                 <!-- Eje central cromado -->
                 <div class="w-3.5 h-3.5 rounded-full bg-[#e0e0e0] border-2 border-[#555] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-md"></div>
@@ -320,18 +320,18 @@ const TANOS_ALBUMS: Track[] = [
           <!-- BRAZO FONOCAPTOR (TONEARM ASSEMBLY) -->
           <div class="relative w-28 sm:w-36 h-full flex flex-col items-center justify-center shrink-0">
             <!-- Base circular del brazo -->
-            <div class="absolute top-8 right-4 w-16 h-16 rounded-full bg-gradient-to-b from-[#888] via-[#444] to-[#111] border-2 border-[#999] shadow-2xl flex items-center justify-center">
+            <div class="absolute top-8 right-4 w-16 h-16 rounded-full bg-linear-to-b from-[#888] via-[#444] to-[#111] border-2 border-[#999] shadow-2xl flex items-center justify-center">
               <div class="w-8 h-8 rounded-full bg-[#111] border border-[#666]"></div>
             </div>
 
             <!-- Brazo que pivota (Tonearm) -->
-            <div id="tt-tonearm" class="tonearm-rod absolute top-14 right-10 w-3 h-[220px] sm:h-[260px] origin-top transition-transform duration-1000 ease-in-out -rotate-[28deg] z-20 pointer-events-none">
+            <div id="tt-tonearm" class="tonearm-rod absolute top-14 right-10 w-3 h-55 sm:h-65 origin-top transition-transform duration-1000 ease-in-out rotate-[-28deg] z-20 pointer-events-none">
               <!-- Tubo de aluminio cromado pulido -->
-              <div class="w-full h-full bg-gradient-to-r from-[#d1d1d1] via-[#ffffff] to-[#777] rounded-full shadow-[2px_4px_10px_rgba(0,0,0,0.6)]"></div>
+              <div class="w-full h-full bg-linear-to-r from-[#d1d1d1] via-[#ffffff] to-[#777] rounded-full shadow-[2px_4px_10px_rgba(0,0,0,0.6)]"></div>
               <!-- Cabezal / Cápsula Fonográfica con Púa -->
-              <div class="absolute -bottom-3 -left-3 w-8 h-12 bg-[#171412] border border-[#e6c229] rounded-md shadow-xl rotate-[18deg] flex flex-col items-center justify-end pb-1">
+              <div class="absolute -bottom-3 -left-3 w-8 h-12 bg-vintage-black border border-mostaza rounded-md shadow-xl rotate-18 flex flex-col items-center justify-end pb-1">
                 <!-- Luz guía de la aguja -->
-                <div class="w-1.5 h-1.5 rounded-full bg-[#e6c229] animate-ping mb-1"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-mostaza animate-ping mb-1"></div>
                 <div class="w-1 h-3 bg-[#ccc] rounded-full"></div>
               </div>
             </div>
@@ -341,7 +341,7 @@ const TANOS_ALBUMS: Track[] = [
               <!-- Selector 33 / 45 RPM -->
               <button 
                 id="btn-rpm-toggle" 
-                class="px-2.5 py-1 rounded bg-[#111] border border-white/20 text-[#e6c229] font-mono text-[10px] font-bold uppercase hover:border-[#e6c229] transition-all cursor-pointer"
+                class="px-2.5 py-1 rounded bg-[#111] border border-white/20 text-mostaza font-mono text-[10px] font-bold uppercase hover:border-mostaza transition-all cursor-pointer"
                 title="Alternar velocidad de giro"
               >
                 33 RPM
@@ -349,7 +349,7 @@ const TANOS_ALBUMS: Track[] = [
               <!-- Palanca Start / Stop -->
               <button 
                 id="btn-tt-power" 
-                class="px-3 py-1.5 rounded-lg bg-[#a93f2f] text-white font-outfit text-xs font-black uppercase tracking-wider hover:bg-[#c25342] shadow-lg transition-all cursor-pointer flex items-center gap-1.5"
+                class="px-3 py-1.5 rounded-lg bg-terracota text-white font-outfit text-xs font-black uppercase tracking-wider hover:bg-terracota-light shadow-lg transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <span id="tt-power-icon">▶</span>
                 <span id="tt-power-text">Start</span>
@@ -360,26 +360,26 @@ const TANOS_ALBUMS: Track[] = [
       </div>
 
       <!-- LADO DERECHO: PANEL DE REPRODUCCIÓN, VÚMETROS & CRÉDITOS -->
-      <div class="lg:col-span-4 flex flex-col justify-between h-full bg-[#171412] p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl">
+      <div class="lg:col-span-4 flex flex-col justify-between h-full bg-vintage-black p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl">
         <div>
           <!-- Indicador de aguja en surco -->
           <div class="flex items-center justify-between mb-4">
-            <span class="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-[#e6c229] font-semibold">
+            <span class="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-mostaza font-semibold">
               <span id="needle-indicator" class="w-2.5 h-2.5 rounded-full bg-white/20"></span>
               <span id="needle-status-text">Aguja en Reposo</span>
             </span>
-            <span id="tt-meta-catalog" class="text-[10px] font-mono text-[#faf5ea]/50">AVS-4210</span>
+            <span id="tt-meta-catalog" class="text-[10px] font-mono text-vintage-cream/50">AVS-4210</span>
           </div>
 
-          <h3 id="tt-meta-track" class="font-bodoni text-2xl sm:text-3xl font-bold text-[#e6c229] leading-tight mb-1">
+          <h3 id="tt-meta-track" class="font-bodoni text-2xl sm:text-3xl font-bold text-mostaza leading-tight mb-1">
             «Yo te nombro, Libertad»
           </h3>
 
-          <p id="tt-meta-artist" class="font-outfit text-base font-semibold text-[#faf5ea] mb-3">
+          <p id="tt-meta-artist" class="font-outfit text-base font-semibold text-vintage-cream mb-3">
             Gian Franco Pagliaro
           </p>
 
-          <p id="tt-meta-album" class="font-outfit text-xs text-[#faf5ea]/60 uppercase tracking-wider mb-6">
+          <p id="tt-meta-album" class="font-outfit text-xs text-vintage-cream/60 uppercase tracking-wider mb-6">
             Álbum: <em>Yo te nombro, Libertad</em> (1974) · RCA Víctor
           </p>
 
@@ -387,21 +387,21 @@ const TANOS_ALBUMS: Track[] = [
           <div class="bg-[#0c0a0a] p-4 rounded-2xl border border-white/10 mb-6">
             <div class="flex justify-between items-center text-[9px] font-mono text-white/50 mb-2 uppercase tracking-widest">
               <span>Nivel de Salida (VU)</span>
-              <span class="text-[#e6c229]">Canal L/R</span>
+              <span class="text-mostaza">Canal L/R</span>
             </div>
             <div class="grid grid-cols-2 gap-3">
               <div class="relative h-12 bg-[#1f1a17] rounded-lg border border-white/10 overflow-hidden flex items-end p-1">
-                <div id="vu-bar-left" class="w-full h-2 bg-gradient-to-r from-[#34c759] via-[#e6c229] to-[#ff3b30] rounded-sm transition-all duration-100"></div>
+                <div id="vu-bar-left" class="w-full h-2 bg-linear-to-r from-[#34c759] via-mostaza to-[#ff3b30] rounded-sm transition-all duration-100"></div>
                 <div class="absolute top-1 left-2 text-[8px] font-mono text-white/40">CH-L</div>
               </div>
               <div class="relative h-12 bg-[#1f1a17] rounded-lg border border-white/10 overflow-hidden flex items-end p-1">
-                <div id="vu-bar-right" class="w-full h-2 bg-gradient-to-r from-[#34c759] via-[#e6c229] to-[#ff3b30] rounded-sm transition-all duration-100"></div>
+                <div id="vu-bar-right" class="w-full h-2 bg-linear-to-r from-[#34c759] via-mostaza to-[#ff3b30] rounded-sm transition-all duration-100"></div>
                 <div class="absolute top-1 left-2 text-[8px] font-mono text-white/40">CH-R</div>
               </div>
             </div>
           </div>
 
-          <blockquote id="tt-meta-quote" class="font-outfit text-xs text-[#faf5ea]/75 italic border-l-2 border-[#e6c229] pl-3 py-1 mb-6">
+          <blockquote id="tt-meta-quote" class="font-outfit text-xs text-vintage-cream/75 italic border-l-2 border-mostaza pl-3 py-1 mb-6">
             «La voz contestataria y poética que unió a Nápoles con el asfalto de Buenos Aires desafiando el silencio de una época.»
           </blockquote>
         </div>
@@ -411,7 +411,7 @@ const TANOS_ALBUMS: Track[] = [
           <a 
             id="tt-btn-flipbook" 
             href="/magazine/los-ultimos-tanos"
-            class="w-full py-3 px-4 rounded-xl bg-[#e6c229] text-[#171412] font-outfit text-xs font-black uppercase tracking-widest hover:bg-white transition-all text-center flex items-center justify-center gap-2 shadow-lg"
+            class="w-full py-3 px-4 rounded-xl bg-mostaza text-vintage-black font-outfit text-xs font-black uppercase tracking-widest hover:bg-white transition-all text-center flex items-center justify-center gap-2 shadow-lg"
           >
             <span>Ver Folio en el Flipbook</span>
             <span>↗</span>
@@ -419,7 +419,7 @@ const TANOS_ALBUMS: Track[] = [
 
           <button 
             id="btn-back-to-crate" 
-            class="w-full py-2.5 px-4 rounded-xl bg-transparent border border-white/20 text-[#faf5ea] font-outfit text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all text-center cursor-pointer"
+            class="w-full py-2.5 px-4 rounded-xl bg-transparent border border-white/20 text-vintage-cream font-outfit text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all text-center cursor-pointer"
           >
             🗂️ Volver a la Batea de Discos
           </button>

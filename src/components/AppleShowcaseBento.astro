@@ -116,16 +116,16 @@ const col3 = cards.slice(6, 9);
   <!-- BENTO ULTRA-WIDE -->
   <div
     id="tgp-masonry-bento"
-    class="relative isolate w-full max-w-[1560px] h-[520px] sm:h-[480px] md:h-[460px] lg:h-[480px] mx-auto rounded-[28px] overflow-hidden bg-black border border-white/10 shadow-2xl"
+    class="relative isolate w-full max-w-390 h-130 sm:h-120 md:h-115 lg:h-120 mx-auto rounded-[28px] overflow-hidden bg-black border border-white/10 shadow-2xl"
   >
     <!-- 1. CÁMARA 3D Y SÁBANA MASONRY DESIGUAL (Derecha) -->
-    <!-- perspective-[1200px] es el secreto para que caigan "desde la pantalla" hacia adentro -->
-    <div class="absolute inset-0 z-0 overflow-hidden [perspective:1200px]">
+    <!-- perspective-distant es el secreto para que caigan "desde la pantalla" hacia adentro -->
+    <div class="absolute inset-0 z-0 overflow-hidden perspective-distant">
       
       <!-- Grilla inclinada (-12deg) con 3 columnas de tamaños desiguales -->
       <div
         id="masonry-deck"
-        class="absolute right-[-10%] sm:right-[-6%] top-[-30%] w-[95%] sm:w-[80%] md:w-[68%] h-[170%] grid grid-cols-3 gap-3.5 -rotate-[12deg] [transform-style:preserve-3d]"
+        class="absolute right-[-10%] sm:right-[-6%] top-[-30%] w-[95%] sm:w-[80%] md:w-[68%] h-[170%] grid grid-cols-3 gap-3.5 -rotate-12 transform-3d"
       >
         <!-- COLUMNA 1 (Desfasada arriba) -->
         <div class="flex flex-col gap-3.5 -translate-y-8">
@@ -141,7 +141,7 @@ const col3 = cards.slice(6, 9);
                 class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+              <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
 
               <!-- Metadata sutil inferior -->
               <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/80 pointer-events-none z-10">
@@ -170,7 +170,7 @@ const col3 = cards.slice(6, 9);
                 class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+              <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
 
               <!-- Metadata sutil inferior -->
               <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/80 pointer-events-none z-10">
@@ -199,7 +199,7 @@ const col3 = cards.slice(6, 9);
                 class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+              <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
 
               <!-- Metadata sutil inferior -->
               <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/80 pointer-events-none z-10">

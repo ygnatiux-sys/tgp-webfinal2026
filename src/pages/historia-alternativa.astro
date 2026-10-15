@@ -96,7 +96,7 @@ const casosAlternativos = [
   <!-- LENS GLOWS DE FONDO (HEREDADO DE ARCHIVO) -->
   <div class="lens-glow -top-50 -left-50"></div>
   <div class="lens-glow -bottom-50 -right-50"></div>
-  <div class="fixed top-1/4 -right-32 w-[550px] h-[550px] bg-vault-accent/5 rounded-full blur-[160px] pointer-events-none"></div>
+  <div class="fixed top-1/4 -right-32 w-137.5 h-137.5 bg-vault-accent/5 rounded-full blur-[160px] pointer-events-none"></div>
 
   <Navbar />
 
@@ -148,7 +148,7 @@ const casosAlternativos = [
          - Acabado Bento Obsidian con lens glows y tipografía Bodoni / Outfit
     ═══════════════════════════════════════════════════════════════════════ -->
     <section class="relative px-4 sm:px-6 md:px-16 max-w-7xl mx-auto mb-24">
-      <div class="cartel-univisium w-full bg-[#11141c] flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 group">
+      <div class="cartel-univisium w-full bg-bg flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 group">
         <!-- Fondo Fotográfico Cinemático con Gradiente de Inmersión Apple -->
         <div class="absolute inset-0 -z-10 overflow-hidden">
           <img
@@ -156,7 +156,7 @@ const casosAlternativos = [
             alt="Göbekli Tepe - Cartel Univisium"
             class="w-full h-full object-cover opacity-40 group-hover:scale-105 group-hover:opacity-55 transition-all duration-1000 filter contrast-125"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#11141c] via-[#11141c]/75 to-[#11141c]/30"></div>
+          <div class="absolute inset-0 bg-linear-to-t from-bg via-bg/75 to-bg/30"></div>
           <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,169,110,0.25)_0%,transparent_60%)] pointer-events-none"></div>
         </div>
 
@@ -185,7 +185,7 @@ const casosAlternativos = [
             <span>◈</span> Documento de Investigación Primario
           </div>
 
-          <h2 class="font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.0] tracking-tighter titulo-estilo-apple mb-4">
+          <h2 class="font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-none tracking-tighter titulo-estilo-apple mb-4">
             La Civilización Olvidada del <span class="highlight-word italic font-light font-bodoni text-vault-accent">Younger Dryas</span>.
           </h2>
 
@@ -262,7 +262,7 @@ const casosAlternativos = [
             >
               <div>
                 <!-- Contenedor de Imagen Uniforme Aspect 3/4 -->
-                <div class="w-full aspect-[3/4] overflow-hidden rounded-xl bg-neutral-900 relative">
+                <div class="w-full aspect-3/4 overflow-hidden rounded-xl bg-neutral-900 relative">
                   <img
                     src={caso.imageUrl}
                     alt={caso.title}
@@ -270,7 +270,7 @@ const casosAlternativos = [
                     loading="lazy"
                   />
                   <!-- Degradé Cinematográfico -->
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent pointer-events-none"></div>
+                  <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/25 to-transparent pointer-events-none"></div>
 
                   <!-- Badges Superiores -->
                   <div class="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">

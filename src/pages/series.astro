@@ -5,11 +5,25 @@ import Footer from '../components/Footer.astro';
 import VinylTurntableExperience from '../components/VinylTurntableExperience.astro';
 import { getCollection } from 'astro:content';
 
+interface SerieItem {
+  id: string;
+  title: string;
+  subtitulo?: string;
+  era?: string;
+  urgencia: 'alta' | 'media' | 'baja';
+  paletteTheme: 'terracota-mostaza' | 'mostaza-terracota' | 'editorial-dark';
+  quoteDestacada?: string;
+  descripcion?: string;
+  autores?: string[];
+  flipbookSlug?: string;
+  coverImageUrl?: string;
+}
+
 // Cargar las series registradas en Astro Content Layer
 const seriesEntries = await getCollection('series_hemeroteca');
 
 // Fallback curado por si está vacío
-const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id, ...e.data })) : [
+const seriesList: SerieItem[] = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id, ...e.data })) : [
   {
     id: 'los-ultimos-tanos',
     title: 'Los Últimos Tanos',
@@ -55,8 +69,8 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
 <Layout title="Hemeroteca Editorial TGP · Catálogo de Series">
   <!-- AMBIENT GLOWS -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-    <div class="absolute top-10 -left-40 w-[600px] h-[600px] bg-[#a93f2f]/15 rounded-full blur-[140px]"></div>
-    <div class="absolute bottom-20 -right-40 w-[600px] h-[600px] bg-[#e6c229]/15 rounded-full blur-[160px]"></div>
+    <div class="absolute top-10 -left-40 w-150 h-150 bg-terracota/15 rounded-full blur-[140px]"></div>
+    <div class="absolute bottom-20 -right-40 w-150 h-150 bg-mostaza/15 rounded-full blur-[160px]"></div>
   </div>
 
   <Navbar />
@@ -64,49 +78,49 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
   <main class="relative z-10 pt-28 pb-32 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
     
     <!-- HEADER HERO EDITORIAL VINTAGE (ROJO TERRACOTA DE ÉPOCA) -->
-    <header class="series-hero-container relative rounded-3xl p-8 sm:p-12 md:p-16 mb-16 overflow-hidden border border-white/10 shadow-[0_30px_90px_rgba(169,63,47,0.25)] transition-all duration-700 bg-gradient-to-br from-[#a93f2f] via-[#752418] to-[#1c1210]">
+    <header class="series-hero-container relative rounded-3xl p-8 sm:p-12 md:p-16 mb-16 overflow-hidden border border-white/10 shadow-[0_30px_90px_rgba(169,63,47,0.25)] transition-all duration-700 bg-linear-to-br from-terracota via-[#752418] to-[#1c1210]">
       <!-- Textura de fondo sutil tipo vinilo / papel de época -->
-      <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+      <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] bg-size-[16px_16px] pointer-events-none"></div>
       
       <div class="relative z-10 max-w-4xl">
-        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-[#e6c229]/40 text-[#e6c229] text-[11px] font-outfit uppercase tracking-[0.3em] font-semibold mb-6">
-          <span class="w-2 h-2 rounded-full bg-[#e6c229] animate-pulse"></span>
+        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-mostaza/40 text-mostaza text-[11px] font-outfit uppercase tracking-[0.3em] font-semibold mb-6">
+          <span class="w-2 h-2 rounded-full bg-mostaza animate-pulse"></span>
           Archivo Sonoro & Hemeroteca Digital
         </div>
 
-        <h1 class="font-bodoni text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#faf5ea] leading-[1.05] mb-6">
-          Cantantes Italianos <span class="italic font-normal text-[#e6c229]">en Argentina</span>
+        <h1 class="font-bodoni text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-vintage-cream leading-[1.05] mb-6">
+          Cantantes Italianos <span class="italic font-normal text-mostaza">en Argentina</span>
         </h1>
 
-        <blockquote class="font-outfit text-lg sm:text-xl font-light text-[#faf5ea]/90 leading-relaxed max-w-3xl border-l-2 border-[#e6c229] pl-6 py-1 my-6 italic">
+        <blockquote class="font-outfit text-lg sm:text-xl font-light text-vintage-cream/90 leading-relaxed max-w-3xl border-l-2 border-mostaza pl-6 py-1 my-6 italic">
           «Entre la nostalgia del Mediterráneo y el asfalto porteño, una generación de voces italianas fundó la banda sonora sentimental de una Argentina irrepetible.»
         </blockquote>
 
-        <p class="font-outfit text-sm sm:text-base text-[#faf5ea]/75 max-w-2xl leading-relaxed mt-4">
+        <p class="font-outfit text-sm sm:text-base text-vintage-cream/75 max-w-2xl leading-relaxed mt-4">
           Colección de vinilos restaurados, notas de prensa de <em>Radiolandia</em> y microfichas sonoras organizadas por nivel de urgencia de digitalización en la Bóveda TGP.
         </p>
 
         <!-- FILTROS Y CONTROLES DE ÉPOCA -->
         <div class="mt-10 flex flex-wrap items-center gap-4 pt-6 border-t border-white/15">
           <div class="flex items-center gap-2 bg-black/30 backdrop-blur-md p-1.5 rounded-xl border border-white/10" id="filter-buttons">
-            <button class="filter-btn active px-4 py-2 rounded-lg text-xs font-outfit font-semibold tracking-wider uppercase transition-all duration-300 bg-[#e6c229] text-[#171412]" data-filter="all">
+            <button class="filter-btn active px-4 py-2 rounded-lg text-xs font-outfit font-semibold tracking-wider uppercase transition-all duration-300 bg-mostaza text-vintage-black" data-filter="all">
               Todas las Series (3)
             </button>
-            <button class="filter-btn px-4 py-2 rounded-lg text-xs font-outfit font-semibold tracking-wider uppercase transition-all duration-300 text-[#faf5ea]/80 hover:text-white" data-filter="alta">
+            <button class="filter-btn px-4 py-2 rounded-lg text-xs font-outfit font-semibold tracking-wider uppercase transition-all duration-300 text-vintage-cream/80 hover:text-white" data-filter="alta">
               Urgencia Alta
             </button>
-            <button class="filter-btn px-4 py-2 rounded-lg text-xs font-outfit font-semibold tracking-wider uppercase transition-all duration-300 text-[#faf5ea]/80 hover:text-white" data-filter="media">
+            <button class="filter-btn px-4 py-2 rounded-lg text-xs font-outfit font-semibold tracking-wider uppercase transition-all duration-300 text-vintage-cream/80 hover:text-white" data-filter="media">
               Urgencia Media
             </button>
-            <button class="filter-btn px-4 py-2 rounded-lg text-xs font-outfit font-semibold tracking-wider uppercase transition-all duration-300 text-[#faf5ea]/80 hover:text-white" data-filter="baja">
+            <button class="filter-btn px-4 py-2 rounded-lg text-xs font-outfit font-semibold tracking-wider uppercase transition-all duration-300 text-vintage-cream/80 hover:text-white" data-filter="baja">
               Reserva
             </button>
           </div>
 
-          <div class="ml-auto text-xs font-outfit tracking-widest uppercase text-[#faf5ea]/60 flex items-center gap-2">
+          <div class="ml-auto text-xs font-outfit tracking-widest uppercase text-vintage-cream/60 flex items-center gap-2">
             <span>Paleta de Época:</span>
-            <span class="inline-block w-3.5 h-3.5 rounded-full bg-[#a93f2f] border border-white/30" title="Rojo Terracota"></span>
-            <span class="inline-block w-3.5 h-3.5 rounded-full bg-[#e6c229] border border-white/30" title="Amarillo Mostaza"></span>
+            <span class="inline-block w-3.5 h-3.5 rounded-full bg-terracota border border-white/30" title="Rojo Terracota"></span>
+            <span class="inline-block w-3.5 h-3.5 rounded-full bg-mostaza border border-white/30" title="Amarillo Mostaza"></span>
           </div>
         </div>
       </div>
@@ -137,8 +151,8 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
           <article 
             class={`serie-card group relative rounded-2xl overflow-hidden border transition-all duration-500 cursor-pointer flex flex-col ${
               isTerracota 
-                ? 'bg-gradient-to-b from-[#2a1310] to-[#1a1210] border-[#a93f2f]/40 hover:border-[#a93f2f] hover:shadow-[0_20px_50px_rgba(169,63,47,0.35)]' 
-                : 'bg-gradient-to-b from-[#241e10] to-[#171510] border-[#e6c229]/40 hover:border-[#e6c229] hover:shadow-[0_20px_50px_rgba(230,194,41,0.25)]'
+                ? 'bg-linear-to-b from-[#2a1310] to-[#1a1210] border-terracota/40 hover:border-terracota hover:shadow-[0_20px_50px_rgba(169,63,47,0.35)]' 
+                : 'bg-linear-to-b from-[#241e10] to-[#171510] border-mostaza/40 hover:border-mostaza hover:shadow-[0_20px_50px_rgba(230,194,41,0.25)]'
             }`}
             data-urgencia={serie.urgencia}
             data-serie-id={serie.id}
@@ -160,30 +174,30 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
               />
               
               <!-- Gradiente de tapa -->
-              <div class={`absolute inset-0 bg-gradient-to-t ${isTerracota ? 'from-[#1a1210] via-transparent to-transparent' : 'from-[#171510] via-transparent to-transparent'}`}></div>
+              <div class={`absolute inset-0 bg-linear-to-t ${isTerracota ? 'from-[#1a1210] via-transparent to-transparent' : 'from-[#171510] via-transparent to-transparent'}`}></div>
 
               <!-- Indicador de Vinilo 33 RPM -->
               <div class="absolute bottom-4 left-4 z-10 flex items-center gap-2">
-                <div class="w-7 h-7 rounded-full bg-black/70 border border-white/20 flex items-center justify-center text-[#e6c229] text-xs group-hover:rotate-180 transition-transform duration-1000">
+                <div class="w-7 h-7 rounded-full bg-black/70 border border-white/20 flex items-center justify-center text-mostaza text-xs group-hover:rotate-180 transition-transform duration-1000">
                   ◎
                 </div>
-                <span class="font-outfit text-[11px] uppercase tracking-widest text-[#faf5ea]/80 font-medium">
+                <span class="font-outfit text-[11px] uppercase tracking-widest text-vintage-cream/80 font-medium">
                   {serie.era || 'LP 33 RPM'}
                 </span>
               </div>
             </div>
 
             <!-- Contenido de la Tarjeta -->
-            <div class="p-6 sm:p-8 flex flex-col flex-grow">
-              <div class="font-outfit text-xs uppercase tracking-widest mb-2 font-semibold text-[#e6c229]">
+            <div class="p-6 sm:p-8 flex flex-col grow">
+              <div class="font-outfit text-xs uppercase tracking-widest mb-2 font-semibold text-mostaza">
                 {serie.subtitulo || 'Serie Hemerográfica'}
               </div>
 
-              <h2 class="font-bodoni text-2xl sm:text-3xl font-bold text-[#faf5ea] mb-3 group-hover:text-[#e6c229] transition-colors duration-300">
+              <h2 class="font-bodoni text-2xl sm:text-3xl font-bold text-vintage-cream mb-3 group-hover:text-mostaza transition-colors duration-300">
                 {serie.title}
               </h2>
 
-              <p class="font-outfit text-sm text-[#faf5ea]/70 leading-relaxed mb-6 flex-grow">
+              <p class="font-outfit text-sm text-vintage-cream/70 leading-relaxed mb-6 grow">
                 {serie.quoteDestacada || serie.descripcion}
               </p>
 
@@ -191,7 +205,7 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
               {serie.autores && (
                 <div class="flex flex-wrap gap-1.5 mb-6">
                   {serie.autores.map((autor: string) => (
-                    <span class="font-outfit text-[11px] px-2.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-[#faf5ea]/80">
+                    <span class="font-outfit text-[11px] px-2.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-vintage-cream/80">
                       {autor}
                     </span>
                   ))}
@@ -201,7 +215,7 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
               <!-- Botones de Acción: Abrir Ficha Mostaza & Flipbook -->
               <div class="grid grid-cols-2 gap-3 mt-auto pt-4 border-t border-white/10">
                 <button 
-                  class="btn-trigger-mostaza w-full py-3 px-3 rounded-xl bg-transparent border border-[#e6c229]/60 text-[#e6c229] font-outfit text-xs font-bold uppercase tracking-wider hover:bg-[#e6c229] hover:text-[#171412] transition-all duration-300 flex items-center justify-center gap-1.5"
+                  class="btn-trigger-mostaza w-full py-3 px-3 rounded-xl bg-transparent border border-mostaza/60 text-mostaza font-outfit text-xs font-bold uppercase tracking-wider hover:bg-mostaza hover:text-vintage-black transition-all duration-300 flex items-center justify-center gap-1.5"
                   data-serie-id={serie.id}
                 >
                   <span>Ficha Época</span>
@@ -210,7 +224,7 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
 
                 <a 
                   href={`/magazine/${serie.flipbookSlug || serie.id}`}
-                  class="w-full py-3 px-3 rounded-xl bg-[#a93f2f] text-[#faf5ea] font-outfit text-xs font-bold uppercase tracking-wider hover:bg-[#c25342] transition-all duration-300 text-center flex items-center justify-center gap-1.5 shadow-[0_4px_15px_rgba(169,63,47,0.4)]"
+                  class="w-full py-3 px-3 rounded-xl bg-terracota text-vintage-cream font-outfit text-xs font-bold uppercase tracking-wider hover:bg-terracota-light transition-all duration-300 text-center flex items-center justify-center gap-1.5 shadow-[0_4px_15px_rgba(169,63,47,0.4)]"
                   onclick="event.stopPropagation();"
                 >
                   <span>Flipbook</span>
@@ -231,96 +245,96 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
     <div id="modal-mostaza" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10 opacity-0 pointer-events-none transition-all duration-500 bg-black/85 backdrop-blur-xl">
       <div 
         id="modal-mostaza-card" 
-        class="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl p-6 sm:p-10 md:p-14 shadow-[0_25px_100px_rgba(230,194,41,0.4)] border-2 border-[#171412]/15 transform scale-95 transition-all duration-500"
+        class="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl p-6 sm:p-10 md:p-14 shadow-[0_25px_100px_rgba(230,194,41,0.4)] border-2 border-vintage-black/15 transform scale-95 transition-all duration-500"
         style="background-color: #e6c229; color: #171412;"
       >
         <!-- Botón de Cerrar -->
         <button 
           id="btn-close-mostaza"
-          class="absolute top-6 right-6 w-11 h-11 rounded-full bg-[#171412] text-[#e6c229] hover:bg-[#a93f2f] hover:text-white flex items-center justify-center font-bold text-lg transition-all duration-300 shadow-md cursor-pointer z-20"
+          class="absolute top-6 right-6 w-11 h-11 rounded-full bg-vintage-black text-mostaza hover:bg-terracota hover:text-white flex items-center justify-center font-bold text-lg transition-all duration-300 shadow-md cursor-pointer z-20"
           aria-label="Cerrar Ficha de Época"
         >
           ✕
         </button>
 
         <!-- Cabecera de la Ficha en Estética Mostaza -->
-        <div class="border-b-2 border-[#171412] pb-6 mb-8">
+        <div class="border-b-2 border-vintage-black pb-6 mb-8">
           <div class="flex items-center gap-3 mb-4">
-            <span class="px-3.5 py-1 rounded-full bg-[#171412] text-[#e6c229] font-outfit text-xs font-black uppercase tracking-widest">
+            <span class="px-3.5 py-1 rounded-full bg-vintage-black text-mostaza font-outfit text-xs font-black uppercase tracking-widest">
               Ficha de Archivo Sonoro
             </span>
-            <span id="modal-era-badge" class="font-outfit text-xs font-bold text-[#171412]/75 uppercase tracking-widest">
+            <span id="modal-era-badge" class="font-outfit text-xs font-bold text-vintage-black/75 uppercase tracking-widest">
               Años 70s / 80s
             </span>
-            <span id="modal-urgencia-badge" class="ml-auto px-3 py-1 rounded-full bg-[#a93f2f] text-white font-outfit text-[11px] font-black uppercase tracking-wider">
+            <span id="modal-urgencia-badge" class="ml-auto px-3 py-1 rounded-full bg-terracota text-white font-outfit text-[11px] font-black uppercase tracking-wider">
               Urgencia Alta
             </span>
           </div>
 
           <!-- Título H1 en Bodoni Moda -->
-          <h1 id="modal-title" class="font-bodoni text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-[#171412] leading-[0.98] mb-3">
+          <h1 id="modal-title" class="font-bodoni text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-vintage-black leading-[0.98] mb-3">
             Los Últimos Tanos
           </h1>
 
-          <p id="modal-subtitle" class="font-outfit text-base sm:text-lg font-semibold uppercase tracking-[0.2em] text-[#a93f2f]">
+          <p id="modal-subtitle" class="font-outfit text-base sm:text-lg font-semibold uppercase tracking-[0.2em] text-terracota">
             Cantantes Italianos en Argentina (1968-1985)
           </p>
         </div>
 
         <!-- Cita Destacada en Tipografía Outfit -->
-        <blockquote id="modal-quote" class="font-outfit text-xl sm:text-2xl font-medium italic text-[#171412] leading-relaxed border-l-4 border-[#171412] pl-6 py-2 mb-8 bg-black/5 rounded-r-2xl">
+        <blockquote id="modal-quote" class="font-outfit text-xl sm:text-2xl font-medium italic text-vintage-black leading-relaxed border-l-4 border-vintage-black pl-6 py-2 mb-8 bg-black/5 rounded-r-2xl">
           «Entre la nostalgia del Mediterráneo y el asfalto porteño, una generación de voces italianas fundó la banda sonora sentimental de una Argentina irrepetible.»
         </blockquote>
 
         <!-- CUERPO PRINCIPAL: Artistas, Fonoteca & Discos -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-8">
           <!-- Columna 1: Artistas Integrantes -->
-          <div class="bg-[#171412]/5 p-6 rounded-2xl border border-[#171412]/10">
-            <h3 class="font-bodoni text-2xl font-bold text-[#171412] uppercase mb-4 flex items-center gap-2">
+          <div class="bg-vintage-black/5 p-6 rounded-2xl border border-vintage-black/10">
+            <h3 class="font-bodoni text-2xl font-bold text-vintage-black uppercase mb-4 flex items-center gap-2">
               <span>✦</span> Artistas en la Colección
             </h3>
-            <ul id="modal-artistas-list" class="space-y-3 font-outfit text-base text-[#171412]">
-              <li class="flex items-center justify-between pb-2 border-b border-[#171412]/10">
+            <ul id="modal-artistas-list" class="space-y-3 font-outfit text-base text-vintage-black">
+              <li class="flex items-center justify-between pb-2 border-b border-vintage-black/10">
                 <span class="font-bold">Gian Franco Pagliaro</span>
-                <span class="text-xs uppercase bg-[#171412] text-[#e6c229] px-2 py-0.5 rounded font-mono">Nápoles / Bs.As.</span>
+                <span class="text-xs uppercase bg-vintage-black text-mostaza px-2 py-0.5 rounded font-mono">Nápoles / Bs.As.</span>
               </li>
-              <li class="flex items-center justify-between pb-2 border-b border-[#171412]/10">
+              <li class="flex items-center justify-between pb-2 border-b border-vintage-black/10">
                 <span class="font-bold">Nicola Di Bari</span>
-                <span class="text-xs uppercase bg-[#171412] text-[#e6c229] px-2 py-0.5 rounded font-mono">Puglia / RCA</span>
+                <span class="text-xs uppercase bg-vintage-black text-mostaza px-2 py-0.5 rounded font-mono">Puglia / RCA</span>
               </li>
-              <li class="flex items-center justify-between pb-2 border-b border-[#171412]/10">
+              <li class="flex items-center justify-between pb-2 border-b border-vintage-black/10">
                 <span class="font-bold">Domenico Modugno</span>
-                <span class="text-xs uppercase bg-[#171412] text-[#e6c229] px-2 py-0.5 rounded font-mono">Sanremo / Luna Park</span>
+                <span class="text-xs uppercase bg-vintage-black text-mostaza px-2 py-0.5 rounded font-mono">Sanremo / Luna Park</span>
               </li>
-              <li class="flex items-center justify-between pb-2 border-b border-[#171412]/10">
+              <li class="flex items-center justify-between pb-2 border-b border-vintage-black/10">
                 <span class="font-bold">Franco Simone</span>
-                <span class="text-xs uppercase bg-[#171412] text-[#e6c229] px-2 py-0.5 rounded font-mono">Salento / Sudamérica</span>
+                <span class="text-xs uppercase bg-vintage-black text-mostaza px-2 py-0.5 rounded font-mono">Salento / Sudamérica</span>
               </li>
             </ul>
           </div>
 
           <!-- Columna 2: Fonograma Simulado (Tornamesa 33 RPM) -->
-          <div class="bg-[#171412] text-[#faf5ea] p-6 rounded-2xl flex flex-col justify-between shadow-xl">
+          <div class="bg-vintage-black text-vintage-cream p-6 rounded-2xl flex flex-col justify-between shadow-xl">
             <div>
               <div class="flex items-center justify-between mb-4">
-                <span class="font-outfit text-[11px] uppercase tracking-widest text-[#e6c229] font-bold">
+                <span class="font-outfit text-[11px] uppercase tracking-widest text-mostaza font-bold">
                   Fonograma Restaurado · 33 RPM
                 </span>
-                <span class="w-3 h-3 rounded-full bg-[#a93f2f] animate-ping"></span>
+                <span class="w-3 h-3 rounded-full bg-terracota animate-ping"></span>
               </div>
 
               <div class="flex items-center gap-4 my-2">
                 <!-- Disco Vinilo Girando -->
                 <div class="w-16 h-16 rounded-full bg-[#111] border-4 border-[#333] flex items-center justify-center animate-[spin_6s_linear_infinite] shadow-lg shrink-0">
-                  <div class="w-6 h-6 rounded-full bg-[#a93f2f] border border-[#e6c229] flex items-center justify-center text-[8px] text-[#e6c229] font-bold">
+                  <div class="w-6 h-6 rounded-full bg-terracota border border-mostaza flex items-center justify-center text-[8px] text-mostaza font-bold">
                     TGP
                   </div>
                 </div>
                 <div>
-                  <div id="modal-player-track" class="font-bodoni text-lg font-bold text-[#e6c229] leading-tight">
+                  <div id="modal-player-track" class="font-bodoni text-lg font-bold text-mostaza leading-tight">
                     «Yo te nombro, Libertad»
                   </div>
-                  <div id="modal-player-artist" class="font-outfit text-xs text-[#faf5ea]/70">
+                  <div id="modal-player-artist" class="font-outfit text-xs text-vintage-cream/70">
                     Gian Franco Pagliaro · Sello RCA Víctor
                   </div>
                 </div>
@@ -329,10 +343,10 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
 
             <!-- Selector de Temas del Fonograma -->
             <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-              <span class="font-outfit text-xs text-[#faf5ea]/60">Pistas disponibles: 4 masters</span>
+              <span class="font-outfit text-xs text-vintage-cream/60">Pistas disponibles: 4 masters</span>
               <button 
                 id="btn-next-track" 
-                class="font-outfit text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-[#e6c229] text-[#171412] hover:bg-white transition-colors cursor-pointer"
+                class="font-outfit text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-mostaza text-vintage-black hover:bg-white transition-colors cursor-pointer"
               >
                 Siguiente Pista ❯
               </button>
@@ -341,12 +355,12 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
         </div>
 
         <!-- Footer del Modal: Acciones Editoriales -->
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t-2 border-[#171412]">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t-2 border-vintage-black">
           <div class="flex items-center gap-3">
-            <span class="font-outfit text-xs font-bold uppercase tracking-wider text-[#171412]">
+            <span class="font-outfit text-xs font-bold uppercase tracking-wider text-vintage-black">
               Alternar Paleta:
             </span>
-            <button id="toggle-card-palette" class="px-3.5 py-1.5 rounded-lg bg-[#a93f2f] text-white font-outfit text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer">
+            <button id="toggle-card-palette" class="px-3.5 py-1.5 rounded-lg bg-terracota text-white font-outfit text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer">
               Ver en Modo Terracota
             </button>
           </div>
@@ -355,7 +369,7 @@ const seriesList = seriesEntries.length > 0 ? seriesEntries.map(e => ({ id: e.id
             <a 
               id="modal-flipbook-link"
               href="/magazine/los-ultimos-tanos"
-              class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#171412] text-[#e6c229] font-outfit text-xs font-black uppercase tracking-widest hover:bg-[#a93f2f] hover:text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
+              class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-vintage-black text-mostaza font-outfit text-xs font-black uppercase tracking-widest hover:bg-terracota hover:text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
             >
               <span>Abrir Fábrica de Flipbook</span>
               <span class="text-base">↗</span>

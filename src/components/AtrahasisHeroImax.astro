@@ -1,0 +1,187 @@
+---
+// src/components/AtrahasisHeroImax.astro
+// Hero Full Bleed IMAX (1.90:1 / 100vh) — La Epopeya Acadia: ATRAHASIS
+// Estilo visual exacto de la muestra: Glow cobrizo, tipografía monumental 8vw, Univisium 2:1 y animación GSAP
+---
+
+<section
+  id="atrahasis-imax-hero"
+  class="relative w-full min-h-[92vh] lg:min-h-screen overflow-hidden bg-black flex flex-col justify-end lg:justify-center border-b border-white/10"
+>
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       1. IMAGEN CINEMÁTICA FULL BLEED (IMAX 1.90:1 / UNIVISIUM 2:1)
+       - object-fit: cover;
+       - Parallax suave con GSAP ScrollTrigger
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="absolute inset-0 z-0 overflow-hidden w-full h-full pointer-events-none">
+    <img
+      id="atrahasis-bg-img"
+      src="/atrahasis-hero.jpg"
+      alt="La Epopeya Acadia: Atrahasis — La memoria del cataclismo grabada en arcilla"
+      class="w-full h-full object-cover object-right lg:object-center select-none will-change-transform scale-110 opacity-95"
+      style="aspect-ratio: 2 / 1;"
+      loading="eager"
+    />
+
+    <!-- Ambient Glow Cobrizo / Terracota en la esquina superior izquierda (Idéntico a la muestra) -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(195,90,50,0.6)_0%,rgba(169,63,47,0.3)_25%,transparent_60%)] pointer-events-none"></div>
+
+    <!-- Máscara de Fusión Lateral para Legibilidad Pura de Tipografía -->
+    <div class="absolute inset-0 bg-[linear-gradient(90deg,#000000_0%,#000000_28%,rgba(0,0,0,0.85)_46%,rgba(0,0,0,0.25)_72%,transparent_100%)] pointer-events-none"></div>
+
+    <!-- Viñeta Inferior y Superior para Integración Orgánica -->
+    <div class="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black via-black/60 to-transparent pointer-events-none"></div>
+    <div class="absolute inset-x-0 top-0 h-32 bg-linear-to-b from-black/80 via-black/30 to-transparent pointer-events-none"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       2. TIPOGRAFÍA MONUMENTAL (EXTRA BOLD 8vw + ITALIC SERIF)
+       - Ubicada abajo a la izquierda, fija y de escala cinematográfica
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div
+    id="atrahasis-content-wrap"
+    class="relative z-20 w-full max-w-400 mx-auto px-6 sm:px-10 md:px-16 lg:px-20 py-20 md:py-28 lg:py-32 flex flex-col items-start justify-end"
+  >
+    <!-- Badge / Tag Superior Estilo Apple -->
+    <div class="atrahasis-elem flex items-center gap-3 mb-4 sm:mb-6">
+      <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/75 border border-white/15 backdrop-blur-md">
+        <span class="w-2 h-2 rounded-full bg-vault-accent animate-pulse"></span>
+        <span class="text-[9px] sm:text-[10px] font-mono tracking-[0.3em] uppercase text-vault-accent font-semibold">
+          ✦ Formato IMAX 1.90:1 · Full Bleed
+        </span>
+      </div>
+      <span class="hidden sm:inline-block text-[10px] font-mono tracking-widest uppercase text-white/40">
+        Edición Arcaica · Tablillas de Arcilla
+      </span>
+    </div>
+
+    <!-- Volanta en Sans-Serif Tracked -->
+    <p class="atrahasis-elem font-inter text-xs sm:text-sm md:text-base font-medium tracking-[0.45em] text-primary/80 uppercase mb-2 sm:mb-3">
+      LA EPOPEYA ACADIA
+    </p>
+
+    <!-- Título Gigante Extra Bold (font-size: 8vw) -->
+    <h1 class="atrahasis-elem font-bodoni font-extrabold text-5xl sm:text-7xl md:text-8xl lg:text-[8vw] xl:text-[8.5vw] tracking-tight leading-[0.88] text-white select-none drop-shadow-[0_10px_35px_rgba(0,0,0,0.9)]">
+      ATRAHASIS
+    </h1>
+
+    <!-- Subtítulo en Serif Italic -->
+    <p class="atrahasis-elem font-bodoni italic text-xl sm:text-2xl md:text-3xl lg:text-[2.2vw] text-primary/90 font-light max-w-3xl leading-snug mt-4 sm:mt-6 drop-shadow-md">
+      La memoria del cataclismo grabada en arcilla.
+    </p>
+
+    <!-- Acciones Editoriales & Enlaces Directos -->
+    <div class="atrahasis-elem flex flex-wrap items-center gap-3 sm:gap-4 mt-8 sm:mt-10">
+      <a
+        href="/archivo"
+        class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-black hover:bg-vault-accent hover:text-black transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-bold shadow-[0_0_30px_rgba(255,255,255,0.25)] group cursor-pointer"
+      >
+        <span>◈ Explorar Archivo Acadio</span>
+        <span class="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+
+      <a
+        href="/historia-alternativa"
+        class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-black/60 hover:bg-white/10 border border-white/20 hover:border-vault-accent/50 text-white hover:text-vault-accent transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-medium backdrop-blur-md cursor-pointer"
+      >
+        <span>✦ Ver Tablilla en Bóveda D1</span>
+      </a>
+
+      <a
+        href="#portal-exploratorio"
+        class="hidden md:inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white transition-all text-xs font-mono uppercase tracking-[0.2em] backdrop-blur-sm"
+      >
+        <span>↓ Descender al Hub</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Indicador Sutil de Scroll al Pie del IMAX -->
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none opacity-60 hover:opacity-100 transition-opacity">
+    <span class="text-[9px] font-mono uppercase tracking-[0.3em] text-white/50">SCROLL</span>
+    <div class="w-px h-8 bg-linear-to-b from-vault-accent to-transparent animate-pulse"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     3. EL TOQUE GSAP (PARALLAX EN FONDO + FADE-IN & SCALE EN TIPOGRAFÍA)
+═══════════════════════════════════════════════════════════════════════ -->
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const initAtrahasisImax = () => {
+    const heroSection = document.getElementById('atrahasis-imax-hero');
+    const bgImg = document.getElementById('atrahasis-bg-img');
+    const textElems = gsap.utils.toArray<HTMLElement>('.atrahasis-elem');
+
+    if (!heroSection) return;
+
+    // 1. Animación de Entrada: Fade-in + Scale en la tipografía gigante
+    gsap.fromTo(
+      textElems,
+      {
+        opacity: 0,
+        y: 40,
+        scale: 0.94,
+        filter: 'blur(10px)'
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: 'blur(0px)',
+        duration: 1.2,
+        stagger: 0.12,
+        ease: 'expo.out',
+        delay: 0.2
+      }
+    );
+
+    // 2. Parallax suave en la imagen de fondo con ScrollTrigger
+    if (bgImg) {
+      gsap.fromTo(
+        bgImg,
+        {
+          yPercent: -4,
+          scale: 1.12
+        },
+        {
+          yPercent: 12,
+          scale: 1.05,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroSection,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true
+          }
+        }
+      );
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAtrahasisImax);
+  } else {
+    initAtrahasisImax();
+  }
+  document.addEventListener('astro:page-load', initAtrahasisImax);
+</script>
+
+<style>
+  /* Garantizar proporción IMAX y tipografía colosal sin desbordes */
+  #atrahasis-imax-hero {
+    min-height: 92vh;
+    min-height: 92dvh;
+  }
+
+  @media (min-width: 1024px) {
+    #atrahasis-imax-hero {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+  }
+</style>

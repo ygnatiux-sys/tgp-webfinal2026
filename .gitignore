@@ -14,3 +14,9 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
+
+# Scripts de escritorio, historial de editor y backups locales
+.history/
+scratch/
+extra-kelvin/
+*.bak

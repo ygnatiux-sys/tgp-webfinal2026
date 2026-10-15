@@ -6,6 +6,7 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import AtrahasisHeroImax from '../components/AtrahasisHeroImax.astro';
 
 // Sanitizador de texto Markdown crudo para descripciones/extractos
 const sanitizeSnippet = (text: string) => {
@@ -94,8 +95,16 @@ const mubiCollection = [
 
   <Navbar />
 
-  <main class="relative z-10 overflow-x-hidden pt-24 md:pt-32">
+  <main class="relative z-10 overflow-x-hidden">
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         HERO MONUMENTAL FULL BLEED TIPO APPLE (IMAX 1.90:1 / 100vh) — ATRAHASIS
+         - Mismo estilo de la muestra: Glow cobrizo, volanta, título 8vw e imagen Univisium 2:1
+         - GSAP Parallax suave en imagen de fondo + Fade-in & Scale en tipografía
+    ═══════════════════════════════════════════════════════════════════════ -->
+    <AtrahasisHeroImax />
+
     <!-- ENCABEZADO SUPERIOR EDITORIAL (ESTILO ARCHIVO) -->
+    <div id="portal-exploratorio" class="pt-20 md:pt-28"></div>
     <section class="relative px-6 md:px-12 max-w-7xl mx-auto text-center mb-10">
       <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-vault-accent/30 bg-vault-accent/5 backdrop-blur-md mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
@@ -122,7 +131,7 @@ const mubiCollection = [
          - H2 en tipografía Sans Serif Outfit
     ═══════════════════════════════════════════════════════════════════════ -->
     <section class="relative px-4 sm:px-6 md:px-12 max-w-7xl mx-auto mb-24">
-      <div class="cartel-univisium w-full bg-[#11141c] flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 group">
+      <div class="cartel-univisium w-full bg-bg flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 group">
         <!-- Imagen de Fondo Cinemática con Gradiente Apple -->
         <div class="absolute inset-0 -z-10 overflow-hidden">
           <img
@@ -130,7 +139,7 @@ const mubiCollection = [
             alt="The Great Puzzle Project Ambient"
             class="w-full h-full object-cover opacity-25 group-hover:scale-105 group-hover:opacity-35 transition-all duration-1000 filter grayscale contrast-125"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#11141c] via-[#11141c]/70 to-[#11141c]/40"></div>
+          <div class="absolute inset-0 bg-linear-to-t from-bg via-bg/70 to-bg/40"></div>
           <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(201,169,110,0.18)_0%,transparent_50%)] pointer-events-none"></div>
           <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(159,140,174,0.12)_0%,transparent_50%)] pointer-events-none"></div>
         </div>
@@ -249,7 +258,7 @@ const mubiCollection = [
               <!-- Contenedor de Imagen Estricto con Aspect Ratio Controlado -->
               <div
                 class={`w-full overflow-hidden rounded-xl bg-neutral-900 relative ${
-                  isHero ? 'aspect-[4/5]' : 'aspect-[2/3]'
+                  isHero ? 'aspect-4/5' : 'aspect-2/3'
                 }`}
               >
                 <img
@@ -260,7 +269,7 @@ const mubiCollection = [
                 />
 
                 <!-- Degradé de oscurecimiento superior e inferior -->
-                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
 
                 <!-- Badge Superior "DOSSIER CINEMÁTICO" -->
                 <div class="absolute top-3 left-3 z-10 pointer-events-none">
