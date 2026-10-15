@@ -227,7 +227,7 @@ export const KenBurnsWikimedia: FC<KenBurnsWikimediaProps> = ({
 					<img
 						src={currentItem.url}
 						alt={currentItem.title || 'Visualización de artículo'}
-						className="w-full h-full object-cover"
+						className="w-full h-full object-cover object-[center_22%] tgp-img-protected"
 						style={{
 							filter: 'contrast(1.04) brightness(0.96)',
 						}}
@@ -439,7 +439,7 @@ export const KenBurnsWikimedia: FC<KenBurnsWikimediaProps> = ({
 										: 'border-white/10 opacity-50 hover:opacity-100'
 								}`}
 							>
-								<img src={item.url} alt={`Miniatura ${idx + 1}`} className="w-full h-full object-cover" />
+								<img src={item.url} alt={`Miniatura ${idx + 1}`} className="w-full h-full object-cover object-[center_22%]" />
 								<div className="absolute inset-0 bg-black/20" />
 								<span className="absolute bottom-1 right-1 text-[8px] font-mono bg-black/80 px-1.5 py-0.5 rounded text-white/90">
 									{idx + 1}
