@@ -194,7 +194,7 @@
   });
 
   // ─── DICCIONARIO & MOTOR DE HOOKS INTELIGENTES DARK ACADEMIA ────────────────
-  export interface IntelligentHook {
+  interface IntelligentHook {
     phrase: string;
     category: 'provocacion' | 'paradoja' | 'evidencia' | 'enigma';
     emphasisColor: string;
@@ -587,7 +587,7 @@
             <!-- ── CARD BENTO CINEMASCOPE (2.39:1) WIDESCREEN ── -->
             <article
               id={`cinemascope-card-${idx}`}
-              class="cinemascope-card relative isolate w-full min-h-115 sm:min-h-125 lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-[var(--card-bg,#23232a)] border border-white/15 hover:border-vault-accent/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card relative isolate w-full min-h-115 sm:min-h-125 lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-(--card-bg,#23232a) border border-white/15 hover:border-vault-accent/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
             >
               <!-- 1. Fondo Cinemático Panorámico Full-Bleed Limpio y Brillante (Sin Scrims) -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
@@ -624,7 +624,7 @@
                 </div>
 
                 <!-- Datación / Fecha en cápsula de cristal -->
-                <div class="px-3 py-1 rounded-full bg-black/60 border border-white/15 text-[var(--text-primary,#eae6df)] font-mono text-[10px] sm:text-[11px] uppercase tracking-widest backdrop-blur-xs">
+                <div class="px-3 py-1 rounded-full bg-black/60 border border-white/15 text-(--text-primary,#eae6df) font-mono text-[10px] sm:text-[11px] uppercase tracking-widest backdrop-blur-xs">
                   ⏳ {mag.date}
                 </div>
               </div>
@@ -646,13 +646,13 @@
                 </h3>
 
                 <!-- 3. SUBTÍTULO -->
-                <p class="cinemascope-subtitle font-bodoni italic text-base sm:text-xl md:text-2xl text-[var(--text-secondary,#a5a19a)] tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.95)]">
+                <p class="cinemascope-subtitle font-bodoni italic text-base sm:text-xl md:text-2xl text-(--text-secondary,#a5a19a) tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.95)]">
                   {mag.subtitle}
                 </p>
 
                 <!-- 4. VER MÁS / EXCERPT EDITORIAL (H3 / PARRAFO) -->
                 <div class="cinemascope-excerpt space-y-2 max-w-3xl">
-                  <p class="font-outfit text-xs sm:text-sm md:text-base text-[var(--text-primary,#eae6df)] leading-relaxed font-normal [text-shadow:0_2px_10px_rgba(0,0,0,0.98),0_1px_3px_rgba(0,0,0,1)]">
+                  <p class="font-outfit text-xs sm:text-sm md:text-base text-(--text-primary,#eae6df) leading-relaxed font-normal [text-shadow:0_2px_10px_rgba(0,0,0,0.98),0_1px_3px_rgba(0,0,0,1)]">
                     {mag.excerpt}
                   </p>
                   <span class="text-[10px] font-mono text-vault-accent tracking-widest uppercase inline-block [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
@@ -686,7 +686,7 @@
               </div>
 
               <!-- 4. Pie de la Tarjeta Cinemascope -->
-              <div class="cinemascope-footer z-10 flex items-center justify-between w-full pt-4 border-t border-white/10 text-[10px] font-mono text-[var(--text-secondary,#a5a19a)] uppercase tracking-widest">
+              <div class="cinemascope-footer z-10 flex items-center justify-between w-full pt-4 border-t border-white/10 text-[10px] font-mono text-(--text-secondary,#a5a19a) uppercase tracking-widest">
                 <span>The Great Puzzle Magazine Archive</span>
                 <span class="hidden sm:inline-block">Folio #{idx + 1} de {filteredMagazines.length}</span>
               </div>
@@ -758,7 +758,7 @@
             <!-- ── CARD BENTO CINEMASCOPE (2.39:1) ENSAYOS ── -->
             <article
               id={`cinemascope-ensayo-${idx}`}
-              class="cinemascope-card relative isolate w-full min-h-115 sm:min-h-125 lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-[var(--card-bg,#23232a)] border border-white/15 hover:border-vault-accent/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card relative isolate w-full min-h-115 sm:min-h-125 lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-(--card-bg,#23232a) border border-white/15 hover:border-vault-accent/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
             >
               <!-- 1. Fondo Cinemático Panorámico Full-Bleed Limpio y Brillante (Sin Scrims) -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
@@ -786,7 +786,7 @@
                   </span>
                 </div>
 
-                <div class="px-3 py-1 rounded-full bg-black/60 border border-white/15 text-[var(--text-primary,#eae6df)] font-mono text-[10px] sm:text-[11px] uppercase tracking-widest backdrop-blur-xs">
+                <div class="px-3 py-1 rounded-full bg-black/60 border border-white/15 text-(--text-primary,#eae6df) font-mono text-[10px] sm:text-[11px] uppercase tracking-widest backdrop-blur-xs">
                   ⏳ {ensayo.date}
                 </div>
               </div>
@@ -809,7 +809,7 @@
 
                 <!-- 3. VOLANTA / SUBTÍTULO -->
                 {#if ensayo.volanta}
-                  <p class="cinemascope-subtitle font-bodoni italic text-base sm:text-xl md:text-2xl text-[var(--text-secondary,#a5a19a)] tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.95)]">
+                  <p class="cinemascope-subtitle font-bodoni italic text-base sm:text-xl md:text-2xl text-(--text-secondary,#a5a19a) tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.95)]">
                     {ensayo.volanta}
                   </p>
                 {/if}
@@ -817,7 +817,7 @@
                 <!-- 4. EXCERPT DESCRIPTIVO H3 -->
                 {#if ensayo.description}
                   <div class="cinemascope-excerpt space-y-2 max-w-3xl">
-                    <p class="font-outfit text-xs sm:text-sm md:text-base text-[var(--text-primary,#eae6df)] leading-relaxed font-normal [text-shadow:0_2px_10px_rgba(0,0,0,0.98),0_1px_3px_rgba(0,0,0,1)]">
+                    <p class="font-outfit text-xs sm:text-sm md:text-base text-(--text-primary,#eae6df) leading-relaxed font-normal [text-shadow:0_2px_10px_rgba(0,0,0,0.98),0_1px_3px_rgba(0,0,0,1)]">
                       {ensayo.description}
                     </p>
                     <span class="text-[10px] font-mono text-vault-accent tracking-widest uppercase inline-block [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
@@ -857,7 +857,7 @@
               </div>
 
               <!-- 4. Pie de la Tarjeta Cinemascope -->
-              <div class="cinemascope-footer z-10 flex items-center justify-between w-full pt-4 border-t border-white/10 text-[10px] font-mono text-[var(--text-secondary,#a5a19a)] uppercase tracking-widest">
+              <div class="cinemascope-footer z-10 flex items-center justify-between w-full pt-4 border-t border-white/10 text-[10px] font-mono text-(--text-secondary,#a5a19a) uppercase tracking-widest">
                 <span>Colección de Ensayos & Artículos</span>
                 <span class="hidden sm:inline-block">Ensayo #{idx + 1} de {filteredEnsayos.length}</span>
               </div>
@@ -933,7 +933,7 @@
             <!-- ── CARD BENTO CINEMASCOPE (2.39:1) BÓVEDA D1 / R2 ── -->
             <article
               id={`cinemascope-d1-${idx}`}
-              class="cinemascope-card relative isolate w-full min-h-115 sm:min-h-125 lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-[var(--card-bg,#23232a)] border border-white/15 hover:border-vault-success/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card relative isolate w-full min-h-115 sm:min-h-125 lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-(--card-bg,#23232a) border border-white/15 hover:border-vault-success/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
             >
               <!-- 1. Fondo Cinemático Panorámico Full-Bleed Limpio y Brillante (Sin Scrims) -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
@@ -961,7 +961,7 @@
                   </span>
                 </div>
 
-                <div class="px-3 py-1 rounded-full bg-black/60 border border-white/15 text-[var(--text-primary,#eae6df)] font-mono text-[10px] sm:text-[11px] uppercase tracking-widest backdrop-blur-xs">
+                <div class="px-3 py-1 rounded-full bg-black/60 border border-white/15 text-(--text-primary,#eae6df) font-mono text-[10px] sm:text-[11px] uppercase tracking-widest backdrop-blur-xs">
                   ⏳ {item.date}
                 </div>
               </div>
@@ -990,7 +990,7 @@
                 <!-- 4. EXCERPT DESCRIPTIVO H3 -->
                 {#if item.description}
                   <div class="cinemascope-excerpt space-y-2 max-w-3xl">
-                    <p class="font-outfit text-xs sm:text-sm md:text-base text-[var(--text-primary,#eae6df)] leading-relaxed font-normal [text-shadow:0_2px_10px_rgba(0,0,0,0.98),0_1px_3px_rgba(0,0,0,1)]">
+                    <p class="font-outfit text-xs sm:text-sm md:text-base text-(--text-primary,#eae6df) leading-relaxed font-normal [text-shadow:0_2px_10px_rgba(0,0,0,0.98),0_1px_3px_rgba(0,0,0,1)]">
                       {item.description}
                     </p>
                     <span class="text-[10px] font-mono text-vault-success tracking-widest uppercase inline-block [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
@@ -1031,7 +1031,7 @@
               </div>
 
               <!-- 4. Pie de la Tarjeta Cinemascope -->
-              <div class="cinemascope-footer z-10 flex items-center justify-between w-full pt-4 border-t border-white/10 text-[10px] font-mono text-[var(--text-secondary,#a5a19a)] uppercase tracking-widest">
+              <div class="cinemascope-footer z-10 flex items-center justify-between w-full pt-4 border-t border-white/10 text-[10px] font-mono text-(--text-secondary,#a5a19a) uppercase tracking-widest">
                 <span>The Great Puzzle Vault Database</span>
                 <span class="hidden sm:inline-block">Artefacto #{idx + 1} de {filteredD1.length}</span>
               </div>
