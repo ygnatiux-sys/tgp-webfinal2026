@@ -260,8 +260,19 @@
     letter-spacing: 0.38em;
   }
 
+  /* ══════════════════════════════════════════════════════════════════════════
+     SISTEMA DE PROPORCIONES INMERSIVAS Y PROTECCIÓN DE CABEZAS / BUSTOS
+     Ecosistema TGP: Panorámica Tectónica (19:10) vs Busto Monumental (16:10)
+     ══════════════════════════════════════════════════════════════════════════ */
+
+  /* Variante 1: Panorámica Tectónica (IMAX Digital 19:10) - Paisajes, horizontes, georeferencias */
+  .tgp-hero-card,
+  .tgp-hero-card.panoramico,
+  .tgp-card-panoramico,
+  .cinemascope-card,
   .cartel-univisium {
-    aspect-ratio: 2 / 1;
+    aspect-ratio: 19 / 10;
+    max-height: 640px;
     position: relative;
     overflow: hidden;
     border-radius: 2.25rem;
@@ -270,16 +281,65 @@
     transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
+  /* Variante 2: Busto y Monolito Monumental (Retina 16:10) - Arquetipos, bustos, esculturas, retratos */
+  .tgp-hero-card.monumental,
+  .tgp-card-monumental,
+  .cinemascope-card.monumental,
+  .cinemascope-card.busto {
+    aspect-ratio: 16 / 10;
+    max-height: 760px;
+  }
+
+  .tgp-hero-card:hover,
+  .cinemascope-card:hover,
   .cartel-univisium:hover {
     border-color: rgba(201, 169, 110, 0.45);
     box-shadow: 0 35px 90px -20px rgba(0, 0, 0, 0.9), 0 0 40px rgba(201, 169, 110, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
   @media (max-width: 768px) {
+    .tgp-hero-card,
+    .tgp-hero-card.panoramico,
+    .tgp-card-panoramico,
+    .tgp-hero-card.monumental,
+    .tgp-card-monumental,
+    .cinemascope-card,
     .cartel-univisium {
       aspect-ratio: auto;
-      min-height: 480px;
+      min-height: 520px;
     }
+  }
+
+  /* Regla de oro para no decapitar figuras humanas, bustos ni monumentos:
+     Ancla el encuadre en la coronilla / ojos (20%-22%), protegiendo la cabeza del zoom forzado */
+  .tgp-hero-card img,
+  .tgp-card-panoramico img,
+  .tgp-card-monumental img,
+  .cinemascope-card img,
+  .tgp-img-protected,
+  .mag-visual__img,
+  .ken-burns-cinematic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 22%;
+  }
+
+  /* Utilidades directas de encuadre protegido */
+  .aspect-19\/10 {
+    aspect-ratio: 19 / 10;
+  }
+  .aspect-16\/10 {
+    aspect-ratio: 16 / 10;
+  }
+  .object-head-safe {
+    object-position: center 22% !important;
+  }
+  .object-bust-safe {
+    object-position: center 20% !important;
+  }
+  .object-landscape-safe {
+    object-position: center 38% !important;
   }
 }
 

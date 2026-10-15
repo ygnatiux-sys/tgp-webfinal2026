@@ -680,7 +680,7 @@
                 <img
                   src={mag.heroUrl}
                   alt={mag.title}
-                  class="w-full h-full object-cover object-[center_35%] filter brightness-[0.98] contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform"
+                  class="w-full h-full object-cover object-[center_22%] filter brightness-[0.98] contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
                   loading={idx === 0 ? "eager" : "lazy"}
                 />
 
@@ -780,7 +780,7 @@
                 <img
                   src={ensayo.imageUrl}
                   alt={ensayo.title}
-                  class="w-full h-full object-cover object-[center_35%] filter brightness-[0.98] contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform"
+                  class="w-full h-full object-cover object-[center_22%] filter brightness-[0.98] contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
                   loading="lazy"
                 />
 
@@ -879,7 +879,7 @@
                 <img
                   src={item.imageUrl || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp'}
                   alt={item.title}
-                  class="w-full h-full object-cover object-[center_35%] filter brightness-[0.98] contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform"
+                  class="w-full h-full object-cover object-[center_22%] filter brightness-[0.98] contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
                   loading="lazy"
                 />
 
