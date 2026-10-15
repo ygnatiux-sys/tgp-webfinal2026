@@ -373,7 +373,7 @@
             <!-- ── CARD BENTO CINEMASCOPE (2.39:1) WIDESCREEN ── -->
             <article
               id={`cinemascope-card-${idx}`}
-              class="cinemascope-card relative isolate w-full min-h-[460px] sm:min-h-[500px] lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-[#07080b] border border-white/15 hover:border-vault-accent/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card relative isolate w-full min-h-115 sm:min-h-125 lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-[#07080b] border border-white/15 hover:border-vault-accent/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
             >
               <!-- 1. Fondo Cinemático Panorámico Full-Bleed con Ken Burns Zoom -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
