@@ -13,7 +13,6 @@ autores:
 flipbookSlug: "los-ultimos-tanos"
 coverImageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80"
 ---
-
 # Los Últimos Tanos: El Exilio Lírico y la Balada Rioplatense
 
 En la encrucijada cultural de las décadas de 1970 y 1980, Buenos Aires albergó una de las transformaciones más singulares de la canción popular latina. Procedentes de Nápoles, Puglia y Sanremo, figuras como **Gian Franco Pagliaro**, **Nicola Di Bari**, **Domenico Modugno** y **Franco Simone** no fueron meros visitantes de paso: forjaron un diálogo visceral con el público argentino.

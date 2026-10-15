@@ -12,5 +12,4 @@ autores:
 flipbookSlug: "la-curva-moderna"
 coverImageUrl: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80"
 ---
-
 Exploración visual y conceptual de diseños automotrices vintage, planos arquitectónicos y estructuras estilizadas del siglo XX.

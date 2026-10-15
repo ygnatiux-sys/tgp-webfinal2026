@@ -20,3 +20,4 @@ Thumbs.db
 scratch/
 extra-kelvin/
 *.bak
+scripts/doctor-report.json

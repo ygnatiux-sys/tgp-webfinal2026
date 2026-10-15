@@ -11,5 +11,4 @@ autores:
 flipbookSlug: "grandes-enigmas"
 coverImageUrl: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80"
 ---
-
 Crónicas arqueológicas exhaustivas centradas en petroglifos antiguos, iconografía y vestigios de la cuenca mediterránea.

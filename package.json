@@ -10,7 +10,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "doctor": "node scripts/doctor.mjs",
+    "sanear": "node scripts/sanear.mjs",
     "sync": "node scripts/sync.mjs",
+    "eod": "node scripts/eod.mjs",
     "generate-types": "wrangler types"
   },
   "dependencies": {
