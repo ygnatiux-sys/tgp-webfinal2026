@@ -201,7 +201,7 @@
   }
 
   const HOOK_CATALOG: Record<string, IntelligentHook> = {
-    // Magazines
+    // ── Revistas / Magazines Inmersivas ──
     'gobekli-tepe': {
       phrase: '¿Por qué la humanidad aprendió a rezar antes de aprender a cultivar?',
       category: 'enigma',
@@ -222,10 +222,60 @@
       category: 'provocacion',
       emphasisColor: 'text-vault-accent'
     },
-    
-    // Ensayos Clave
-    'younger-dryas': {
-      phrase: 'El cataclismo de doce horas que reinició la prehistoria humana',
+    'la-biblioteca-de-alejandria': {
+      phrase: 'Cuando el fuego devoró el pensamiento: el alto precio de recordar',
+      category: 'provocacion',
+      emphasisColor: 'text-vault-accent'
+    },
+
+    // ── Ensayos Editoriales & Artículos Históricos ──
+    'uxmal': {
+      phrase: 'Uxmal: La sinfonía pétrea del estilo Puuc que desafió la sequía del Clásico Maya',
+      category: 'enigma',
+      emphasisColor: 'text-vault-accent'
+    },
+    'borrador-ia-2026-08-18t07-00-15': {
+      phrase: 'Uxmal: La sinfonía pétrea del estilo Puuc que desafió la sequía del Clásico Maya',
+      category: 'enigma',
+      emphasisColor: 'text-vault-accent'
+    },
+    'amazonia': {
+      phrase: 'La memoria hídrica del Amazonas: geoglifos de agua y la cicatriz del Antropoceno',
+      category: 'paradoja',
+      emphasisColor: 'text-vault-accent'
+    },
+    'borrador-ia-visual-2026-08-18t05-24-50': {
+      phrase: 'La memoria hídrica del Amazonas: geoglifos de agua y la cicatriz del Antropoceno',
+      category: 'paradoja',
+      emphasisColor: 'text-vault-accent'
+    },
+    'bonampak': {
+      phrase: 'Muros pintados en la penumbra: el códice dinástico que la selva no logró devorar',
+      category: 'evidencia',
+      emphasisColor: 'text-vault-accent'
+    },
+    'borrador-ia-visual-2026-08-18t07-48-40': {
+      phrase: 'Muros pintados en la penumbra: el códice dinástico que la selva no logró devorar',
+      category: 'evidencia',
+      emphasisColor: 'text-vault-accent'
+    },
+    'frescos-pompeya': {
+      phrase: 'El rojo pompeyano y la ceniza: cuando el arte doméstico burló al Vesubio',
+      category: 'paradoja',
+      emphasisColor: 'text-vault-accent'
+    },
+    'borrador-ia-visual-2026-08-18t09-16-08': {
+      phrase: 'El rojo pompeyano y la ceniza: cuando el arte doméstico burló al Vesubio',
+      category: 'paradoja',
+      emphasisColor: 'text-vault-accent'
+    },
+    'priapo-pompeya': {
+      phrase: 'El dios del umbral: protección fálica, rito apotropaico y abundancia en Roma',
+      category: 'evidencia',
+      emphasisColor: 'text-vault-accent'
+    },
+    'r007-borrador-visual-2026-08-18t10-23-17': {
+      phrase: 'El dios del umbral: protección fálica, rito apotropaico y abundancia en Roma',
       category: 'evidencia',
       emphasisColor: 'text-vault-accent'
     },
@@ -234,13 +284,48 @@
       category: 'enigma',
       emphasisColor: 'text-vault-accent'
     },
+    'el-tel-y-la-sombra-belo-brdo': {
+      phrase: 'La civilización sin armas que escribió antes que los sumerios',
+      category: 'enigma',
+      emphasisColor: 'text-vault-accent'
+    },
+    'saqqara': {
+      phrase: 'Imhotep y la escalera cósmica: cuando el hombre petrificó la eternidad',
+      category: 'enigma',
+      emphasisColor: 'text-vault-accent'
+    },
+    'la-piramide-escalonada-de-saqqara-y-los-origenes-de-la-arquitectura-monumental-de-imhotep': {
+      phrase: 'Imhotep y la escalera cósmica: cuando el hombre petrificó la eternidad',
+      category: 'enigma',
+      emphasisColor: 'text-vault-accent'
+    },
+    'dahshur': {
+      phrase: 'La primera pirámide verdadera: la conquista del ángulo perfecto en el desierto',
+      category: 'enigma',
+      emphasisColor: 'text-vault-accent'
+    },
+    'piramide-roja-dahshur': {
+      phrase: 'La primera pirámide verdadera: la conquista del ángulo perfecto en el desierto',
+      category: 'enigma',
+      emphasisColor: 'text-vault-accent'
+    },
+    'the-caterpillar': {
+      phrase: 'La nave biológica de Teseo: ¿sobrevive la memoria cuando el cuerpo se licúa?',
+      category: 'paradoja',
+      emphasisColor: 'text-vault-accent'
+    },
+    'younger-dryas': {
+      phrase: 'El cataclismo de doce horas que reinició la prehistoria humana',
+      category: 'evidencia',
+      emphasisColor: 'text-vault-accent'
+    },
     'tartessos': {
       phrase: 'La metrópoli de plata que Roma juró borrar de los mapas',
       category: 'enigma',
       emphasisColor: 'text-vault-accent'
     },
 
-    // Artefactos D1 / R2
+    // ── Bóveda Cloudflare D1 / R2 ──
     'vault-recinto-c': {
       phrase: 'Cinco metros de caliza mirando al vacío: el rostro prohibido de Anatolia',
       category: 'enigma',
@@ -258,6 +343,17 @@
     }
   };
 
+  function cleanTitleForHook(raw?: string): string {
+    if (!raw) return 'este vestigio';
+    let t = raw
+      .replace(/^borrador(-ia)?(-visual)?[\d\w\-_]*/gi, '')
+      .replace(/^r\d+-borrador[\d\w\-_]*/gi, '')
+      .replace(/\bborrador\b/gi, '')
+      .replace(/\b\d{4}-\d{2}-\d{2}[tT\d\-:]*\b/gi, '')
+      .trim();
+    return t || 'este vestigio';
+  }
+
   function getIntelligentHook(item: { id?: string; slug?: string; title?: string; category?: string; volanta?: string }): IntelligentHook {
     const key = (item.slug || item.id || '').toLowerCase();
     if (HOOK_CATALOG[key]) return HOOK_CATALOG[key];
@@ -271,40 +367,44 @@
     }
 
     // Heurísticas contextuales Dark Academia
+    if (titleLower.includes('uxmal') || titleLower.includes('puuc')) {
+      return HOOK_CATALOG['uxmal'];
+    }
+    if (titleLower.includes('amazonia') || titleLower.includes('amazonas') || titleLower.includes('antropoceno')) {
+      return HOOK_CATALOG['amazonia'];
+    }
+    if (titleLower.includes('bonampak') || titleLower.includes('lacandona') || titleLower.includes('mural')) {
+      return HOOK_CATALOG['bonampak'];
+    }
+    if (titleLower.includes('fresco') && (titleLower.includes('pompeya') || titleLower.includes('vesubio'))) {
+      return HOOK_CATALOG['frescos-pompeya'];
+    }
+    if (titleLower.includes('priapo') || titleLower.includes('príapo')) {
+      return HOOK_CATALOG['priapo-pompeya'];
+    }
     if (titleLower.includes('pompeya') || titleLower.includes('vesubio')) {
-      return {
-        phrase: 'Pompeya: La ciudad que no quiso morir antes de volverse inmortal',
-        category: 'paradoja',
-        emphasisColor: 'text-vault-accent'
-      };
+      return HOOK_CATALOG['pompeya'];
     }
     if (titleLower.includes('gobekli') || titleLower.includes('tepe') || titleLower.includes('anatolia')) {
-      return {
-        phrase: '¿Por qué la humanidad aprendió a rezar antes de aprender a cultivar?',
-        category: 'enigma',
-        emphasisColor: 'text-vault-accent'
-      };
+      return HOOK_CATALOG['gobekli-tepe'];
     }
-    if (titleLower.includes('alejandria') || titleLower.includes('biblioteca')) {
-      return {
-        phrase: 'Cuando el fuego devoró el pensamiento: el alto precio de recordar',
-        category: 'provocacion',
-        emphasisColor: 'text-vault-accent'
-      };
+    if (titleLower.includes('alejandria') || titleLower.includes('alejandría') || titleLower.includes('biblioteca')) {
+      return HOOK_CATALOG['biblioteca-alejandria'];
+    }
+    if (titleLower.includes('saqqara') || titleLower.includes('imhotep')) {
+      return HOOK_CATALOG['saqqara'];
+    }
+    if (titleLower.includes('dahshur') || titleLower.includes('pirámide roja') || titleLower.includes('piramide roja')) {
+      return HOOK_CATALOG['dahshur'];
+    }
+    if (titleLower.includes('caterpillar') || titleLower.includes('oruga') || titleLower.includes('metamorfosis')) {
+      return HOOK_CATALOG['the-caterpillar'];
     }
     if (titleLower.includes('dryas') || titleLower.includes('cometa') || titleLower.includes('impacto')) {
-      return {
-        phrase: 'El cataclismo de doce horas que reinició la prehistoria humana',
-        category: 'evidencia',
-        emphasisColor: 'text-vault-accent'
-      };
+      return HOOK_CATALOG['younger-dryas'];
     }
-    if (titleLower.includes('belo') || titleLower.includes('vinca') || titleLower.includes('danubio')) {
-      return {
-        phrase: 'La civilización sin armas que escribió antes que los sumerios',
-        category: 'enigma',
-        emphasisColor: 'text-vault-accent'
-      };
+    if (titleLower.includes('belo') || titleLower.includes('vinca') || titleLower.includes('vinča') || titleLower.includes('danubio')) {
+      return HOOK_CATALOG['belo-brdo'];
     }
     if (titleLower.includes('piramid') || titleLower.includes('egipto') || titleLower.includes('giza')) {
       return {
@@ -314,11 +414,7 @@
       };
     }
     if (titleLower.includes('tartessos') || titleLower.includes('atlantida') || titleLower.includes('plata')) {
-      return {
-        phrase: 'La metrópoli de plata que Roma juró borrar de los mapas',
-        category: 'enigma',
-        emphasisColor: 'text-vault-accent'
-      };
+      return HOOK_CATALOG['tartessos'];
     }
     if (item.category && item.category.toLowerCase().includes('d1')) {
       return {
@@ -328,8 +424,9 @@
       };
     }
 
+    const cleanName = cleanTitleForHook(item.title);
     return {
-      phrase: `¿Y si el relato oficial sobre ${item.title || 'este vestigio'} empezó con la premisa invertida?`,
+      phrase: `¿Y si el relato oficial sobre ${cleanName} empezó con la premisa invertida?`,
       category: 'provocacion',
       emphasisColor: 'text-vault-accent'
     };
@@ -343,6 +440,13 @@
       gsap.registerPlugin(ScrollTrigger);
 
       setTimeout(() => {
+        // Limpiar triggers previos de tarjetas cinemascope para evitar colisiones
+        ScrollTrigger.getAll().forEach(trigger => {
+          if (trigger.vars && trigger.vars.trigger && (trigger.vars.trigger as HTMLElement).classList?.contains('cinemascope-card')) {
+            trigger.kill();
+          }
+        });
+
         const cards = document.querySelectorAll<HTMLElement>('.cinemascope-card');
         
         cards.forEach((card) => {
@@ -361,7 +465,7 @@
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: card,
-              start: 'top 82%',
+              start: 'top 85%',
               once: true,
             }
           });
@@ -470,6 +574,11 @@
   });
 
   $: totalItemsCount = filteredMagazines.length + filteredEnsayos.length + filteredD1.length;
+
+  // Reactivar GSAP cada vez que se cambia de pestaña o se realiza una búsqueda
+  $: if (typeof window !== 'undefined' && (activeTab || searchQuery !== undefined)) {
+    initGsapCinemascope();
+  }
 </script>
 
 <div class="w-full max-w-7xl mx-auto font-inter text-left">

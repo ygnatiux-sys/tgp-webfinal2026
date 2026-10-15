@@ -14,7 +14,7 @@ let initialD1Items: any[] = [];
 
 try {
   const ensayos = await getCollection('ensayos', ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true;
+    return !data.draft;
   });
   if (Array.isArray(ensayos)) {
     initialEnsayos = ensayos.map((ensayo) => {

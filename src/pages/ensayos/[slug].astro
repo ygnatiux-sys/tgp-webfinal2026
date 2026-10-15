@@ -10,7 +10,7 @@ import ArticleKenBurnsModal from '../../components/ArticleKenBurnsModal';
 
 export async function getStaticPaths() {
   const ensayos = await getCollection('ensayos', ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true;
+    return !data.draft;
   });
   return ensayos.map((entry) => ({
     params: { slug: entry.id },
@@ -22,7 +22,7 @@ const { slug } = Astro.params;
 const ensayos = await getCollection('ensayos');
 const entry = Astro.props.entry || ensayos.find((e) => e.id === slug);
 
-if (!entry || (import.meta.env.PROD && entry.data.draft)) {
+if (!entry || entry.data.draft) {
   return Astro.redirect('/archivo');
 }
 
@@ -208,7 +208,7 @@ const secondaryImages = allImages.slice(1);
       <div class="max-w-[66ch] mx-auto mt-20 pt-10 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-6 text-xs font-mono tracking-widest text-primary/40 uppercase">
         <span>The Great Puzzle Project · Archivo Vivo</span>
         <a href="/archivo" class="hover:text-vault-accent transition-colors flex items-center gap-2">
-          <span>Explorar más borradores</span>
+          <span>Explorar más investigaciones y ensayos</span>
           <span>→</span>
         </a>
       </div>
