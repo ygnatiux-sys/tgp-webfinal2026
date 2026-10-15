@@ -45,7 +45,7 @@
       title: 'La Biblioteca de Alejandría',
       subtitle: 'El sueño del conocimiento universal',
       excerpt: 'El intento más ambicioso de la antigüedad por concentrar todo el saber del mundo conocido en un solo espacio sagrado de papiros y filosofía.',
-      heroUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Ancient_Library_of_Alexandria.jpg/1280px-Ancient_Library_of_Alexandria.jpg',
+      heroUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792044852021-861c97cb.webp',
       category: 'Historia del Pensamiento',
       date: 'Agosto 2026',
       folios: 3,

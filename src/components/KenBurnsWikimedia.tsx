@@ -33,7 +33,7 @@ export interface KenBurnsWikimediaProps {
 
 // Imagen de demostración por defecto: Wikimedia Commons Paisaje en Alta Resolución
 const DEFAULT_WIKIMEDIA_IMAGE =
-	'https://upload.wikimedia.org/wikipedia/commons/4/4e/Dusk_landscape_high_resolution.jpg';
+	'https://storage.thegreatpuzzleproject.com/vault-media/1792044929055-b1b217fb.webp';
 
 export const KenBurnsWikimedia: FC<KenBurnsWikimediaProps> = ({
 	src,
