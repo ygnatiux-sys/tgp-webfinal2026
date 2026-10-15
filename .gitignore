@@ -20,4 +20,8 @@ Thumbs.db
 scratch/
 extra-kelvin/
 *.bak
+*.ps1
+scripts/test-*
+scripts/*-report.json
+scripts/r2-audit-report.json
 scripts/doctor-report.json

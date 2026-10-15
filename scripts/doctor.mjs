@@ -17,7 +17,7 @@ let issues = [];
 
 // 1. CHEQUEO DE SEGURIDAD: Archivos de Desk protegidos
 try {
-  const trackedForbidden = execSync('git ls-files .env .history scratch *.bak extra-kelvin', { 
+  const trackedForbidden = execSync('git ls-files .env .history scratch *.bak extra-kelvin *.ps1 scripts/test-*', { 
     cwd: ROOT_DIR,
     stdio: ['pipe', 'pipe', 'ignore'] 
   }).toString().trim();
