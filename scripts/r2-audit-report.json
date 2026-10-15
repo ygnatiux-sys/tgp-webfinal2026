@@ -1,0 +1,292 @@
+{
+  "timestamp": "2026-10-15T04:38:29.347Z",
+  "summary": {
+    "totalPublicImages": 21,
+    "publicImagesInR2": 0,
+    "publicImagesMissingInR2": 21,
+    "totalReferencesInSrc": 82,
+    "r2ReferencesCount": 9,
+    "wikimediaReferencesCount": 57,
+    "localPublicReferencesCount": 15
+  },
+  "autoUploadStatus": {
+    "syncMjsAutoUpload": false,
+    "eodMjsAutoUpload": false,
+    "buildAutoUpload": false,
+    "hasManualScript": true,
+    "hasUiTransmutation": true
+  },
+  "publicAssetsAudit": [
+    {
+      "file": "/atrahasis-hero.jpg",
+      "size": "113.4 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/components/AtrahasisHeroImax.astro"
+      ]
+    },
+    {
+      "file": "/favicon-puzzle.png",
+      "size": "35.2 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/layouts/Layout.astro"
+      ]
+    },
+    {
+      "file": "/favicon.ico",
+      "size": "0.6 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": []
+    },
+    {
+      "file": "/favicon.png",
+      "size": "35.2 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": []
+    },
+    {
+      "file": "/favicon.svg",
+      "size": "0.7 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": []
+    },
+    {
+      "file": "/fondo_estudio.webp",
+      "size": "83.1 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/pages/home.astro"
+      ]
+    },
+    {
+      "file": "/images/posts/example-one/hero_image.jpeg",
+      "size": "425.5 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": []
+    },
+    {
+      "file": "/images/posts/tuthankamon-royal-mask/hero_image.jpg",
+      "size": "425.5 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": []
+    },
+    {
+      "file": "/magazine-hero-gobekli.jpg",
+      "size": "1054.4 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/components/AppleBentoArchetypes.astro",
+        "src/components/AppleShowcaseBento.astro",
+        "src/components/archivo/ArchivoHub.svelte",
+        "src/components/vault/VaultEngine.svelte",
+        "src/pages/archivo.astro",
+        "src/pages/ensayos/[slug].astro",
+        "src/pages/historia-alternativa.astro",
+        "src/pages/home.astro",
+        "src/pages/kenburns.astro",
+        "src/pages/magazine/[id].astro"
+      ]
+    },
+    {
+      "file": "/media-events.png",
+      "size": "674.9 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/pages/media.astro"
+      ]
+    },
+    {
+      "file": "/media-podcast.png",
+      "size": "656.4 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/components/AppleShowcaseBento.astro",
+        "src/pages/media.astro"
+      ]
+    },
+    {
+      "file": "/perfil.webp",
+      "size": "82.2 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/pages/about.astro",
+        "src/pages/proyectos.astro"
+      ]
+    },
+    {
+      "file": "/puzzle.png",
+      "size": "35.2 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/components/Footer.astro",
+        "src/components/Navbar.astro",
+        "src/pages/index.astro"
+      ]
+    },
+    {
+      "file": "/tesis-01.png",
+      "size": "725.3 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/components/AppleShowcaseBento.astro",
+        "src/pages/home.astro",
+        "src/pages/tesis-01.astro",
+        "src/pages/tesis.astro"
+      ]
+    },
+    {
+      "file": "/tesis-02.png",
+      "size": "820.7 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/pages/historia-alternativa.astro",
+        "src/pages/home.astro",
+        "src/pages/tesis-02.astro"
+      ]
+    },
+    {
+      "file": "/tesis-03.png",
+      "size": "742.7 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/components/AppleShowcaseBento.astro",
+        "src/pages/historia-alternativa.astro",
+        "src/pages/home.astro",
+        "src/pages/tesis-03.astro"
+      ]
+    },
+    {
+      "file": "/tesis-04.png",
+      "size": "879.3 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/pages/historia-alternativa.astro",
+        "src/pages/tesis-04.astro",
+        "src/pages/tesis.astro"
+      ]
+    },
+    {
+      "file": "/tgp-img-16.webp",
+      "size": "22.6 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": []
+    },
+    {
+      "file": "/tgp-img-18.webp",
+      "size": "163.7 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/components/AppleShowcaseBento.astro",
+        "src/content/ensayos/the-caterpillar.mdx"
+      ]
+    },
+    {
+      "file": "/vinca-belo-brdo.jpg",
+      "size": "241.1 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": [
+        "src/components/AppleBentoArchetypes.astro",
+        "src/content/ensayos/el-tel-y-la-sombra-belo-brdo.mdx",
+        "src/pages/historia-alternativa.astro"
+      ]
+    },
+    {
+      "file": "/xavier.jpg",
+      "size": "425.5 KB",
+      "foundInR2": false,
+      "r2Url": "NO_SUBIDO_A_R2",
+      "usedInCode": []
+    }
+  ],
+  "r2References": [
+    "https://storage.thegreatpuzzleproject.com/vault-media/magazine/pompeya-y-el-vesubio/vesuvius-from-pompeii-hires-version-2png.webp",
+    "https://storage.thegreatpuzzleproject.com/vault-media/magazine/piramide-roja-dahshur/26712-red-pyramid-in-morning-hazejpg.webp",
+    "https://storage.thegreatpuzzleproject.com/vault-media/magazine/piramide-roja-dahshur/snofrus-red-pyramid-in-dahshur-2jpg.webp",
+    "https://storage.thegreatpuzzleproject.com/vault-media/magazine/piramide-roja-dahshur/sneferus-bent-pyramid-and-red-pyramid-giza-egyptpng.webp",
+    "https://storage.thegreatpuzzleproject.com/vault-media/magazine/piramide-roja-dahshur/red-pyramid-entryjpg.webp",
+    "https://storage.thegreatpuzzleproject.com/vault-media/magazine/piramide-roja-dahshur/egyptdashurredpyramid01jpg.webp",
+    "https://storage.thegreatpuzzleproject.com/wikimedia/1789890927671-efdefead.webp",
+    "https://storage.thegreatpuzzleproject.com/wikimedia/1789890931130-017dd69e.webp",
+    "https://storage.thegreatpuzzleproject.com/wikimedia/1789890950450-985288cb.webp"
+  ],
+  "wikimediaReferences": [
+    "https://upload.wikimedia.org/wikipedia/commons/d/d4/G%C3%B6bekli_Tepe_Birthing_Woman_in_Leopard_Pillar_Building.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Ancient_Library_of_Alexandria.jpg/1280px-Ancient_Library_of_Alexandria.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/4/4e/Dusk_landscape_high_resolution.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/d/d7/Bonampak_painting.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/8/84/Bonampak_2009_03.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/9/93/Bonampak_2009_02.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/7/7e/Bonampak_2009_04.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/d/db/Bonampak_2009_05.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/4/44/Tefe-Amazon-Rainforest_%28cropped%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/7/71/Juma_River%2C_Amazonas%2C_Brazil.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/f/fd/Juru%C3%A1_River_in_Brazil.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b5/Amazon_rainforest_%28Satellite_picture%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/6/6b/Amazon_MODIS.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/5/54/Amazon_rainforest_%28Satellite_picture%29_-_3.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/4/44/Tefe-Amazon-Rainforest_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/7/71/Juma_River%2C_Amazonas%2C_Brazil.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/f/fd/Juru%C3%A1_River_in_Brazil.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b5/Amazon_rainforest_%28Satellite_picture%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/6/6b/Amazon_MODIS.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/5/54/Amazon_rainforest_%28Satellite_picture%29_-_3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b6/Fresco_Lupanar_Pompeya_03.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/1/15/Pompeya_er%C3%B3tica5.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/9/9f/Pompeya_er%C3%B3tica6.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/7/7e/Pompeii_Priapus_2.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/5/5a/Napoli_BW_2013-05-16_16-32-51_DxO.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/5/58/Mercurio-Pr%C3%ADapo_N%C3%A1poles.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b6/Fresco_Lupanar_Pompeya_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/1/15/Pompeya_er%C3%B3tica5.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/9/9f/Pompeya_er%C3%B3tica6.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/7/7e/Pompeii_Priapus_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/5/5a/Napoli_BW_2013-05-16_16-32-51_DxO.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/5/58/Mercurio-Pr%C3%ADapo_N%C3%A1poles.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b6/Fresco_Lupanar_Pompeya_03.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/1/15/Pompeya_er%C3%B3tica5.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/9/9f/Pompeya_er%C3%B3tica6.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/7/7e/Pompeii_Priapus_2.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/5/5a/Napoli_BW_2013-05-16_16-32-51_DxO.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/5/58/Mercurio-Pr%C3%ADapo_N%C3%A1poles.JPG?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b1/Pirito_e_ippodamia_ricevono_l%27omaggio_dei_centauri%2C_9044%2C_01.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/9/93/Fresco_Lupanar_Pompeya_02.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/a/a0/Kentauren_bei_der_Hochzeit_des_Perithoos.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/6/64/Pirithous_Hippodamia_MAN_Napoli_Inv9044.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/b/bf/Fresco_Isis_Pompeya_02.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b1/Pirito_e_ippodamia_ricevono_l%27omaggio_dei_centauri%2C_9044%2C_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/9/93/Fresco_Lupanar_Pompeya_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/a/a0/Kentauren_bei_der_Hochzeit_des_Perithoos.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/6/64/Pirithous_Hippodamia_MAN_Napoli_Inv9044.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/b/bf/Fresco_Isis_Pompeya_02.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b1/Pirito_e_ippodamia_ricevono_l%27omaggio_dei_centauri%2C_9044%2C_01.JPG?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/a/a0/Kentauren_bei_der_Hochzeit_des_Perithoos.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/b/bf/Fresco_Isis_Pompeya_02.JPG?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/9/93/Fresco_Lupanar_Pompeya_02.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/commons/6/64/Pirithous_Hippodamia_MAN_Napoli_Inv9044.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=original",
+    "https://upload.wikimedia.org/wikipedia/...",
+    "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png/1280px-The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png",
+    "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png/1280px-The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "https://upload.wikimedia.org/wikipedia/commons/d/d4/G%C3%B6bekli_Tepe_Birthing_Woman_in_Leopard_Pillar_Building.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+  ]
+}
