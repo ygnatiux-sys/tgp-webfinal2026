@@ -102,7 +102,7 @@ const items = sequences && sequences.length > 0 ? sequences : defaultSequences;
   <!-- CONTENEDOR VISOR CINEMÁTICO IMAX (Ratio 2.00:1 / Gran Angular) -->
   <div
     id="imax-visor-archetypes"
-    class="relative isolate w-full max-w-400 min-h-[580px] sm:min-h-[640px] md:min-h-[700px] lg:min-h-[760px] mx-auto rounded-[28px] sm:rounded-[36px] overflow-hidden bg-[#07080b] border border-white/15 shadow-[0_35px_100px_rgba(0,0,0,0.95)] select-none group/visor"
+    class="relative isolate w-full max-w-400 min-h-145 sm:min-h-160 md:min-h-175 lg:min-h-190 mx-auto rounded-[28px] sm:rounded-[36px] overflow-hidden bg-[#07080b] border border-white/15 shadow-[0_35px_100px_rgba(0,0,0,0.95)] select-none group/visor"
   >
     {/* ── 1. FONDOS CINEMÁTICOS DE CADA SECUENCIA (CROSSFADE + DOLLY ZOOM GSAP) ── */}
     <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -135,7 +135,7 @@ const items = sequences && sequences.length > 0 ? sequences : defaultSequences;
       <div class="absolute inset-0 z-1 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(7,8,11,0.85)_100%)] pointer-events-none"></div>
 
       {/* Degradado base inferior para anclar barra de controles */}
-      <div class="absolute inset-x-0 bottom-0 h-44 z-1 bg-gradient-to-t from-[#07080b] via-[#07080b]/80 to-transparent pointer-events-none"></div>
+      <div class="absolute inset-x-0 bottom-0 h-44 z-1 bg-linear-to-t from-[#07080b] via-[#07080b]/80 to-transparent pointer-events-none"></div>
     </div>
 
     {/* ── 2. HEADER SUPERIOR DEL VISOR (ESTILO APPLE TV CINEMATIC) ── */}
@@ -162,7 +162,7 @@ const items = sequences && sequences.length > 0 ? sequences : defaultSequences;
     </div>
 
     {/* ── 3. CONTENIDO PRINCIPAL EDITORIAL (CAMBIOS DE TEXTOS VINCULADOS A CADA SECUENCIA) ── */}
-    <div class="relative z-20 w-full px-6 sm:px-10 md:px-14 py-8 md:py-14 flex flex-col justify-center min-h-[420px] sm:min-h-[460px] md:min-h-[500px]">
+    <div class="relative z-20 w-full px-6 sm:px-10 md:px-14 py-8 md:py-14 flex flex-col justify-center min-h-105 sm:min-h-115 md:min-h-125">
       {items.map((item, idx) => (
         <div
           id={`content-slide-${idx}`}
@@ -232,7 +232,7 @@ const items = sequences && sequences.length > 0 ? sequences : defaultSequences;
             <!-- Línea de Progreso de Tiempo de la Secuencia -->
             <div
               id={`seq-progress-${idx}`}
-              class="seq-progress-bar absolute bottom-0 left-0 h-[2px] bg-amber-400 transition-all duration-100"
+              class="seq-progress-bar absolute bottom-0 left-0 h-0.5 bg-amber-400 transition-all duration-100"
               style={`width: ${idx === 0 ? '0%' : '0%'};`}
             ></div>
 
@@ -240,7 +240,7 @@ const items = sequences && sequences.length > 0 ? sequences : defaultSequences;
               <span class="text-[10px] font-mono font-bold text-amber-300">
                 {item.sequenceNumber}
               </span>
-              <span class="text-[11px] sm:text-xs font-sans font-medium tracking-tight truncate max-w-[120px] sm:max-w-[160px]">
+              <span class="text-[11px] sm:text-xs font-sans font-medium tracking-tight truncate max-w-30 sm:max-w-40">
                 {item.titleAccent}
               </span>
             </div>

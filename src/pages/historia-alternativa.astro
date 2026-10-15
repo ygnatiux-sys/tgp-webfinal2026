@@ -176,7 +176,7 @@ const casosAlternativos = [
 
           <!-- H1 Monumental Cinematográfico con Sombras Nítidas (Legibilidad Pura sin Scrim) -->
           <h1 class="univisium-anim-elem opacity-0 font-bodoni font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-[5.4vw] leading-[0.92] tracking-tighter text-white [text-shadow:0_4px_24px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)] mb-4">
-            El Tel y la Sombra: <span class="highlight-word italic font-light font-bodoni text-vault-accent [filter:drop-shadow(0_0_30px_rgba(201,169,110,0.5))]">Belo Brdo</span>.
+            El Tel y la Sombra: <span class="highlight-word italic font-light font-bodoni text-vault-accent drop-shadow-[0_0_30px_rgba(201,169,110,0.5)]">Belo Brdo</span>.
           </h1>
 
           <!-- H2 Exegético Cinematográfico -->
@@ -271,92 +271,177 @@ const casosAlternativos = [
          - <img>: w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-105
          - Sanitización de Markdown en descripciones con line-clamp-2
     ═══════════════════════════════════════════════════════════════════════ -->
-    <section id="grid-editorial" class="relative px-6 md:px-16 max-w-7xl mx-auto pb-32">
-      <div class="flex items-center justify-between mb-12">
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TRÍPTICO ULTRA BENTO "ANOMALÍAS & ENIGMAS HISTÓRICOS" (IMAX INMERSIVO)
+         - Las 3 tarjetas verticales de la muestra en escala IMAX full-bleed
+         - Fotografía cinemática de borde a borde (h-150 a lg:h-195)
+         - Badges flotantes de vidrio, fechas de carbono y tipografía monumental
+         - Expansión interactiva y Ken Burns hover zoom
+    ═══════════════════════════════════════════════════════════════════════ -->
+    <section id="grid-editorial" class="relative px-3 sm:px-6 md:px-12 w-full max-w-420 mx-auto pb-32">
+      <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-10 gap-4">
         <div>
-          <div class="flex items-center gap-2 text-[10px] font-mono tracking-[0.3em] uppercase text-vault-accent">
-            <span class="w-1.5 h-1.5 rounded-full bg-vault-accent"></span>
-            A24 & Apple Editorial Design · Staggered Grid
+          <div class="flex items-center gap-2 text-[10px] font-mono tracking-[0.35em] uppercase text-vault-accent mb-2">
+            <span class="w-2 h-2 rounded-full bg-vault-accent animate-pulse"></span>
+            Tríptico Ultra Bento · Formato IMAX Vertical 9:16
           </div>
-          <h2 class="font-bodoni text-3xl sm:text-4xl md:text-5xl text-highlight font-bold mt-1">
+          <h2 class="font-bodoni text-3xl sm:text-5xl md:text-6xl text-highlight font-extrabold tracking-tight">
             Anomalías & <span class="italic text-vault-accent font-light">Enigmas Históricos</span>
           </h2>
         </div>
 
-        <span class="text-[11px] font-mono text-primary/40 uppercase tracking-widest hidden sm:inline-block">
-          6 Expediciones Catalogadas · Cascada Asimétrica
-        </span>
+        <div class="flex items-center gap-3">
+          <span class="text-[10px] sm:text-[11px] font-mono text-primary/60 uppercase tracking-widest bg-black/60 px-4 py-2 rounded-full border border-white/15 backdrop-blur-md">
+            Secuencia Primaria · 3 Paneles Monolíticos
+          </span>
+        </div>
       </div>
 
-      <!-- Contenedor General de la Grilla Escalonada -->
-      <div class="staggered-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 items-start w-full pb-24">
-        {casosAlternativos.map((caso) => {
+      <!-- ── TRÍPTICO ULTRA BENTO IMAX: 3 TARJETAS VERTICALES INMERSIVAS ── -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch w-full mb-16">
+        {casosAlternativos.slice(0, 3).map((caso, idx) => {
           const cleanExcerpt = sanitizeSnippet(caso.excerpt);
+          const accentColor = idx === 0 ? '#c9a96e' : idx === 1 ? '#e58e4a' : '#d9b35b';
 
           return (
             <a
               href={caso.url}
-              class="staggered-card bento-glass rounded-2xl overflow-hidden border border-white/10 hover:border-vault-accent/60 transition-all duration-500 flex flex-col justify-between group shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] cursor-pointer text-left w-full"
+              class="triptico-imax-card relative isolate flex flex-col justify-between overflow-hidden rounded-[28px] sm:rounded-[36px] border border-white/15 bg-[#07080b] shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 hover:border-vault-accent/70 hover:shadow-[0_40px_120px_rgba(201,169,110,0.3)] group/imaxcard cursor-pointer h-150 sm:h-170 md:h-180 lg:h-195 w-full select-none"
             >
-              <div>
-                <!-- Contenedor de Imagen Uniforme Aspect 3/4 -->
-                <div class="w-full aspect-3/4 overflow-hidden rounded-xl bg-neutral-900 relative">
-                  <img
-                    src={caso.imageUrl}
-                    alt={caso.title}
-                    class="w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <!-- Degradé Cinematográfico -->
-                  <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/25 to-transparent pointer-events-none"></div>
+              {/* 1. Fondo Fotográfico IMAX Full-Bleed con Ken Burns Zoom */}
+              <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden">
+                <img
+                  src={caso.imageUrl}
+                  alt={caso.title}
+                  class="w-full h-full object-cover object-[center_35%] filter brightness-90 contrast-105 transition-transform duration-1000 ease-out group-hover/imaxcard:scale-110 will-change-transform"
+                  loading="eager"
+                />
+                
+                {/* Degradados Cinemáticos para Legibilidad de Borde */}
+                <div class="absolute inset-0 bg-linear-to-b from-black/85 via-black/20 to-black/95 pointer-events-none"></div>
+                <div 
+                  class="absolute inset-0 pointer-events-none opacity-40 group-hover/imaxcard:opacity-70 transition-opacity duration-700"
+                  style={`background: radial-gradient(circle at 50% 30%, ${accentColor}33 0%, transparent 70%);`}
+                ></div>
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(7,8,11,0.85)_100%)] pointer-events-none"></div>
+              </div>
 
-                  <!-- Badges Superiores -->
-                  <div class="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
-                    <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-vault-accent/40 text-[9px] font-mono uppercase tracking-widest text-vault-accent font-semibold">
-                      ✦ {caso.badge}
-                    </span>
-
-                    <span class="px-2.5 py-0.5 rounded-full bg-white/10 text-highlight text-[9px] font-mono uppercase tracking-widest backdrop-blur-md">
-                      {caso.era}
-                    </span>
-                  </div>
-
-                  <!-- Fecha Inferior -->
-                  <div class="absolute bottom-3 left-3 text-[10px] font-mono text-vault-accent/80 tracking-widest uppercase pointer-events-none">
-                    <span>{caso.date}</span>
-                  </div>
-                </div>
-
-                <!-- Bloque Editorial de Textos -->
-                <div class="p-5 sm:p-6 space-y-2.5">
-                  <span class="text-[10px] font-mono text-primary/50 tracking-widest uppercase block">
-                    {caso.category}
+              {/* 2. Cabecera Flotante del Panel (Badges Superiores + Secuencia) */}
+              <div class="p-6 sm:p-8 z-10 flex flex-col gap-3">
+                <div class="flex items-center justify-between w-full">
+                  <span class="px-3.5 py-1.5 rounded-full bg-black/75 backdrop-blur-md border text-[9px] sm:text-[10px] font-mono tracking-widest uppercase font-semibold text-vault-accent border-vault-accent/40 shadow-lg">
+                    ✦ {caso.badge}
                   </span>
 
-                  <h3 class="font-bodoni text-xl md:text-2xl text-highlight group-hover:text-vault-accent transition-colors font-bold leading-tight">
-                    {caso.title}
-                  </h3>
+                  <span class="px-3 py-1 rounded-full bg-white/10 text-white/90 text-[9px] sm:text-[10px] font-mono uppercase tracking-widest backdrop-blur-md border border-white/15">
+                    {caso.era}
+                  </span>
+                </div>
 
-                  <p class="text-xs italic text-vault-accent/90 font-bodoni">
-                    {caso.subtitle}
-                  </p>
-
-                  <p class="font-inter text-xs text-primary/70 line-clamp-2 leading-relaxed font-light">
-                    {cleanExcerpt}
-                  </p>
+                <!-- Datación Arqueológica -->
+                <div class="self-start px-3 py-1 rounded-full bg-black/60 border border-amber-400/30 text-amber-300 font-mono text-[10px] sm:text-[11px] uppercase tracking-widest backdrop-blur-xs">
+                  ⏳ {caso.date}
                 </div>
               </div>
 
-              <!-- Botón Inferior -->
-              <div class="p-5 sm:p-6 pt-0 mt-auto">
-                <div class="w-full py-2.5 px-4 rounded-xl bg-white/5 border border-white/10 group-hover:border-vault-accent group-hover:bg-vault-accent group-hover:text-black transition-all text-xs font-mono uppercase tracking-[0.18em] font-semibold flex items-center justify-center gap-2 shadow-md">
-                  <span>Explorar Caso</span>
-                  <span class="group-hover:translate-x-1 transition-transform text-sm">→</span>
+              {/* 3. Bloque Inferior Flotante sobre la Imagen (Tipografía Monumental + CTA) */}
+              <div class="p-6 sm:p-8 md:p-10 z-10 flex flex-col items-start gap-3 bg-linear-to-t from-[#07080b] via-[#07080b]/90 to-transparent pt-16">
+                <!-- Volanta / Categoría Editorial -->
+                <span class="text-[10px] sm:text-[11px] font-mono text-vault-accent tracking-[0.35em] uppercase font-bold">
+                  ◈ {caso.category}
+                </span>
+
+                <!-- Título Monumental Bodoni -->
+                <h3 class="font-bodoni font-extrabold text-2xl sm:text-3xl lg:text-4xl text-white leading-[1.05] tracking-tight group-hover/imaxcard:text-vault-accent transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
+                  {caso.title}
+                </h3>
+
+                <!-- Subtítulo Exegético Italic -->
+                <p class="text-xs sm:text-sm italic text-vault-accent/90 font-bodoni">
+                  {caso.subtitle}
+                </p>
+
+                <!-- Excerpt Curado -->
+                <p class="font-outfit text-xs sm:text-sm text-white/80 line-clamp-3 leading-relaxed font-light drop-shadow-md">
+                  {cleanExcerpt}
+                </p>
+
+                <!-- Botón de Acción Estilo Apple / IMAX Pill -->
+                <div class="w-full pt-2">
+                  <div class="w-full py-3.5 px-6 rounded-full bg-white/10 group-hover/imaxcard:bg-vault-accent group-hover/imaxcard:text-black border border-white/20 group-hover/imaxcard:border-vault-accent text-white font-mono text-xs uppercase tracking-[0.2em] font-bold backdrop-blur-md flex items-center justify-between transition-all duration-300 shadow-xl">
+                    <span>Explorar Dossier</span>
+                    <span class="group-hover/imaxcard:translate-x-1.5 transition-transform text-sm font-black">→</span>
+                  </div>
                 </div>
               </div>
             </a>
           );
         })}
+      </div>
+
+      <!-- ── ARCHIVO COMPLEMENTARIO: CASOS SECUNDARIOS (PIRI REIS, 1177, HAL SAFLIENI) ── -->
+      <div class="pt-8 border-t border-white/10">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex items-center gap-2 text-[10px] font-mono tracking-[0.3em] uppercase text-primary/60">
+            <span>◈</span>
+            Expediciones Complementarias de la Bóveda
+          </div>
+          <span class="text-[10px] font-mono text-primary/40 uppercase tracking-widest hidden sm:inline-block">
+            Archivos 04 al 06
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start w-full">
+          {casosAlternativos.slice(3).map((caso) => {
+            const cleanExcerpt = sanitizeSnippet(caso.excerpt);
+
+            return (
+              <a
+                href={caso.url}
+                class="bento-glass rounded-2xl overflow-hidden border border-white/10 hover:border-vault-accent/50 transition-all duration-500 flex flex-col justify-between group shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] cursor-pointer text-left w-full"
+              >
+                <div>
+                  <div class="w-full aspect-16/10 overflow-hidden bg-neutral-900 relative">
+                    <img
+                      src={caso.imageUrl}
+                      alt={caso.title}
+                      class="w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/25 to-transparent pointer-events-none"></div>
+                    <div class="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
+                      <span class="px-2.5 py-0.5 rounded-full bg-black/75 backdrop-blur-md border border-vault-accent/40 text-[9px] font-mono uppercase tracking-widest text-vault-accent font-semibold">
+                        ✦ {caso.badge}
+                      </span>
+                      <span class="px-2 py-0.5 rounded-full bg-white/10 text-highlight text-[9px] font-mono uppercase tracking-widest backdrop-blur-md">
+                        {caso.era}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="p-5 space-y-2">
+                    <span class="text-[10px] font-mono text-primary/50 tracking-widest uppercase block">
+                      {caso.category}
+                    </span>
+                    <h4 class="font-bodoni text-lg text-highlight group-hover:text-vault-accent transition-colors font-bold leading-tight">
+                      {caso.title}
+                    </h4>
+                    <p class="font-inter text-xs text-primary/70 line-clamp-2 leading-relaxed font-light">
+                      {cleanExcerpt}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="p-5 pt-0 mt-auto">
+                  <div class="w-full py-2 px-4 rounded-xl bg-white/5 border border-white/10 group-hover:border-vault-accent group-hover:bg-vault-accent group-hover:text-black transition-all text-xs font-mono uppercase tracking-[0.18em] font-semibold flex items-center justify-center gap-2 shadow-md">
+                    <span>Ver Expedición</span>
+                    <span class="group-hover:translate-x-1 transition-transform text-xs">→</span>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
       </div>
     </section>
 
@@ -485,6 +570,23 @@ const casosAlternativos = [
           start: 'top top',
           end: 'bottom top',
           scrub: true
+        }
+      });
+    }
+
+    // 4. Revelación Cinemática del Tríptico Ultra Bento IMAX
+    const tripticoCards = gsap.utils.toArray<HTMLElement>('.triptico-imax-card');
+    if (tripticoCards.length > 0) {
+      gsap.from(tripticoCards, {
+        opacity: 0,
+        y: 60,
+        duration: 1.1,
+        stagger: 0.18,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#grid-editorial',
+          start: 'top 80%',
+          toggleActions: 'play none none none'
         }
       });
     }
