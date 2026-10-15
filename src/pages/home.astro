@@ -1,0 +1,315 @@
+---
+// src/pages/home.astro
+// Home & Portal Principal — The Great Puzzle Project
+// Cartel Univisium de Apple (2:1) + Grilla de Colecciones "MUBI / Criterion Channel" (Hero Spotlight + Satélites)
+
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+// Sanitizador de texto Markdown crudo para descripciones/extractos
+const sanitizeSnippet = (text: string) => {
+  return text
+    .replace(/^[#*\->\s]+/gm, '')
+    .replace(/[*_~`]/g, '')
+    .trim();
+};
+
+// Colección MUBI / Criterion Channel (Ciclos de 3: 1 Hero + 2 Satélites)
+const mubiCollection = [
+  {
+    id: 'younger-dryas-dossier',
+    title: 'Göbekli Tepe & El Reinicio del Holoceno',
+    subtitle: 'El Oopart de Anatolia antes de la Agricultura',
+    description: '### Testimonio Geológico: Doce mil años antes del relato lineal, manos anónimas esculpieron monolitos de quince toneladas alineados con Sirio.',
+    category: 'Arqueología Cognitiva',
+    badge: 'DOSSIER CINEMÁTICO',
+    date: '10.000 a.C.',
+    imageUrl: '/magazine-hero-gobekli.jpg',
+    url: '/magazine/gobekli-tepe'
+  },
+  {
+    id: 'vesubio-pompeya',
+    title: 'Pompeya & El Archivo Petrificado',
+    subtitle: 'Estratigrafía de una Tragedia Inmortal',
+    description: '* Bajo el manto piroclástico del 79 d.C., una civilización quedó sellada al vacío, congelando su técnica y cosmogonía.',
+    category: 'Memoria & Cataclismo',
+    badge: 'DOSSIER CINEMÁTICO',
+    date: '79 d.C.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/magazine/pompeya-y-el-vesubio/vesuvius-from-pompeii-hires-version-2png.webp',
+    url: '/magazine/pompeya'
+  },
+  {
+    id: 'alejandria-cenizas',
+    title: 'Alejandría: El Sueño del Papiro Total',
+    subtitle: 'La Concentración Universal del Pensamiento',
+    description: '## Quinientos mil rollos consumidos por el fuego y la intolerancia institucional. El mapa de la gran amnesia mediterránea.',
+    category: 'Historia del Conocimiento',
+    badge: 'DOSSIER CINEMÁTICO',
+    date: '48 a.C.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Ancient_Library_of_Alexandria.jpg/1280px-Ancient_Library_of_Alexandria.jpg',
+    url: '/archivo'
+  },
+  {
+    id: 'tesis-sapiens-arquitecto',
+    title: 'El Sapiens Arquitecto & Las Prótesis del Sentido',
+    subtitle: 'Tesis I & II · La Mente Extendida en la Máquina',
+    description: '## No habitamos el plano biológico sino narrativas monumentales. La prótesis técnica no es externa: es la infraestructura de nuestra mente.',
+    category: 'Tratado Epistemológico',
+    badge: 'DOSSIER CINEMÁTICO',
+    date: 'Edición 2026',
+    imageUrl: '/tesis-01.png',
+    url: '/tesis-01'
+  },
+  {
+    id: 'boveda-digital-cloudflare',
+    title: 'Bóveda TGP-Vault: Persistencia Inmutable',
+    subtitle: 'Cloudflare D1 / R2 & Transmutación WebP',
+    description: '* Depósito digital distribuido para salvaguardar evidencias fotográficas y crónicas ante el apagón digital contemporáneo.',
+    category: 'Infraestructura Crítica',
+    badge: 'DOSSIER CINEMÁTICO',
+    date: 'Tiempo Real',
+    imageUrl: '/tesis-02.png',
+    url: '/tgp-vault'
+  },
+  {
+    id: 'cartografia-piri-reis',
+    title: 'Piri Reis: La Antártida Libre de Hielo',
+    subtitle: 'Fuentes Cartográficas del Mundo Perdido',
+    description: '### Cartas náuticas del siglo XVI que registran accidentes geográficos ocultos bajo kilómetros de hielo glaciar.',
+    category: 'Cartografía Anómala',
+    badge: 'DOSSIER CINEMÁTICO',
+    date: '1513 d.C.',
+    imageUrl: '/tesis-03.png',
+    url: '/historia-alternativa'
+  }
+];
+---
+
+<Layout title="Home · Portal Principal | The Great Puzzle Project">
+  <!-- LENS GLOWS DE FONDO (HEREDADO DE ARCHIVO) -->
+  <div class="lens-glow -top-50 -left-50"></div>
+  <div class="lens-glow -bottom-50 -right-50"></div>
+  <div class="fixed top-1/3 -right-40 w-96 h-96 bg-vault-accent/5 rounded-full blur-[140px] pointer-events-none"></div>
+
+  <Navbar />
+
+  <main class="relative z-10 overflow-x-hidden pt-24 md:pt-32">
+    <!-- ENCABEZADO SUPERIOR EDITORIAL (ESTILO ARCHIVO) -->
+    <section class="relative px-6 md:px-12 max-w-7xl mx-auto text-center mb-10">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-vault-accent/30 bg-vault-accent/5 backdrop-blur-md mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
+        <span class="text-[10px] uppercase font-mono tracking-[0.35em] text-vault-accent font-medium">
+          The Great Puzzle Project · Solapa Home Principal
+        </span>
+      </div>
+
+      <h1 class="font-bodoni text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] font-extrabold tracking-tighter titulo-estilo-apple mb-6">
+        Portal <span class="highlight-word italic font-light font-bodoni text-vault-accent">Principal</span>
+      </h1>
+
+      <div class="w-24 h-px bg-highlight/30 mx-auto mb-6"></div>
+
+      <p class="font-inter font-light text-xs sm:text-sm md:text-base tracking-[0.25em] uppercase text-fade-gradient max-w-3xl mx-auto leading-relaxed">
+        Investigación sobre la arquitectura técnica del olvido, arqueología cognitiva y gestión del sentido.
+      </p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         CARTEL DE BIENVENIDA EN FORMATO UNIVISIUM DE APPLE (2:1)
+         - Proporción 2:1 (Univisium 18:9 / Vittorio Storaro)
+         - Título de bienvenida en tipografía Serif Extra Bold (Bodoni)
+         - H2 en tipografía Sans Serif Outfit
+    ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="relative px-4 sm:px-6 md:px-12 max-w-7xl mx-auto mb-24">
+      <div class="cartel-univisium w-full bg-[#11141c] flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 group">
+        <!-- Imagen de Fondo Cinemática con Gradiente Apple -->
+        <div class="absolute inset-0 -z-10 overflow-hidden">
+          <img
+            src="/fondo_estudio.webp"
+            alt="The Great Puzzle Project Ambient"
+            class="w-full h-full object-cover opacity-25 group-hover:scale-105 group-hover:opacity-35 transition-all duration-1000 filter grayscale contrast-125"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#11141c] via-[#11141c]/70 to-[#11141c]/40"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(201,169,110,0.18)_0%,transparent_50%)] pointer-events-none"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(159,140,174,0.12)_0%,transparent_50%)] pointer-events-none"></div>
+        </div>
+
+        <!-- Encabezado Superior del Cartel (Badges Apple Univisium) -->
+        <div class="flex items-center justify-between w-full z-10">
+          <div class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md">
+            <span class="w-2 h-2 rounded-full bg-vault-accent animate-pulse"></span>
+            <span class="text-[9px] sm:text-[10px] font-mono tracking-[0.25em] uppercase text-highlight font-semibold">
+              ✦ Cartel Univisium 2.00:1 · Apple Billboard
+            </span>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-vault-accent/10 border border-vault-accent/30 text-[9px] font-mono tracking-widest text-vault-accent uppercase font-medium">
+              Edición 2026
+            </span>
+            <span class="text-[10px] font-mono text-primary/40 uppercase tracking-widest">
+              Relación de Aspecto 2:1
+            </span>
+          </div>
+        </div>
+
+        <!-- Cuerpo Central del Cartel de Bienvenida -->
+        <div class="my-auto py-6 sm:py-8 z-10 max-w-4xl">
+          <!-- Cartel de Bienvenida en Serif Extra Bold -->
+          <div class="inline-block text-[11px] sm:text-xs font-mono tracking-[0.35em] uppercase text-vault-accent font-semibold mb-3">
+            Manifiesto & Bienvenida Oficial
+          </div>
+
+          <h2 class="font-bodoni font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tighter titulo-estilo-apple mb-4">
+            Bienvenido al Gran <span class="highlight-word italic font-light font-bodoni text-vault-accent">Rompecabezas</span>.
+          </h2>
+
+          <!-- H2 en Sans Serif Outfit -->
+          <h2 class="font-outfit font-normal text-lg sm:text-2xl md:text-3xl text-primary/90 tracking-wide max-w-3xl leading-snug">
+            Una expedición crítica sobre la arquitectura de la memoria, las grietas del relato oficial y la emergencia de nuevos paradigmas.
+          </h2>
+        </div>
+
+        <!-- Barra Inferior de Acciones y Ruteo Lógico (Estilo Apple / Archivo) -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-white/10 z-10">
+          <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+            <a
+              href="/archivo"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-vault-accent text-black hover:bg-highlight transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-bold shadow-[0_0_25px_rgba(201,169,110,0.3)] group/btn cursor-pointer"
+            >
+              <span>◈ Explorar Archivo</span>
+              <span class="group-hover/btn:translate-x-1 transition-transform">→</span>
+            </a>
+
+            <a
+              href="/historia-alternativa"
+              class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/5 hover:bg-vault-accent/15 border border-white/15 hover:border-vault-accent/50 text-highlight hover:text-vault-accent transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-medium backdrop-blur-md cursor-pointer"
+            >
+              <span class="text-vault-accent">✦</span>
+              <span>Historia Alternativa</span>
+            </a>
+
+            <a
+              href="/tgp-vault"
+              class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-primary hover:text-highlight transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-medium backdrop-blur-md cursor-pointer"
+            >
+              <span>Bóveda D1 / R2</span>
+            </a>
+          </div>
+
+          <div class="text-[10px] font-mono text-primary/50 uppercase tracking-[0.25em] flex items-center gap-2">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-400"></span>
+            <span>Sistema Operativo · 100% Standalone</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         GRILLA DE COLECCIONES: MUBI / CRITERION CHANNEL (HERO SPOTLIGHT + SATÉLITES)
+         - Mobile (< md): 1 columna (grid-cols-1 gap-8)
+         - Desktop (lg:): 4 columnas estrictas con minmax(0, 1fr)
+         - Patrón cada 3 elementos:
+           * Tarjeta Hero (nth-child(3n + 1)): lg:col-span-2, aspect-[4/5], título text-2xl lg:text-3xl
+           * Tarjetas Satélite (3n + 2, 3n + 3): lg:col-span-1, aspect-[2/3], título text-lg lg:text-xl
+         - Sanitización de extractos Markdown
+         - Badge superior absoluto top-3 left-3 bg-black/70 backdrop-blur-sm
+    ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="relative px-6 md:px-12 max-w-7xl mx-auto pb-28">
+      <div class="flex items-center justify-between mb-12">
+        <div>
+          <div class="flex items-center gap-2 text-[10px] font-mono tracking-[0.3em] uppercase text-vault-accent">
+            <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
+            Curaduría Cinematográfica · MUBI & Criterion Style
+          </div>
+          <h2 class="font-bodoni text-3xl sm:text-4xl md:text-5xl text-highlight font-bold mt-1">
+            Colección <span class="italic text-vault-accent font-light">Spotlight</span>
+          </h2>
+        </div>
+
+        <span class="text-[11px] font-mono text-primary/40 uppercase tracking-widest hidden sm:inline-block">
+          Patrón Hero 2-Col + Satélites 1-Col
+        </span>
+      </div>
+
+      <!-- Contenedor Padre de la Grilla MUBI (4 Columnas Estrictas en Desktop) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start w-full">
+        {mubiCollection.map((item, index) => {
+          const isHero = index % 3 === 0;
+          const cleanText = sanitizeSnippet(item.description);
+
+          return (
+            <a
+              href={item.url}
+              class={`group block bento-glass rounded-2xl overflow-hidden border border-white/10 hover:border-vault-accent/60 transition-all duration-500 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] cursor-pointer min-w-0 ${
+                isHero ? 'lg:col-span-2' : 'lg:col-span-1'
+              }`}
+            >
+              <!-- Contenedor de Imagen Estricto con Aspect Ratio Controlado -->
+              <div
+                class={`w-full overflow-hidden rounded-xl bg-neutral-900 relative ${
+                  isHero ? 'aspect-[4/5]' : 'aspect-[2/3]'
+                }`}
+              >
+                <img
+                  src={item.imageUrl}
+                  alt={item.title}
+                  class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+
+                <!-- Degradé de oscurecimiento superior e inferior -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
+
+                <!-- Badge Superior "DOSSIER CINEMÁTICO" -->
+                <div class="absolute top-3 left-3 z-10 pointer-events-none">
+                  <span class="px-3 py-1 rounded-full bg-black/70 backdrop-blur-sm border border-vault-accent/40 text-[9px] font-mono uppercase tracking-widest text-vault-accent font-semibold flex items-center gap-1.5 shadow-md">
+                    <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
+                    {item.badge}
+                  </span>
+                </div>
+
+                <!-- Metadata Inferior Sobre la Imagen -->
+                <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[10px] font-mono text-primary/70 tracking-widest uppercase pointer-events-none z-10">
+                  <span class="px-2 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/10 text-highlight">
+                    {item.date}
+                  </span>
+                  <span class="text-vault-accent font-medium">
+                    {item.category}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Bloque Textual Editorial Acompañante -->
+              <div class="p-5 sm:p-6 space-y-2">
+                <span class="text-[10px] font-mono text-vault-accent/80 tracking-widest uppercase block">
+                  {item.subtitle}
+                </span>
+
+                <h3
+                  class={`font-bodoni text-highlight group-hover:text-vault-accent transition-colors font-bold leading-tight ${
+                    isHero ? 'text-2xl lg:text-3xl' : 'text-lg lg:text-xl'
+                  }`}
+                >
+                  {item.title}
+                </h3>
+
+                <p class="font-inter text-xs text-primary/70 leading-relaxed font-light line-clamp-2">
+                  {cleanText}
+                </p>
+
+                <div class="pt-3 flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-vault-accent font-semibold group-hover:translate-x-1 transition-transform">
+                  <span>Acceder al Dossier</span>
+                  <span>→</span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,381 @@
+---
+// src/pages/historia-alternativa.astro
+// Historia Alternativa & Arqueología Especulativa — The Great Puzzle Project
+// Cartel Univisium de Apple (2:1) + Grilla "Staggered Editorial" A24 / Apple Editorial (Escalonado Asimétrico)
+
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+// Sanitizador de texto Markdown crudo para descripciones/extractos
+const sanitizeSnippet = (text: string) => {
+  return text
+    .replace(/^[#*\->\s]+/gm, '')
+    .replace(/[*_~`]/g, '')
+    .trim();
+};
+
+// Casos de Investigación de Historia Alternativa
+const casosAlternativos = [
+  {
+    id: 'younger-dryas',
+    title: 'El Cataclismo del Younger Dryas',
+    subtitle: 'La Hipótesis del Impacto Cósmico',
+    category: 'Catastrofismo Geológico',
+    date: '12.800 AP',
+    era: 'Pleistoceno Tardío',
+    imageUrl: '/magazine-hero-gobekli.jpg',
+    excerpt: '### Nanodiamantes, esférulas magnéticas y una capa de platino global respaldan la teoría de un enjambre cometario que causó inundaciones catastróficas y el reinicio civilizatorio.',
+    badge: 'Evidencia Geológica',
+    url: '/magazine/gobekli-tepe'
+  },
+  {
+    id: 'gobekli-monolitos',
+    title: 'Göbekli Tepe: El Templo Pre-Agrícola',
+    subtitle: 'La Paradoja Megalítica de Anatolia',
+    category: 'Arqueología Cognitiva',
+    date: '9.600 a.C.',
+    era: 'Pre-Cerámico A',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/G%C3%B6bekli_Tepe_Birthing_Woman_in_Leopard_Pillar_Building.jpg',
+    excerpt: '* Pilares calizos de 15 toneladas decorados con relieves zoomorfos y astronomía ritual. La prueba física de que la religión precedió a la agricultura.',
+    badge: 'Megalitismo Arcaico',
+    url: '/archivo'
+  },
+  {
+    id: 'piri-reis',
+    title: 'El Mapa de Piri Reis y la Antártida',
+    subtitle: 'Cartografía de Fuentes Perdidas',
+    category: 'Cartografía Anómala',
+    date: '1513 d.C.',
+    era: 'Imperio Otomano',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Ancient_Library_of_Alexandria.jpg/1280px-Ancient_Library_of_Alexandria.jpg',
+    excerpt: '## El almirante otomano compiló cartas que representaban la costa antártica sin manto de hielo, documentando una tradición geográfica de origen desconocido.',
+    badge: 'Cartografía Disidente',
+    url: '/tesis-03'
+  },
+  {
+    id: 'colapso-1177',
+    title: '1177 a.C.: El Gran Apagón del Bronce',
+    subtitle: 'La Amnesia Sistémica del Mediterráneo',
+    category: 'Colapso de Civilizaciones',
+    date: '1177 a.C.',
+    era: 'Bronce Tardío',
+    imageUrl: '/tesis-03.png',
+    excerpt: '## En menos de una generación, imperios enteros colapsaron simultáneamente. La escritura se perdió y sobrevino una edad oscura de siglos sin crónicas.',
+    badge: 'Amnesia Histórica',
+    url: '/tesis-01'
+  },
+  {
+    id: 'acustica-hal-saflieni',
+    title: 'Hal Saflieni y la Resonancia 111 Hz',
+    subtitle: 'Acústica Subterránea y Conciencia',
+    category: 'Arqueoacústica',
+    date: '4.000 a.C.',
+    era: 'Neolítico Maltés',
+    imageUrl: '/tesis-02.png',
+    excerpt: '* Cámaras subterráneas talladas en la roca viva que amplifican la frecuencia de 111 Hz, estimulando la corteza prefrontal y la actividad cerebral profunda.',
+    badge: 'Tecnología Sonora',
+    url: '/media-home'
+  },
+  {
+    id: 'amnesia-programada',
+    title: 'La Heurística Alterna: Tesis III',
+    subtitle: 'Cartografía Crítica del Olvido Institucional',
+    category: 'Epistemología Crítica',
+    date: '2026',
+    era: 'Era Digital',
+    imageUrl: '/tesis-04.png',
+    excerpt: '### Lo alternativo no como misticismo, sino como método riguroso para cartografiar los procesos de exclusión y la ingeniería institucional de la memoria.',
+    badge: 'Tesis Teórica',
+    url: '/tesis-03'
+  }
+];
+---
+
+<Layout title="Historia Alternativa & Paradigmas Disidentes | The Great Puzzle Project">
+  <!-- LENS GLOWS DE FONDO (HEREDADO DE ARCHIVO) -->
+  <div class="lens-glow -top-50 -left-50"></div>
+  <div class="lens-glow -bottom-50 -right-50"></div>
+  <div class="fixed top-1/4 -right-32 w-[550px] h-[550px] bg-vault-accent/5 rounded-full blur-[160px] pointer-events-none"></div>
+
+  <Navbar />
+
+  <main class="relative z-10 overflow-x-hidden pt-24 md:pt-32">
+    <!-- ENCABEZADO HERO DE LA SECCIÓN (HEREDADO DE ARCHIVO) -->
+    <section class="relative px-6 md:px-16 max-w-7xl mx-auto text-center mb-10">
+      <div class="w-full flex flex-col items-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-vault-accent/30 bg-vault-accent/5 backdrop-blur-md mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
+          <span class="text-[10px] uppercase font-mono tracking-[0.35em] text-vault-accent font-medium">
+            The Great Puzzle Project · Solapa Historia Alternativa
+          </span>
+        </div>
+
+        <h1 class="font-bodoni text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] font-extrabold tracking-tighter titulo-estilo-apple mb-8">
+          Historia <span class="highlight-word italic font-light font-bodoni text-vault-accent">Alternativa</span>
+        </h1>
+
+        <div class="w-24 h-px bg-highlight/30 mb-8"></div>
+
+        <p class="font-inter font-light text-sm md:text-base tracking-[0.2em] uppercase text-fade-gradient max-w-3xl leading-relaxed mb-6">
+          Cartografía de paradigmas disidentes, arqueología cognitiva y las anomalías no resueltas de la cronología oficial.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <a
+            href="/archivo"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-vault-accent/40 bg-vault-accent/10 hover:bg-vault-accent hover:text-black transition-all text-xs font-mono uppercase tracking-[0.2em] font-semibold text-vault-accent shadow-[0_0_20px_rgba(201,169,110,0.15)] group cursor-pointer"
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-vault-accent group-hover:bg-black animate-pulse"></span>
+            <span>◈ Explorar Archivo & Magazines</span>
+            <span class="text-sm group-hover:translate-x-0.5 transition-transform">→</span>
+          </a>
+
+          <a
+            href="/home"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-primary hover:text-highlight transition-all text-xs font-mono uppercase tracking-[0.2em] cursor-pointer"
+          >
+            <span>Volver al Home</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         CARTEL PRINCIPAL EN TAMAÑO UNIVISIUM DE APPLE (2:1)
+         - Proporción Cinematográfica 2:1 Univisium
+         - Estilo Billboard Premium Apple
+         - Acabado Bento Obsidian con lens glows y tipografía Bodoni / Outfit
+    ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="relative px-4 sm:px-6 md:px-16 max-w-7xl mx-auto mb-24">
+      <div class="cartel-univisium w-full bg-[#11141c] flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 group">
+        <!-- Fondo Fotográfico Cinemático con Gradiente de Inmersión Apple -->
+        <div class="absolute inset-0 -z-10 overflow-hidden">
+          <img
+            src="/magazine-hero-gobekli.jpg"
+            alt="Göbekli Tepe - Cartel Univisium"
+            class="w-full h-full object-cover opacity-40 group-hover:scale-105 group-hover:opacity-55 transition-all duration-1000 filter contrast-125"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#11141c] via-[#11141c]/75 to-[#11141c]/30"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,169,110,0.25)_0%,transparent_60%)] pointer-events-none"></div>
+        </div>
+
+        <!-- Badges Superiores del Cartel Univisium -->
+        <div class="flex items-center justify-between w-full z-10">
+          <div class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/70 border border-vault-accent/40 backdrop-blur-md">
+            <span class="w-2 h-2 rounded-full bg-vault-accent animate-pulse"></span>
+            <span class="text-[9px] sm:text-[10px] font-mono tracking-[0.25em] uppercase text-vault-accent font-semibold">
+              ✦ Cartel Univisium 2.00:1 · Expedición Anatolia
+            </span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-black/60 border border-white/10 text-[9px] font-mono tracking-widest text-highlight/80 uppercase font-medium backdrop-blur-md">
+              10.000 a.C. · Oopart
+            </span>
+            <span class="text-[10px] font-mono text-primary/40 uppercase tracking-widest hidden md:inline-block">
+              Apple Cinematic Ratio
+            </span>
+          </div>
+        </div>
+
+        <!-- Contenido Central del Cartel Univisium -->
+        <div class="my-auto py-6 sm:py-8 z-10 max-w-4xl">
+          <div class="inline-flex items-center gap-2 text-[10px] sm:text-[11px] font-mono tracking-[0.35em] uppercase text-vault-accent font-semibold mb-3">
+            <span>◈</span> Documento de Investigación Primario
+          </div>
+
+          <h2 class="font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.0] tracking-tighter titulo-estilo-apple mb-4">
+            La Civilización Olvidada del <span class="highlight-word italic font-light font-bodoni text-vault-accent">Younger Dryas</span>.
+          </h2>
+
+          <p class="font-outfit font-light text-base sm:text-xl md:text-2xl text-primary/85 tracking-wide max-w-3xl leading-relaxed">
+            Monolitos astronómicos esculpidos milenios antes de la invención de la rueda. La evidencia geológica que fractura el relato lineal del progreso humano.
+          </p>
+        </div>
+
+        <!-- Pie del Cartel Univisium -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-white/10 z-10">
+          <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+            <a
+              href="/magazine/gobekli-tepe"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-vault-accent text-black hover:bg-highlight transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-bold shadow-[0_0_25px_rgba(201,169,110,0.3)] group/btn cursor-pointer"
+            >
+              <span>Abrir Revista Inmersiva 60/40</span>
+              <span class="group-hover/btn:translate-x-1 transition-transform">↗</span>
+            </a>
+
+            <a
+              href="/tesis-03"
+              class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/5 hover:bg-vault-accent/15 border border-white/15 hover:border-vault-accent/50 text-highlight hover:text-vault-accent transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-medium backdrop-blur-md cursor-pointer"
+            >
+              <span>Leer Tesis III: Heurística Alterna</span>
+              <span>→</span>
+            </a>
+          </div>
+
+          <span class="text-[10px] font-mono text-primary/40 uppercase tracking-[0.2em]">
+            Curaduría TGP · Bóveda Digital
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         GRILLA "STAGGERED EDITORIAL" (ESCALONADO ASIMÉTRICO A24 / APPLE EDITORIAL)
+         - Mobile: grid-cols-1 gap-8
+         - Desktop (lg:): grid-cols-3 gap-8 lg:gap-10 items-start pb-24
+         - Desplazamiento escalonado (Offset vertical en lg:):
+           * Columna 1 (:nth-child(3n + 1)): transform: translateY(0)
+           * Columna 2 (:nth-child(3n + 2)): transform: translateY(48px) (translate-y-12)
+           * Columna 3 (:nth-child(3n + 3)): transform: translateY(24px) (translate-y-6)
+         - Contenedor imagen: aspect-[3/4] con w-full overflow-hidden rounded-xl bg-neutral-900
+         - <img>: w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-105
+         - Sanitización de Markdown en descripciones con line-clamp-2
+    ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="relative px-6 md:px-16 max-w-7xl mx-auto pb-32">
+      <div class="flex items-center justify-between mb-12">
+        <div>
+          <div class="flex items-center gap-2 text-[10px] font-mono tracking-[0.3em] uppercase text-vault-accent">
+            <span class="w-1.5 h-1.5 rounded-full bg-vault-accent"></span>
+            A24 & Apple Editorial Design · Staggered Grid
+          </div>
+          <h2 class="font-bodoni text-3xl sm:text-4xl md:text-5xl text-highlight font-bold mt-1">
+            Anomalías & <span class="italic text-vault-accent font-light">Enigmas Históricos</span>
+          </h2>
+        </div>
+
+        <span class="text-[11px] font-mono text-primary/40 uppercase tracking-widest hidden sm:inline-block">
+          6 Expediciones Catalogadas · Cascada Asimétrica
+        </span>
+      </div>
+
+      <!-- Contenedor General de la Grilla Escalonada -->
+      <div class="staggered-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 items-start w-full pb-24">
+        {casosAlternativos.map((caso) => {
+          const cleanExcerpt = sanitizeSnippet(caso.excerpt);
+
+          return (
+            <a
+              href={caso.url}
+              class="staggered-card bento-glass rounded-2xl overflow-hidden border border-white/10 hover:border-vault-accent/60 transition-all duration-500 flex flex-col justify-between group shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] cursor-pointer text-left w-full"
+            >
+              <div>
+                <!-- Contenedor de Imagen Uniforme Aspect 3/4 -->
+                <div class="w-full aspect-[3/4] overflow-hidden rounded-xl bg-neutral-900 relative">
+                  <img
+                    src={caso.imageUrl}
+                    alt={caso.title}
+                    class="w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <!-- Degradé Cinematográfico -->
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent pointer-events-none"></div>
+
+                  <!-- Badges Superiores -->
+                  <div class="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
+                    <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-vault-accent/40 text-[9px] font-mono uppercase tracking-widest text-vault-accent font-semibold">
+                      ✦ {caso.badge}
+                    </span>
+
+                    <span class="px-2.5 py-0.5 rounded-full bg-white/10 text-highlight text-[9px] font-mono uppercase tracking-widest backdrop-blur-md">
+                      {caso.era}
+                    </span>
+                  </div>
+
+                  <!-- Fecha Inferior -->
+                  <div class="absolute bottom-3 left-3 text-[10px] font-mono text-vault-accent/80 tracking-widest uppercase pointer-events-none">
+                    <span>{caso.date}</span>
+                  </div>
+                </div>
+
+                <!-- Bloque Editorial de Textos -->
+                <div class="p-5 sm:p-6 space-y-2.5">
+                  <span class="text-[10px] font-mono text-primary/50 tracking-widest uppercase block">
+                    {caso.category}
+                  </span>
+
+                  <h3 class="font-bodoni text-xl md:text-2xl text-highlight group-hover:text-vault-accent transition-colors font-bold leading-tight">
+                    {caso.title}
+                  </h3>
+
+                  <p class="text-xs italic text-vault-accent/90 font-bodoni">
+                    {caso.subtitle}
+                  </p>
+
+                  <p class="font-inter text-xs text-primary/70 line-clamp-2 leading-relaxed font-light">
+                    {cleanExcerpt}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Botón Inferior -->
+              <div class="p-5 sm:p-6 pt-0 mt-auto">
+                <div class="w-full py-2.5 px-4 rounded-xl bg-white/5 border border-white/10 group-hover:border-vault-accent group-hover:bg-vault-accent group-hover:text-black transition-all text-xs font-mono uppercase tracking-[0.18em] font-semibold flex items-center justify-center gap-2 shadow-md">
+                  <span>Explorar Caso</span>
+                  <span class="group-hover:translate-x-1 transition-transform text-sm">→</span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- BANNER DE CIERRE HEREDADO DE ARCHIVO CON ENLACE A BÓVEDA -->
+    <section class="relative px-6 md:px-16 max-w-5xl mx-auto pb-24 text-center">
+      <div class="bento-glass rounded-[2.5rem] p-10 md:p-14 border border-vault-accent/30 flex flex-col items-center">
+        <span class="w-2 h-2 rounded-full bg-vault-accent animate-ping mb-4"></span>
+        <h3 class="font-bodoni text-3xl md:text-4xl text-highlight font-bold mb-3">
+          ¿Posees un Registro Arqueológico o Documento Inédito?
+        </h3>
+        <p class="font-inter text-xs md:text-sm text-primary/70 max-w-xl mb-8 leading-relaxed font-light">
+          La Bóveda TGP-Vault preserva testimonios fotográficos y transcripciones históricas con almacenamiento inmutable en Cloudflare D1 / R2.
+        </p>
+        <a
+          href="/tgp-vault"
+          class="cta-vault"
+        >
+          <span class="text-xs">◈</span>
+          <span>Transmitir a la Bóveda TGP-Vault</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     ESTILOS DEL ESCALONADO ASIMÉTRICO (A24 / APPLE EDITORIAL OFFSET)
+     Solo aplica en desktop (@media (min-width: 1024px))
+     - Columna 1 (3n + 1): translateY(0)
+     - Columna 2 (3n + 2): translateY(48px)
+     - Columna 3 (3n + 3): translateY(24px)
+═══════════════════════════════════════════════════════════════════════ -->
+<style>
+  @media (min-width: 1024px) {
+    .staggered-card:nth-child(3n + 1) {
+      transform: translateY(0);
+    }
+    .staggered-card:nth-child(3n + 2) {
+      transform: translateY(48px);
+    }
+    .staggered-card:nth-child(3n + 3) {
+      transform: translateY(24px);
+    }
+    .staggered-card:hover {
+      /* Mantiene el offset escalonado y añade elevación suave */
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease;
+    }
+    .staggered-card:nth-child(3n + 1):hover {
+      transform: translateY(-8px);
+    }
+    .staggered-card:nth-child(3n + 2):hover {
+      transform: translateY(40px);
+    }
+    .staggered-card:nth-child(3n + 3):hover {
+      transform: translateY(16px);
+    }
+  }
+</style>
