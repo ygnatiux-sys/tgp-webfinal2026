@@ -666,42 +666,46 @@
 
   <!-- ── CABECERA PRINCIPAL ────────────────────────────────────────── -->
   <header class="text-center mb-12">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-vault-accent/30 bg-vault-accent/5 backdrop-blur-md mb-6">
-      <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
-      <span class="text-[10px] uppercase font-mono tracking-[0.35em] text-vault-accent">
-        The Great Puzzle Project · Mesa de Operaciones
-      </span>
+    <div class="flex items-center justify-center gap-2 t-telemetry text-vault-accent mb-4">
+      <span class="font-semibold">â—ˆ</span>
+      <span>THE GREAT PUZZLE PROJECT Â· MESA DE OPERACIONES CMS</span>
     </div>
 
-    <h1 class="font-bodoni text-4xl sm:text-5xl lg:text-6xl text-highlight mb-4 tracking-tight">
-      TGP-Vault <span class="text-vault-accent italic font-light font-bodoni">&</span> Forja
+    <h1 class="t-display text-4xl sm:text-6xl md:text-7xl mb-4">
+      TGP-Vault <span class="italic font-light text-vault-accent">& Forja</span>
     </h1>
 
-    <p class="text-primary/70 text-xs sm:text-sm tracking-[0.25em] uppercase max-w-2xl mx-auto leading-relaxed">
-      Arquitectura técnica de ingesta histórica, transmutación multimedia y síntesis cognitiva.
+    <div class="w-16 h-px bg-white/20 mx-auto mb-5"></div>
+
+    <p class="t-logline text-sm sm:text-base md:text-lg text-white/70 max-w-2xl mx-auto mb-6">
+      Arquitectura tÃ©cnica de ingesta histÃ³rica, transmutaciÃ³n multimedia y sÃ­ntesis cognitiva.
     </p>
 
     <!-- Indicadores de Enlace de Motores -->
-    <div class="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-[10px] font-mono tracking-widest uppercase">
-      <div class="flex items-center gap-2 px-3 py-1 rounded-full border border-white/5 bg-white/2">
-        <span class="w-2 h-2 rounded-full {TGP_MOTORES.vault ? 'bg-vault-success shadow-[0_0_8px_#6dba8a]' : 'bg-white/20'}"></span>
-        <span class="text-primary/80">Vault (D1 + R2)</span>
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-5 sm:gap-6 text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-white/60">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full {TGP_MOTORES.vault ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-white/25'}"></span>
+        <span class="text-white/80">Vault (D1 + R2)</span>
       </div>
 
-      <div class="flex items-center gap-2 px-3 py-1 rounded-full border border-white/5 bg-white/2">
-        <span class="w-2 h-2 rounded-full {TGP_MOTORES.proxy ? 'bg-vault-success shadow-[0_0_8px_#6dba8a]' : 'bg-white/20'}"></span>
-        <span class="text-primary/80">Proxy (WikiForge)</span>
+      <span class="text-white/20 hidden sm:inline">Â·</span>
+
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full {TGP_MOTORES.proxy ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-white/25'}"></span>
+        <span class="text-white/80">Proxy (WikiForge)</span>
       </div>
 
-      <div class="flex items-center gap-2 px-3 py-1 rounded-full border border-white/5 bg-white/2">
-        <span class="w-2 h-2 rounded-full {TGP_MOTORES.mind ? 'bg-vault-success shadow-[0_0_8px_#6dba8a]' : 'bg-white/20'}"></span>
-        <span class="text-primary/80">Mind (IA Cognitiva)</span>
+      <span class="text-white/20 hidden sm:inline">Â·</span>
+
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full {TGP_MOTORES.mind ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-white/25'}"></span>
+        <span class="text-white/80">Mind (IA Cognitiva)</span>
       </div>
     </div>
   </header>
 
   <!-- ── PANEL DE OPERACIONES (BENTO GLASS WORKBENCH) ──────────────── -->
-  <div class="bento-glass rounded-3xl p-6 sm:p-10 border border-white/10 shadow-[0_20px_80px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
+  <div class="bento-glass rounded-[2.25rem] p-6 sm:p-10 border border-white/12 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur-2xl">
 
     <!-- ── SELECTOR DE MODOS (TABS EDITORIALES) ────────────────────── -->
     <div class="border-b border-white/10 pb-6 mb-8">
@@ -1616,7 +1620,7 @@
       <!-- Botón Transmitir / Ejecutar -->
       <button
         id="btn-ejecutar-protocolo"
-        class="cta-vault w-full md:w-auto"
+        class="btn-glass px-8! py-3.5! text-xs! tracking-[0.25em]! w-full md:w-auto group cursor-pointer inline-flex items-center justify-center gap-2.5"
         class:loading={status === 'loading'}
         disabled={status === 'loading'}
         on:click={ejecutarProtocolo}

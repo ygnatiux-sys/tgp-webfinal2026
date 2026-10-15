@@ -182,8 +182,9 @@
   }
 
   .mask-image-v {
-    mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+    /* Desactivado para preservar contornos nítidos y limpios de los bentos */
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 
   .mask-image-radial {
@@ -192,30 +193,32 @@
   }
 
   .bento-glow {
-    background-color: rgba(255, 255, 255, 0.02);
+    background-color: rgba(18, 19, 26, 0.6);
     box-shadow: 
-      inset 0 0 20px rgba(255, 255, 255, 0.03),
-      0 0 30px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+      0 20px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.12);
   }
 
   .bento-glass {
-    background-color: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    @apply transition-all duration-700;
+    background-color: rgba(18, 19, 26, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    @apply transition-all duration-500;
     box-shadow: 
-      inset 0 0 20px rgba(255, 255, 255, 0.02),
-      0 10px 40px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+      0 20px 50px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
   }
 
   .bento-glass:hover {
-    border-color: rgba(159, 140, 174, 0.3);
+    border-color: rgba(201, 169, 110, 0.35);
+    background-color: rgba(24, 25, 34, 0.85);
     box-shadow: 
-      inset 0 0 25px rgba(159, 140, 174, 0.05),
-      0 15px 50px rgba(0, 0, 0, 0.5);
-    transform: translateY(-4px) scale(1.01);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+      0 25px 60px rgba(0, 0, 0, 0.75),
+      0 0 35px rgba(201, 169, 110, 0.12);
+    transform: translateY(-4px);
   }
 
   .cta-editorial {
@@ -312,16 +315,32 @@
 }
 
 @layer components {
-  /* --- Inputs & Textareas --- */
+  /* --- Inputs & Textareas Studio Estilo MUBI / Apple --- */
   .vault-input {
-    @apply w-full bg-vault-surface border border-vault-border text-vault-text
-           placeholder:text-vault-ghost rounded-sm px-4 py-3
+    @apply w-full text-vault-text rounded-xl px-4 py-3
            text-sm font-inter outline-none
            transition-all duration-300;
+    background-color: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .vault-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
   }
   .vault-input:focus {
-    border-color: var(--color-vault-accent-dim);
-    box-shadow: 0 0 0 2px var(--color-vault-glow);
+    border-color: rgba(201, 169, 110, 0.55);
+    box-shadow: 0 0 0 1px rgba(201, 169, 110, 0.25);
+    background-color: rgba(0, 0, 0, 0.65);
+  }
+
+  /* Eliminar cajas azules agresivas del autocompletado del navegador */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  textarea:-webkit-autofill {
+    -webkit-text-fill-color: #fdfbf7 !important;
+    -webkit-box-shadow: 0 0 0px 1000px #12131a inset !important;
+    box-shadow: 0 0 0px 1000px #12131a inset !important;
+    transition: background-color 5000s ease-in-out 0s;
   }
 
   /* --- Tabs --- */
@@ -338,18 +357,19 @@
     border-bottom-color: var(--color-vault-accent);
   }
 
-  /* --- Dropzone --- */
+  /* --- Dropzone Studio --- */
   .vault-dropzone {
-    @apply relative flex flex-col items-center justify-center gap-4
-           w-full min-h-48 rounded-sm
-           border-2 border-dashed border-vault-border
-           text-vault-muted text-sm transition-all duration-300 cursor-pointer;
+    @apply relative flex flex-col items-center justify-center gap-3
+           w-full min-h-48 rounded-2xl
+           text-white/60 text-sm transition-all duration-300 cursor-pointer;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px dashed rgba(255, 255, 255, 0.16);
   }
   .vault-dropzone:hover,
   .vault-dropzone.dragging {
-    border-color: var(--color-vault-accent-dim);
-    background: var(--color-vault-glow);
-    color: var(--color-vault-text);
+    border-color: rgba(201, 169, 110, 0.45);
+    background-color: rgba(201, 169, 110, 0.05);
+    color: #fff;
   }
 
   /* --- Botón principal --- */
@@ -397,25 +417,26 @@
     color: #c47a7a;
   }
 
-  /* --- Metadata label --- */
+  /* --- Metadata label Studio --- */
   .vault-label {
-    @apply block mb-2 text-[10px] uppercase tracking-[0.2em] text-vault-muted font-bold;
+    @apply block mb-2 text-[10px] uppercase font-mono tracking-[0.25em] text-white/55 font-medium;
   }
 
   /* --- Separador tenue --- */
   .vault-divider {
-    @apply w-full border-t border-vault-border my-6;
+    @apply w-full border-t border-white/10 my-6;
   }
 
-  /* --- TipTap editor container --- */
+  /* --- TipTap editor container Studio --- */
   .vault-editor-wrap {
-    @apply w-full min-h-72 bg-vault-surface border border-vault-border
-           rounded-sm text-vault-text text-sm font-inter
+    @apply w-full min-h-72 rounded-2xl text-vault-text text-sm font-inter
            transition-all duration-300;
+    background-color: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.12);
   }
   .vault-editor-wrap:focus-within {
-    border-color: var(--color-vault-accent-dim);
-    box-shadow: 0 0 0 2px var(--color-vault-glow);
+    border-color: rgba(201, 169, 110, 0.55);
+    box-shadow: 0 0 0 1px rgba(201, 169, 110, 0.25);
   }
   .vault-editor-wrap .ProseMirror {
     @apply p-4 outline-none min-h-72;
