@@ -450,16 +450,13 @@
         const cards = document.querySelectorAll<HTMLElement>('.cinemascope-card');
         
         cards.forEach((card) => {
-          // 1. Visibilidad estructural base garantizada
           card.style.opacity = '1';
           card.style.visibility = 'visible';
 
-          const hook = card.querySelector<HTMLElement>('.cinemascope-hook');
+          const meta = card.querySelector<HTMLElement>('.cinemascope-meta');
           const title = card.querySelector<HTMLElement>('.cinemascope-title');
-          const subtitle = card.querySelector<HTMLElement>('.cinemascope-subtitle');
-          const excerpt = card.querySelector<HTMLElement>('.cinemascope-excerpt');
-          const ctaBtn = card.querySelector<HTMLElement>('.mirror-cta-btn');
-          const sheen = card.querySelector<HTMLElement>('.mirror-sheen');
+          const logline = card.querySelector<HTMLElement>('.cinemascope-logline');
+          const btn = card.querySelector<HTMLElement>('.cinema-action-btn');
 
           // Crear timeline individual por tarjeta con ScrollTrigger
           const tl = gsap.timeline({
@@ -470,64 +467,44 @@
             }
           });
 
-          // SECUENCIA CINEMATOGRÁFICA ORQUESTADA (< 4.2s TOTAL):
-          // 1. Hook inteligente Dark Academia (0s - 0.65s)
-          if (hook) {
+          // SECUENCIA CINEMATOGRÁFICA MINIMALISTA (< 1.6s TOTAL):
+          // 1. Telemetría superior discreta (0s - 0.45s)
+          if (meta) {
             tl.fromTo(
-              hook,
-              { opacity: 0, y: -14 },
-              { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' }
+              meta,
+              { opacity: 0, y: -8 },
+              { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }
             );
           }
 
-          // 2. Título principal Bodoni Extra Bold (~0.35s - 1.1s)
+          // 2. Título principal Bodoni Extra Bold (~0.2s - 0.85s)
           if (title) {
             tl.fromTo(
               title,
-              { opacity: 0, y: 22, letterSpacing: '-0.04em' },
-              { opacity: 1, y: 0, letterSpacing: '-0.02em', duration: 0.75, ease: 'power4.out' },
-              '-=0.35'
+              { opacity: 0, y: 20, letterSpacing: '-0.03em' },
+              { opacity: 1, y: 0, letterSpacing: '-0.015em', duration: 0.65, ease: 'power3.out' },
+              '-=0.25'
             );
           }
 
-          // 3. Subtítulo (~0.9s - 1.5s)
-          if (subtitle) {
+          // 3. Logline cinematográfico de autor (~0.6s - 1.1s)
+          if (logline) {
             tl.fromTo(
-              subtitle,
-              { opacity: 0, y: 14 },
-              { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
-              '-=0.4'
-            );
-          }
-
-          // 4. Excerpt / H3 descriptivo (~1.4s - 2.1s)
-          if (excerpt) {
-            tl.fromTo(
-              excerpt,
-              { opacity: 0, y: 15 },
-              { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
-              '-=0.35'
-            );
-          }
-
-          // 5. CTA interna a color sólido con dinamismo espejo pulido (~2.0s - 2.75s)
-          if (ctaBtn) {
-            tl.fromTo(
-              ctaBtn,
-              { opacity: 0, y: 18, scale: 0.90 },
-              { opacity: 1, y: 0, scale: 1, duration: 0.75, ease: 'back.out(1.4)' },
+              logline,
+              { opacity: 0, y: 12 },
+              { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' },
               '-=0.3'
             );
+          }
 
-            // Reflejo espejo pulido recorriendo el botón (concluye a los ~3.2s)
-            if (sheen) {
-              tl.fromTo(
-                sheen,
-                { xPercent: -100 },
-                { xPercent: 120, duration: 0.85, ease: 'power2.inOut' },
-                '-=0.25'
-              );
-            }
+          // 4. Botón de cristal interactivo (~0.9s - 1.4s)
+          if (btn) {
+            tl.fromTo(
+              btn,
+              { opacity: 0, y: 10, scale: 0.96 },
+              { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'back.out(1.3)' },
+              '-=0.25'
+            );
           }
         });
 
@@ -693,140 +670,69 @@
         <div class="flex flex-col gap-12 sm:gap-16 lg:gap-20 w-full">
           {#each filteredMagazines as mag, idx}
             {@const hook = getIntelligentHook(mag)}
-            <!-- ── CARD BENTO CINEMASCOPE (2.39:1) WIDESCREEN ── -->
+            <!-- ── CARD CINEMASCOPE MINIMAL (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-card-${idx}`}
-              class="cinemascope-card relative isolate w-full min-h-115 sm:min-h-125 lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-(--card-bg,#23232a) border border-white/15 hover:border-vault-accent/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden bg-[#121214] border border-white/10 hover:border-white/30 shadow-[0_30px_90px_rgba(0,0,0,0.85)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
             >
-              <!-- 1. Fondo Cinemático Panorámico Full-Bleed Limpio y Brillante (Sin Scrims) -->
+              <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={mag.heroUrl}
                   alt={mag.title}
-                  class="w-full h-full object-cover object-[center_35%] filter brightness-100 contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform"
+                  class="w-full h-full object-cover object-[center_35%] filter brightness-[0.98] contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform"
                   loading={idx === 0 ? "eager" : "lazy"}
                 />
 
-                <!-- Viñeta perimetral suave anti-costuras para tapar bordes redondeados y evitar z-fight -->
-                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_65%,rgba(22,22,26,0.85)_100%)] pointer-events-none"></div>
+                <!-- Degradado cinematográfico: el 60% superior respira libre para el arte fotográfico -->
+                <div class="absolute inset-0 bg-linear-to-t from-black/95 via-black/45 via-45% to-transparent pointer-events-none"></div>
 
-                <!-- Remate interno de borde de cristal -->
-                <div class="absolute inset-0 rounded-4xl sm:rounded-[40px] ring-1 ring-inset ring-white/10 pointer-events-none"></div>
+                <!-- Marco perimetral sutil -->
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
               </div>
 
-              <!-- 2. Badges Superiores con Vidrio Flotante -->
-              <div class="cinemascope-badges z-10 flex flex-wrap items-center justify-between gap-3 w-full">
-                <div class="flex items-center gap-2.5">
-                  <span class="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-vault-accent/40 text-[9px] sm:text-[10px] font-mono tracking-widest uppercase text-vault-accent font-semibold shadow-lg">
-                    ✦ {mag.category}
-                  </span>
-
-                  {#if mag.isFresh}
-                    <span class="px-3 py-1 rounded-full bg-vault-accent text-black text-[9px] font-mono uppercase tracking-widest font-black shadow-lg animate-pulse">
-                      Nuevo
-                    </span>
+              <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
+              <div class="cinemascope-meta z-10 flex items-center justify-between w-full text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/50">
+                <span class="flex items-center gap-2">
+                  <span class="text-white/80 font-semibold">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</span>
+                  <span>·</span>
+                  <span>{mag.category}</span>
+                  {#if mag.folios}
+                    <span class="hidden sm:inline">· {mag.folios} Folios</span>
                   {/if}
+                </span>
 
-                  <span class="hidden sm:inline-block px-3 py-1 rounded-full bg-black/50 text-white/90 text-[9px] sm:text-[10px] font-mono uppercase tracking-widest backdrop-blur-md border border-white/15">
-                    {mag.folios} Folios Editoriales
-                  </span>
-                </div>
-
-                <!-- Datación / Fecha en cápsula de cristal -->
-                <div class="px-3 py-1 rounded-full bg-black/60 border border-white/15 text-(--text-primary,#eae6df) font-mono text-[10px] sm:text-[11px] uppercase tracking-widest backdrop-blur-xs">
-                  ⏳ {mag.date}
-                </div>
+                <span class="text-white/40 tracking-widest">{mag.date}</span>
               </div>
 
-              <!-- 3. Contenido Central: Hook Inteligente > Título Extra Bold > Subtítulo > Excerpt H3 > Botón CTA a Color -->
-              <div class="cinemascope-content z-10 my-auto py-8 sm:py-10 max-w-4xl flex flex-col items-start gap-4">
+              <!-- 3. Contenido Inferior Anclado: Título Extra Bold Monumental > Logline > Botón de Cristal -->
+              <div class="cinemascope-content z-10 mt-auto pt-16 max-w-4xl flex flex-col items-start gap-4">
                 
-                <!-- 1. HOOK INTELIGENTE DARK ACADEMIA (NO BAIT) -->
-                <div class="cinemascope-hook flex items-center gap-2.5">
-                  <span class="w-2 h-2 rounded-full bg-vault-accent shadow-[0_0_8px_rgba(201,169,110,0.8)] animate-pulse shrink-0"></span>
-                  <span class="font-bodoni italic text-sm sm:text-base md:text-lg text-vault-accent font-medium tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)]">
-                    «{hook.phrase}»
-                  </span>
-                </div>
-
-                <!-- 2. TÍTULO EN EXTRA BOLD MONUMENTAL -->
-                <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-vault-accent transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)]">
+                <!-- TÍTULO EN EXTRA BOLD MONUMENTAL -->
+                <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-white/90 transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
                   {mag.title}
                 </h3>
 
-                <!-- 3. SUBTÍTULO -->
-                <p class="cinemascope-subtitle font-bodoni italic text-base sm:text-xl md:text-2xl text-(--text-secondary,#a5a19a) tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.95)]">
-                  {mag.subtitle}
+                <!-- LOGLINE CINEMÁTICO DE AUTOR (UNA SOLA LÍNEA POÉTICA) -->
+                <p class="cinemascope-logline font-bodoni italic text-base sm:text-lg md:text-xl text-white/70 max-w-2xl leading-relaxed tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.95)]">
+                  {hook.phrase}
                 </p>
 
-                <!-- 4. VER MÁS / EXCERPT EDITORIAL (H3 / PARRAFO) -->
-                <div class="cinemascope-excerpt space-y-2 max-w-3xl">
-                  <p class="font-outfit text-xs sm:text-sm md:text-base text-(--text-primary,#eae6df) leading-relaxed font-normal [text-shadow:0_2px_10px_rgba(0,0,0,0.98),0_1px_3px_rgba(0,0,0,1)]">
-                    {mag.excerpt}
-                  </p>
-                  <span class="text-[10px] font-mono text-vault-accent tracking-widest uppercase inline-block [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
-                    ↓ Desliza o pulsa el control para acceder al folio completo
-                  </span>
-                </div>
-
-                <!-- 5. CTA INTERNA A COLOR DESTACADA CON DINÁMICA ESPEJO PULIDO -->
-                <div class="cinemascope-cta-wrap pt-3">
+                <!-- BOTÓN DE CRISTAL APPLE / MUBI -->
+                <div class="pt-2">
                   <a
                     href={mag.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="mirror-cta-btn relative inline-flex items-center gap-3 px-8 sm:px-10 py-4 sm:py-4.5 rounded-full overflow-hidden bg-vault-accent text-black font-mono text-xs sm:text-sm font-black uppercase tracking-[0.25em] border border-vault-accent/90 shadow-[0_0_35px_rgba(201,169,110,0.5),0_8px_32px_rgba(0,0,0,0.6)] hover:bg-vault-accent/90 transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] group/btn cursor-pointer"
+                    class="cinema-action-btn inline-flex items-center gap-3 px-7 sm:px-8 py-3.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white backdrop-blur-md text-xs font-mono tracking-[0.25em] uppercase font-bold transition-all duration-300 group/btn cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,255,255,0.35)] hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <!-- Capa de brillo espejo pulido con sweep dinámico -->
-                    <span class="mirror-sheen absolute inset-0 -translate-x-full group-hover/btn:translate-x-full bg-linear-to-r from-transparent via-white/70 to-transparent transition-transform duration-1000 ease-out pointer-events-none"></span>
-
-                    <!-- Contenido del botón espejo a color -->
-                    <span class="relative z-10 flex items-center gap-2.5 text-black">
-                      <span>Abrir Magazine (HTML)</span>
-                      <span class="text-base font-black group-hover/btn:translate-x-1.5 group-hover/btn:-translate-y-0.5 transition-transform duration-300">↗</span>
-                    </span>
-
-                    <span class="relative z-10 hidden sm:inline-block text-[10px] text-black/70 font-mono tracking-widest pl-2 border-l border-black/30">
-                      Standalone 60/40
-                    </span>
+                    <span>Abrir Magazine</span>
+                    <span class="text-sm transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-0.5">↗</span>
                   </a>
                 </div>
 
-              </div>
-
-              <!-- 4. Pie de la Tarjeta Cinemascope -->
-              <div class="cinemascope-footer z-10 flex items-center justify-between w-full pt-4 border-t border-white/10 text-[10px] font-mono text-(--text-secondary,#a5a19a) uppercase tracking-widest">
-                <span>The Great Puzzle Magazine Archive</span>
-                <span class="hidden sm:inline-block">Folio #{idx + 1} de {filteredMagazines.length}</span>
               </div>
             </article>
-
-            <!-- ── CARTEL VISTOSO DE CTA "VER MÁS" COMO SEPARADOR CON SCROLL MEDIO ── -->
-            {#if idx < filteredMagazines.length - 1}
-              <div class="w-full py-8 sm:py-12 flex items-center justify-center">
-                <div class="relative w-full max-w-3xl px-8 py-5 rounded-3xl bg-linear-to-r from-[#16161a]/95 via-vault-accent/10 to-[#16161a]/95 border border-vault-accent/30 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-5 shadow-[0_0_40px_rgba(201,169,110,0.15)] text-left">
-                  <div class="flex items-center gap-4">
-                    <span class="w-3 h-3 rounded-full bg-vault-accent animate-ping shrink-0"></span>
-                    <div>
-                      <span class="text-[10px] font-mono uppercase tracking-[0.35em] text-vault-accent font-bold block mb-0.5">
-                        ✦ Ver Más en la Hemeroteca
-                      </span>
-                      <p class="text-xs sm:text-sm font-bodoni italic text-white/85">
-                        Continúa el recorrido vertical hacia la siguiente edición Cinemascope
-                      </p>
-                    </div>
-                  </div>
-
-                  <a
-                    href={`#cinemascope-card-${idx + 1}`}
-                    class="px-6 py-2.5 rounded-full bg-white/10 hover:bg-vault-accent hover:text-black border border-white/25 text-white text-[11px] font-mono uppercase tracking-widest font-bold transition-all duration-300 whitespace-nowrap shadow-md cursor-pointer flex items-center gap-2 group/next"
-                  >
-                    <span>Siguiente Edición</span>
-                    <span class="group-hover/next:translate-y-0.5 transition-transform">↓</span>
-                  </a>
-                </div>
-              </div>
-            {/if}
           {/each}
         </div>
       {:else}
@@ -864,140 +770,64 @@
         <div class="flex flex-col gap-12 sm:gap-16 lg:gap-20 w-full">
           {#each filteredEnsayos as ensayo, idx}
             {@const hook = getIntelligentHook(ensayo)}
-            <!-- ── CARD BENTO CINEMASCOPE (2.39:1) ENSAYOS ── -->
+            <!-- ── CARD CINEMASCOPE MINIMAL ENSAYOS (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-ensayo-${idx}`}
-              class="cinemascope-card relative isolate w-full min-h-115 sm:min-h-125 lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-(--card-bg,#23232a) border border-white/15 hover:border-vault-accent/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden bg-[#121214] border border-white/10 hover:border-white/30 shadow-[0_30px_90px_rgba(0,0,0,0.85)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
             >
-              <!-- 1. Fondo Cinemático Panorámico Full-Bleed Limpio y Brillante (Sin Scrims) -->
+              <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={ensayo.imageUrl}
                   alt={ensayo.title}
-                  class="w-full h-full object-cover object-[center_35%] filter brightness-100 contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform"
+                  class="w-full h-full object-cover object-[center_35%] filter brightness-[0.98] contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform"
                   loading="lazy"
                 />
 
-                <!-- Viñeta perimetral suave anti-costuras -->
-                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_65%,rgba(22,22,26,0.85)_100%)] pointer-events-none"></div>
-                <div class="absolute inset-0 rounded-4xl sm:rounded-[40px] ring-1 ring-inset ring-white/10 pointer-events-none"></div>
+                <!-- Degradado cinematográfico: el 60% superior respira libre para el arte fotográfico -->
+                <div class="absolute inset-0 bg-linear-to-t from-black/95 via-black/45 via-45% to-transparent pointer-events-none"></div>
+
+                <!-- Marco perimetral sutil -->
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
               </div>
 
-              <!-- 2. Badges Superiores con Vidrio Flotante -->
-              <div class="cinemascope-badges z-10 flex flex-wrap items-center justify-between gap-3 w-full">
-                <div class="flex items-center gap-2.5">
-                  <span class="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-vault-accent/40 text-[9px] sm:text-[10px] font-mono tracking-widest uppercase text-vault-accent font-semibold shadow-lg">
-                    ✎ {ensayo.category}
-                  </span>
+              <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
+              <div class="cinemascope-meta z-10 flex items-center justify-between w-full text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/50">
+                <span class="flex items-center gap-2">
+                  <span class="text-white/80 font-semibold">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</span>
+                  <span>·</span>
+                  <span>{ensayo.category}</span>
+                </span>
 
-                  <span class="hidden sm:inline-block px-3 py-1 rounded-full bg-black/50 text-white/90 text-[9px] sm:text-[10px] font-mono uppercase tracking-widest backdrop-blur-md border border-white/15">
-                    Investigación Editorial
-                  </span>
-                </div>
-
-                <div class="px-3 py-1 rounded-full bg-black/60 border border-white/15 text-(--text-primary,#eae6df) font-mono text-[10px] sm:text-[11px] uppercase tracking-widest backdrop-blur-xs">
-                  ⏳ {ensayo.date}
-                </div>
+                <span class="text-white/40 tracking-widest">{ensayo.date}</span>
               </div>
 
-              <!-- 3. Contenido Central: Hook Inteligente > Título Extra Bold > Subtítulo > Excerpt H3 > Botón CTA a Color -->
-              <div class="cinemascope-content z-10 my-auto py-8 sm:py-10 max-w-4xl flex flex-col items-start gap-4">
+              <!-- 3. Contenido Inferior Anclado: Título Extra Bold Monumental > Logline > Botón de Cristal -->
+              <div class="cinemascope-content z-10 mt-auto pt-16 max-w-4xl flex flex-col items-start gap-4">
                 
-                <!-- 1. HOOK INTELIGENTE DARK ACADEMIA -->
-                <div class="cinemascope-hook flex items-center gap-2.5">
-                  <span class="w-2 h-2 rounded-full bg-vault-accent shadow-[0_0_8px_rgba(201,169,110,0.8)] animate-pulse shrink-0"></span>
-                  <span class="font-bodoni italic text-sm sm:text-base md:text-lg text-vault-accent font-medium tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)]">
-                    «{hook.phrase}»
-                  </span>
-                </div>
-
-                <!-- 2. TÍTULO EN EXTRA BOLD MONUMENTAL -->
-                <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-vault-accent transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)]">
+                <!-- TÍTULO EN EXTRA BOLD MONUMENTAL -->
+                <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-white/90 transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
                   {ensayo.title}
                 </h3>
 
-                <!-- 3. VOLANTA / SUBTÍTULO -->
-                {#if ensayo.volanta}
-                  <p class="cinemascope-subtitle font-bodoni italic text-base sm:text-xl md:text-2xl text-(--text-secondary,#a5a19a) tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.95)]">
-                    {ensayo.volanta}
-                  </p>
-                {/if}
+                <!-- LOGLINE CINEMÁTICO DE AUTOR (UNA SOLA LÍNEA POÉTICA) -->
+                <p class="cinemascope-logline font-bodoni italic text-base sm:text-lg md:text-xl text-white/70 max-w-2xl leading-relaxed tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.95)]">
+                  {hook.phrase}
+                </p>
 
-                <!-- 4. EXCERPT DESCRIPTIVO H3 -->
-                {#if ensayo.description}
-                  <div class="cinemascope-excerpt space-y-2 max-w-3xl">
-                    <p class="font-outfit text-xs sm:text-sm md:text-base text-(--text-primary,#eae6df) leading-relaxed font-normal [text-shadow:0_2px_10px_rgba(0,0,0,0.98),0_1px_3px_rgba(0,0,0,1)]">
-                      {ensayo.description}
-                    </p>
-                    <span class="text-[10px] font-mono text-vault-accent tracking-widest uppercase inline-block [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
-                      ↓ Desliza o pulsa el control para acceder a la lectura integral
-                    </span>
-                  </div>
-                {/if}
-
-                {#if ensayo.tags && ensayo.tags.length > 0}
-                  <div class="flex flex-wrap gap-1.5 pt-1">
-                    {#each ensayo.tags as tag}
-                      <span class="px-2.5 py-1 rounded-full text-[9px] font-mono bg-black/60 text-vault-accent border border-vault-accent/30 backdrop-blur-xs">
-                        #{tag}
-                      </span>
-                    {/each}
-                  </div>
-                {/if}
-
-                <!-- 5. CTA INTERNA A COLOR DESTACADA CON DINÁMICA ESPEJO PULIDO -->
-                <div class="cinemascope-cta-wrap pt-3">
+                <!-- BOTÓN DE CRISTAL APPLE / MUBI -->
+                <div class="pt-2">
                   <a
                     href={ensayo.url}
-                    class="mirror-cta-btn relative inline-flex items-center gap-3 px-8 sm:px-10 py-4 sm:py-4.5 rounded-full overflow-hidden bg-vault-accent text-black font-mono text-xs sm:text-sm font-black uppercase tracking-[0.25em] border border-vault-accent/90 shadow-[0_0_35px_rgba(201,169,110,0.5),0_8px_32px_rgba(0,0,0,0.6)] hover:bg-vault-accent/90 transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] group/btn cursor-pointer"
+                    class="cinema-action-btn inline-flex items-center gap-3 px-7 sm:px-8 py-3.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white backdrop-blur-md text-xs font-mono tracking-[0.25em] uppercase font-bold transition-all duration-300 group/btn cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,255,255,0.35)] hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <span class="mirror-sheen absolute inset-0 -translate-x-full group-hover/btn:translate-x-full bg-linear-to-r from-transparent via-white/70 to-transparent transition-transform duration-1000 ease-out pointer-events-none"></span>
-
-                    <span class="relative z-10 flex items-center gap-2.5 text-black">
-                      <span>Leer Ensayo Editorial</span>
-                      <span class="text-base font-black group-hover/btn:translate-x-1.5 transition-transform duration-300">→</span>
-                    </span>
-
-                    <span class="relative z-10 hidden sm:inline-block text-[10px] text-black/70 font-mono tracking-widest pl-2 border-l border-black/30">
-                      Bóveda TGP
-                    </span>
+                    <span>Leer Ensayo</span>
+                    <span class="text-sm transition-transform duration-300 group-hover/btn:translate-x-1">→</span>
                   </a>
                 </div>
-              </div>
 
-              <!-- 4. Pie de la Tarjeta Cinemascope -->
-              <div class="cinemascope-footer z-10 flex items-center justify-between w-full pt-4 border-t border-white/10 text-[10px] font-mono text-(--text-secondary,#a5a19a) uppercase tracking-widest">
-                <span>Colección de Ensayos & Artículos</span>
-                <span class="hidden sm:inline-block">Ensayo #{idx + 1} de {filteredEnsayos.length}</span>
               </div>
             </article>
-
-            <!-- Separador Cartel CTA Ver Más -->
-            {#if idx < filteredEnsayos.length - 1}
-              <div class="w-full py-8 sm:py-12 flex items-center justify-center">
-                <div class="relative w-full max-w-3xl px-8 py-5 rounded-3xl bg-linear-to-r from-[#16161a]/95 via-vault-accent/10 to-[#16161a]/95 border border-vault-accent/30 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-5 shadow-[0_0_40px_rgba(201,169,110,0.15)] text-left">
-                  <div class="flex items-center gap-4">
-                    <span class="w-3 h-3 rounded-full bg-vault-accent animate-ping shrink-0"></span>
-                    <div>
-                      <span class="text-[10px] font-mono uppercase tracking-[0.35em] text-vault-accent font-bold block mb-0.5">
-                        ✦ Ver Más Ensayos Editoriales
-                      </span>
-                      <p class="text-xs sm:text-sm font-bodoni italic text-white/85">
-                        Continúa el recorrido vertical hacia la siguiente investigación
-                      </p>
-                    </div>
-                  </div>
-
-                  <a
-                    href={`#cinemascope-ensayo-${idx + 1}`}
-                    class="px-6 py-2.5 rounded-full bg-white/10 hover:bg-vault-accent hover:text-black border border-white/25 text-white text-[11px] font-mono uppercase tracking-widest font-bold transition-all duration-300 whitespace-nowrap shadow-md cursor-pointer flex items-center gap-2 group/next"
-                  >
-                    <span>Siguiente Ensayo</span>
-                    <span class="group-hover/next:translate-y-0.5 transition-transform">↓</span>
-                  </a>
-                </div>
-              </div>
-            {/if}
           {/each}
         </div>
       {:else}
@@ -1039,139 +869,67 @@
         <div class="flex flex-col gap-12 sm:gap-16 lg:gap-20 w-full">
           {#each filteredD1 as item, idx}
             {@const hook = getIntelligentHook(item)}
-            <!-- ── CARD BENTO CINEMASCOPE (2.39:1) BÓVEDA D1 / R2 ── -->
+            <!-- ── CARD CINEMASCOPE MINIMAL BÓVEDA D1 (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-d1-${idx}`}
-              class="cinemascope-card relative isolate w-full min-h-115 sm:min-h-125 lg:aspect-[2.39/1] rounded-4xl sm:rounded-[40px] overflow-hidden bg-(--card-bg,#23232a) border border-white/15 hover:border-vault-success/70 shadow-[0_30px_90px_rgba(0,0,0,0.9)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden bg-[#121214] border border-white/10 hover:border-vault-success/40 shadow-[0_30px_90px_rgba(0,0,0,0.85)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
             >
-              <!-- 1. Fondo Cinemático Panorámico Full-Bleed Limpio y Brillante (Sin Scrims) -->
+              <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={item.imageUrl || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp'}
                   alt={item.title}
-                  class="w-full h-full object-cover object-[center_35%] filter brightness-100 contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform"
+                  class="w-full h-full object-cover object-[center_35%] filter brightness-[0.98] contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform"
                   loading="lazy"
                 />
 
-                <!-- Viñeta perimetral suave anti-costuras -->
-                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_65%,rgba(22,22,26,0.85)_100%)] pointer-events-none"></div>
-                <div class="absolute inset-0 rounded-4xl sm:rounded-[40px] ring-1 ring-inset ring-white/10 pointer-events-none"></div>
+                <!-- Degradado cinematográfico: el 60% superior respira libre para el arte fotográfico -->
+                <div class="absolute inset-0 bg-linear-to-t from-black/95 via-black/45 via-45% to-transparent pointer-events-none"></div>
+
+                <!-- Marco perimetral sutil -->
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
               </div>
 
-              <!-- 2. Badges Superiores con Vidrio Flotante -->
-              <div class="cinemascope-badges z-10 flex flex-wrap items-center justify-between gap-3 w-full">
-                <div class="flex items-center gap-2.5">
-                  <span class="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-vault-success/40 text-[9px] sm:text-[10px] font-mono tracking-widest uppercase text-vault-success font-semibold shadow-lg">
-                    ◈ {item.category}
-                  </span>
+              <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
+              <div class="cinemascope-meta z-10 flex items-center justify-between w-full text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/50">
+                <span class="flex items-center gap-2">
+                  <span class="text-vault-success font-semibold">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</span>
+                  <span>·</span>
+                  <span class="text-vault-success/90">{item.category}</span>
+                  <span class="hidden sm:inline text-white/30">·</span>
+                  <span class="hidden sm:inline text-white/40">BÓVEDA D1 / R2</span>
+                </span>
 
-                  <span class="hidden sm:inline-block px-3 py-1 rounded-full bg-black/50 text-white/90 text-[9px] sm:text-[10px] font-mono uppercase tracking-widest backdrop-blur-md border border-white/15">
-                    Cloudflare D1 · Registro Inmutable
-                  </span>
-                </div>
-
-                <div class="px-3 py-1 rounded-full bg-black/60 border border-white/15 text-(--text-primary,#eae6df) font-mono text-[10px] sm:text-[11px] uppercase tracking-widest backdrop-blur-xs">
-                  ⏳ {item.date}
-                </div>
+                <span class="text-white/40 tracking-widest">{item.date}</span>
               </div>
 
-              <!-- 3. Contenido Central: Hook Inteligente > Título Extra Bold > Subtítulo > Excerpt H3 > Botón CTA a Color Esmeralda -->
-              <div class="cinemascope-content z-10 my-auto py-8 sm:py-10 max-w-4xl flex flex-col items-start gap-4">
+              <!-- 3. Contenido Inferior Anclado: Título Extra Bold Monumental > Logline > Botón de Cristal -->
+              <div class="cinemascope-content z-10 mt-auto pt-16 max-w-4xl flex flex-col items-start gap-4">
                 
-                <!-- 1. HOOK INTELIGENTE DARK ACADEMIA -->
-                <div class="cinemascope-hook flex items-center gap-2.5">
-                  <span class="w-2 h-2 rounded-full bg-vault-success shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse shrink-0"></span>
-                  <span class="font-bodoni italic text-sm sm:text-base md:text-lg text-vault-success font-medium tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)]">
-                    «{hook.phrase}»
-                  </span>
-                </div>
-
-                <!-- 2. TÍTULO EN EXTRA BOLD MONUMENTAL -->
-                <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-vault-success transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)]">
+                <!-- TÍTULO EN EXTRA BOLD MONUMENTAL -->
+                <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-vault-success transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
                   {item.title}
                 </h3>
 
-                <!-- 3. VOLANTA / SUBTÍTULO -->
-                <p class="cinemascope-subtitle font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-vault-success font-bold [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
-                  ◈ REGISTRO DE BÓVEDA D1 · ALMACENAMIENTO R2
+                <!-- LOGLINE CINEMÁTICO DE AUTOR (UNA SOLA LÍNEA POÉTICA) -->
+                <p class="cinemascope-logline font-bodoni italic text-base sm:text-lg md:text-xl text-white/70 max-w-2xl leading-relaxed tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.95)]">
+                  {hook.phrase}
                 </p>
 
-                <!-- 4. EXCERPT DESCRIPTIVO H3 -->
-                {#if item.description}
-                  <div class="cinemascope-excerpt space-y-2 max-w-3xl">
-                    <p class="font-outfit text-xs sm:text-sm md:text-base text-(--text-primary,#eae6df) leading-relaxed font-normal [text-shadow:0_2px_10px_rgba(0,0,0,0.98),0_1px_3px_rgba(0,0,0,1)]">
-                      {item.description}
-                    </p>
-                    <span class="text-[10px] font-mono text-vault-success tracking-widest uppercase inline-block [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
-                      ↓ Pulsa para abrir el visor de inspección estratigráfica
-                    </span>
-                  </div>
-                {/if}
-
-                {#if item.tags && item.tags.length > 0}
-                  <div class="flex flex-wrap gap-1.5 pt-1">
-                    {#each item.tags as tag}
-                      <span class="px-2.5 py-1 rounded-full text-[9px] font-mono bg-black/60 text-vault-success border border-vault-success/30 backdrop-blur-xs">
-                        #{tag}
-                      </span>
-                    {/each}
-                  </div>
-                {/if}
-
-                <!-- 5. CTA INTERNA A COLOR ESMERALDA DESTACADA CON DINÁMICA ESPEJO PULIDO -->
-                <div class="cinemascope-cta-wrap pt-3">
+                <!-- BOTÓN DE CRISTAL APPLE / MUBI -->
+                <div class="pt-2">
                   <button
                     type="button"
                     on:click={() => selectedArtifact = item}
-                    class="mirror-cta-btn relative inline-flex items-center gap-3 px-8 sm:px-10 py-4 sm:py-4.5 rounded-full overflow-hidden bg-vault-success text-black font-mono text-xs sm:text-sm font-black uppercase tracking-[0.25em] border border-vault-success/90 shadow-[0_0_35px_rgba(52,211,153,0.5),0_8px_32px_rgba(0,0,0,0.6)] hover:bg-vault-success/90 transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] group/btn cursor-pointer"
+                    class="cinema-action-btn inline-flex items-center gap-3 px-7 sm:px-8 py-3.5 rounded-full bg-white/10 hover:bg-vault-success text-white hover:text-black border border-white/20 hover:border-vault-success backdrop-blur-md text-xs font-mono tracking-[0.25em] uppercase font-bold transition-all duration-300 group/btn cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(52,211,153,0.35)] hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <span class="mirror-sheen absolute inset-0 -translate-x-full group-hover/btn:translate-x-full bg-linear-to-r from-transparent via-white/70 to-transparent transition-transform duration-1000 ease-out pointer-events-none"></span>
-
-                    <span class="relative z-10 flex items-center gap-2.5 text-black">
-                      <span>Inspeccionar Artefacto</span>
-                      <span class="text-base font-black group-hover/btn:translate-x-1.5 transition-transform duration-300">◈</span>
-                    </span>
-
-                    <span class="relative z-10 hidden sm:inline-block text-[10px] text-black/70 font-mono tracking-widest pl-2 border-l border-black/30">
-                      Cloudflare D1
-                    </span>
+                    <span>Inspeccionar Artefacto</span>
+                    <span class="text-sm transition-transform duration-300 group-hover/btn:rotate-45">◈</span>
                   </button>
                 </div>
-              </div>
 
-              <!-- 4. Pie de la Tarjeta Cinemascope -->
-              <div class="cinemascope-footer z-10 flex items-center justify-between w-full pt-4 border-t border-white/10 text-[10px] font-mono text-(--text-secondary,#a5a19a) uppercase tracking-widest">
-                <span>The Great Puzzle Vault Database</span>
-                <span class="hidden sm:inline-block">Artefacto #{idx + 1} de {filteredD1.length}</span>
               </div>
             </article>
-
-            <!-- Separador Cartel CTA Ver Más -->
-            {#if idx < filteredD1.length - 1}
-              <div class="w-full py-8 sm:py-12 flex items-center justify-center">
-                <div class="relative w-full max-w-3xl px-8 py-5 rounded-3xl bg-linear-to-r from-[#16161a]/95 via-vault-success/10 to-[#16161a]/95 border border-vault-success/30 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-5 shadow-[0_0_40px_rgba(52,211,153,0.12)] text-left">
-                  <div class="flex items-center gap-4">
-                    <span class="w-3 h-3 rounded-full bg-vault-success animate-ping shrink-0"></span>
-                    <div>
-                      <span class="text-[10px] font-mono uppercase tracking-[0.35em] text-vault-success font-bold block mb-0.5">
-                        ✦ Ver Más Artefactos D1
-                      </span>
-                      <p class="text-xs sm:text-sm font-bodoni italic text-white/85">
-                        Continúa explorando los registros arqueológicos de la Bóveda Cloudflare
-                      </p>
-                    </div>
-                  </div>
-
-                  <a
-                    href={`#cinemascope-d1-${idx + 1}`}
-                    class="px-6 py-2.5 rounded-full bg-white/10 hover:bg-vault-success hover:text-black border border-white/25 text-white text-[11px] font-mono uppercase tracking-widest font-bold transition-all duration-300 whitespace-nowrap shadow-md cursor-pointer flex items-center gap-2 group/next"
-                  >
-                    <span>Siguiente Registro</span>
-                    <span class="group-hover/next:translate-y-0.5 transition-transform">↓</span>
-                  </a>
-                </div>
-              </div>
-            {/if}
           {/each}
         </div>
       {:else}
@@ -1288,16 +1046,5 @@
   :global(.cinemascope-card) {
     opacity: 1 !important;
     visibility: visible !important;
-  }
-
-  /* Efecto Espejo Pulido con barrido de luz especular */
-  .mirror-cta-btn {
-    position: relative;
-    box-shadow: 0 8px 32px rgba(255, 255, 255, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.7);
-  }
-
-  .mirror-cta-btn:hover .mirror-sheen {
-    transform: translateX(200%);
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 </style>

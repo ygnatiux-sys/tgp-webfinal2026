@@ -98,41 +98,36 @@ const mubiCollection = [
   <main class="relative z-10 overflow-x-hidden">
     <!-- ═══════════════════════════════════════════════════════════════════════
          HERO MONUMENTAL FULL BLEED TIPO APPLE (IMAX 1.90:1 / 100vh) — ATRAHASIS
-         - Mismo estilo de la muestra: Glow cobrizo, volanta, título 8vw e imagen Univisium 2:1
-         - GSAP Parallax suave en imagen de fondo + Fade-in & Scale en tipografía
-    ═══════════════════════════════════════════════════════════════════════ -->
-    <AtrahasisHeroImax />
-
-    <!-- ENCABEZADO SUPERIOR EDITORIAL (ESTILO ARCHIVO) -->
+         - Mismo estilo de la muestra: Glow cobrizo, volanta, título 8vw e imagen Univisi    <!-- ENCABEZADO SUPERIOR EDITORIAL (ESTILO ARCHIVO) -->
     <div id="portal-exploratorio" class="pt-20 md:pt-28"></div>
-    <section class="relative px-6 md:px-12 max-w-7xl mx-auto text-center mb-10">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-vault-accent/30 bg-vault-accent/5 backdrop-blur-md mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
-        <span class="text-[10px] uppercase font-mono tracking-[0.35em] text-vault-accent font-medium">
-          The Great Puzzle Project · Solapa Home Principal
-        </span>
+    <section class="relative px-6 md:px-12 max-w-7xl mx-auto text-center mb-16">
+      <div class="flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-mono tracking-[0.35em] uppercase text-white/50 mb-4">
+        <span class="text-vault-accent font-semibold">THE GREAT PUZZLE PROJECT</span>
+        <span>·</span>
+        <span>PORTAL PRINCIPAL</span>
       </div>
 
-      <h1 class="font-bodoni text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] font-extrabold tracking-tighter titulo-estilo-apple mb-6">
-        Portal <span class="highlight-word italic font-light font-bodoni text-vault-accent">Principal</span>
+      <h1 class="font-bodoni text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] font-extrabold tracking-tighter text-white mb-6">
+        Portal <span class="italic font-light font-bodoni text-vault-accent">Principal</span>
       </h1>
 
-      <div class="w-24 h-px bg-highlight/30 mx-auto mb-6"></div>
+      <div class="w-24 h-px bg-white/20 mx-auto mb-6"></div>
 
-      <p class="font-inter font-light text-xs sm:text-sm md:text-base tracking-[0.25em] uppercase text-fade-gradient max-w-3xl mx-auto leading-relaxed">
+      <p class="font-bodoni italic text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
         Investigación sobre la arquitectura técnica del olvido, arqueología cognitiva y gestión del sentido.
       </p>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         CARTEL DE BIENVENIDA EN FORMATO UNIVISIUM DE APPLE (2:1)
-         - Proporción 2:1 (Univisium 18:9 / Vittorio Storaro)
-         - Título de bienvenida en tipografía Serif Extra Bold (Bodoni)
-         - H2 en tipografía Sans Serif Outfit
+         MEMBRETE EDITORIAL: CARTEL DE BIENVENIDA EN FORMATO CINEMASCOPE / UNIVISIUM (2:1)
+         - Proporción Cinemascope Widescreen 2:1
+         - Título monumental en Bodoni Extra Bold
+         - Subtítulo en Bodoni Italic de autor
+         - Botones en Apple Glass satinado
     ═══════════════════════════════════════════════════════════════════════ -->
     <section class="relative px-4 sm:px-6 md:px-12 max-w-7xl mx-auto mb-24">
       <div class="cartel-univisium w-full bg-bg flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 group">
-        <!-- Imagen de Fondo Cinemática con Gradiente Apple -->
+        <!-- Imagen de Fondo Cinemática con Gradiente Suave -->
         <div class="absolute inset-0 -z-10 overflow-hidden">
           <img
             src="https://storage.thegreatpuzzleproject.com/vault-media/1792044302723-ca67ae92.webp"
@@ -144,173 +139,136 @@ const mubiCollection = [
           <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(159,140,174,0.12)_0%,transparent_50%)] pointer-events-none"></div>
         </div>
 
-        <!-- Encabezado Superior del Cartel (Badges Apple Univisium) -->
-        <div class="flex items-center justify-between w-full z-10">
-          <div class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md">
-            <span class="w-2 h-2 rounded-full bg-vault-accent animate-pulse"></span>
-            <span class="text-[9px] sm:text-[10px] font-mono tracking-[0.25em] uppercase text-highlight font-semibold">
-              ✦ Cartel Univisium 2.00:1 · Apple Billboard
-            </span>
-          </div>
+        <!-- Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
+        <div class="flex items-center justify-between w-full z-10 text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/50">
+          <span class="flex items-center gap-2">
+            <span class="text-vault-accent font-semibold">00</span>
+            <span>·</span>
+            <span>MANIFIESTO EDITORIAL</span>
+            <span class="hidden sm:inline text-white/30">·</span>
+            <span class="hidden sm:inline text-white/40">THE GREAT PUZZLE</span>
+          </span>
 
-          <div class="hidden sm:flex items-center gap-3">
-            <span class="px-3 py-1 rounded-full bg-vault-accent/10 border border-vault-accent/30 text-[9px] font-mono tracking-widest text-vault-accent uppercase font-medium">
-              Edición 2026
-            </span>
-            <span class="text-[10px] font-mono text-primary/40 uppercase tracking-widest">
-              Relación de Aspecto 2:1
-            </span>
-          </div>
+          <span class="text-white/40 tracking-widest">EDICIÓN 2026</span>
         </div>
 
-        <!-- Cuerpo Central del Cartel de Bienvenida -->
+        <!-- Cuerpo Central del Membrete Cinemascope -->
         <div class="my-auto py-6 sm:py-8 z-10 max-w-4xl">
-          <!-- Cartel de Bienvenida en Serif Extra Bold -->
-          <div class="inline-block text-[11px] sm:text-xs font-mono tracking-[0.35em] uppercase text-vault-accent font-semibold mb-3">
-            Manifiesto & Bienvenida Oficial
-          </div>
-
-          <h2 class="font-bodoni font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tighter titulo-estilo-apple mb-4">
-            Bienvenido al Gran <span class="highlight-word italic font-light font-bodoni text-vault-accent">Rompecabezas</span>.
+          <h2 class="font-bodoni font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tighter text-white mb-4">
+            Bienvenido al Gran <span class="italic font-light font-bodoni text-vault-accent">Rompecabezas</span>.
           </h2>
 
-          <!-- H2 en Sans Serif Outfit -->
-          <h2 class="font-outfit font-normal text-lg sm:text-2xl md:text-3xl text-primary/90 tracking-wide max-w-3xl leading-snug">
+          <p class="font-bodoni italic text-base sm:text-xl md:text-2xl text-white/75 tracking-wide max-w-3xl leading-relaxed">
             Una expedición crítica sobre la arquitectura de la memoria, las grietas del relato oficial y la emergencia de nuevos paradigmas.
-          </h2>
+          </p>
         </div>
 
-        <!-- Barra Inferior de Acciones y Ruteo Lógico (Estilo Apple / Archivo) -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-white/10 z-10">
-          <div class="flex flex-wrap items-center gap-3 sm:gap-4">
-            <a
-              href="/archivo"
-              class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-vault-accent text-black hover:bg-highlight transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-bold shadow-[0_0_25px_rgba(201,169,110,0.3)] group/btn cursor-pointer"
-            >
-              <span>◈ Explorar Archivo</span>
-              <span class="group-hover/btn:translate-x-1 transition-transform">→</span>
-            </a>
+        <!-- Barra Inferior de Acciones Estilo Apple Glass -->
+        <div class="flex flex-wrap items-center gap-3 sm:gap-4 pt-6 border-t border-white/10 z-10">
+          <a
+            href="/archivo"
+            class="cinema-action-btn inline-flex items-center gap-3 px-7 sm:px-8 py-3.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white backdrop-blur-md text-xs font-mono tracking-[0.25em] uppercase font-bold transition-all duration-300 group cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,255,255,0.35)] hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <span>Explorar Archivo</span>
+            <span class="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </a>
 
-            <a
-              href="/historia-alternativa"
-              class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/5 hover:bg-vault-accent/15 border border-white/15 hover:border-vault-accent/50 text-highlight hover:text-vault-accent transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-medium backdrop-blur-md cursor-pointer"
-            >
-              <span class="text-vault-accent">✦</span>
-              <span>Historia Alternativa</span>
-            </a>
+          <a
+            href="/historia-alternativa"
+            class="inline-flex items-center gap-2.5 px-6 sm:px-7 py-3.5 rounded-full bg-white/5 hover:bg-white/15 text-white/80 hover:text-white border border-white/15 hover:border-white/30 backdrop-blur-md text-xs font-mono tracking-[0.2em] uppercase font-medium transition-all duration-300 cursor-pointer"
+          >
+            <span>Historia Alternativa</span>
+            <span class="text-xs text-vault-accent">✦</span>
+          </a>
 
-            <a
-              href="/tgp-vault"
-              class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-primary hover:text-highlight transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-medium backdrop-blur-md cursor-pointer"
-            >
-              <span>Bóveda D1 / R2</span>
-            </a>
-          </div>
-
-          <div class="text-[10px] font-mono text-primary/50 uppercase tracking-[0.25em] flex items-center gap-2">
-            <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-400"></span>
-            <span>Sistema Operativo · 100% Standalone</span>
-          </div>
+          <a
+            href="/tgp-vault"
+            class="inline-flex items-center gap-2.5 px-6 sm:px-7 py-3.5 rounded-full bg-white/5 hover:bg-white/15 text-white/80 hover:text-white border border-white/15 hover:border-white/30 backdrop-blur-md text-xs font-mono tracking-[0.2em] uppercase font-medium transition-all duration-300 cursor-pointer"
+          >
+            <span>Bóveda D1 / R2</span>
+            <span class="text-xs text-vault-accent">◈</span>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         GRILLA DE COLECCIONES: MUBI / CRITERION CHANNEL (HERO SPOTLIGHT + SATÉLITES)
-         - Mobile (< md): 1 columna (grid-cols-1 gap-8)
-         - Desktop (lg:): 4 columnas estrictas con minmax(0, 1fr)
-         - Patrón cada 3 elementos:
-           * Tarjeta Hero (nth-child(3n + 1)): lg:col-span-2, aspect-[4/5], título text-2xl lg:text-3xl
-           * Tarjetas Satélite (3n + 2, 3n + 3): lg:col-span-1, aspect-[2/3], título text-lg lg:text-xl
-         - Sanitización de extractos Markdown
-         - Badge superior absoluto top-3 left-3 bg-black/70 backdrop-blur-sm
+         GRILLA DE COLECCIONES: MUBI & CRITERION EN FORMATO 19:10 UNIFORME
+         - Cards uniformes en proporción panorámica 19:10
+         - Telemetría limpia mono en el header de cada card
+         - Títulos monumentales Bodoni Extra Bold y Loglines en Bodoni Italic
+         - Botones cápsula Apple Glass interactivos
     ═══════════════════════════════════════════════════════════════════════ -->
     <section class="relative px-6 md:px-12 max-w-7xl mx-auto pb-28">
-      <div class="flex items-center justify-between mb-12">
+      <div class="flex items-center justify-between mb-10 sm:mb-14">
         <div>
           <div class="flex items-center gap-2 text-[10px] font-mono tracking-[0.3em] uppercase text-vault-accent">
-            <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
-            Curaduría Cinematográfica · MUBI & Criterion Style
+            <span class="w-1.5 h-1.5 rounded-full bg-vault-accent"></span>
+            Curaduría Cinematográfica · Colección Editorial
           </div>
           <h2 class="font-bodoni text-3xl sm:text-4xl md:text-5xl text-highlight font-bold mt-1">
             Colección <span class="italic text-vault-accent font-light">Spotlight</span>
           </h2>
         </div>
 
-        <span class="text-[11px] font-mono text-primary/40 uppercase tracking-widest hidden sm:inline-block">
-          Patrón Hero 2-Col + Satélites 1-Col
+        <span class="text-[11px] font-mono text-white/40 uppercase tracking-widest hidden sm:inline-block">
+          Ediciones Panorámicas 19:10
         </span>
       </div>
 
-      <!-- Contenedor Padre de la Grilla MUBI (4 Columnas Estrictas en Desktop) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start w-full">
+      <!-- Grilla Uniforme de Cards 19:10 (2 Columnas Panorámicas) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch w-full">
         {mubiCollection.map((item, index) => {
-          const isHero = index % 3 === 0;
-          const cleanText = sanitizeSnippet(item.description);
-
           return (
             <a
               href={item.url}
-              class={`group block bento-glass rounded-2xl overflow-hidden border border-white/10 hover:border-vault-accent/60 transition-all duration-500 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] cursor-pointer min-w-0 ${
-                isHero ? 'lg:col-span-2' : 'lg:col-span-1'
-              }`}
+              class="cinemascope-card relative isolate w-full min-h-80 sm:min-h-96 lg:min-h-100 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden bg-[#121214] border border-white/10 hover:border-white/30 shadow-[0_30px_90px_rgba(0,0,0,0.85)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-8 md:p-10 group text-left select-none cursor-pointer"
             >
-              <!-- Contenedor de Imagen Estricto con Aspect Ratio Controlado -->
-              <div
-                class={`w-full overflow-hidden rounded-xl bg-neutral-900 relative ${
-                  isHero ? 'aspect-4/5' : 'aspect-2/3'
-                }`}
-              >
+              <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
+              <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={item.imageUrl}
                   alt={item.title}
-                  class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  class="w-full h-full object-cover object-[center_35%] filter brightness-[0.98] contrast-[1.04] transition-transform duration-1000 ease-out group-hover:scale-105 will-change-transform"
                   loading="lazy"
                 />
 
-                <!-- Degradé de oscurecimiento superior e inferior -->
-                <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
+                <!-- Degradado cinematográfico: el 60% superior respira libre para el arte fotográfico -->
+                <div class="absolute inset-0 bg-linear-to-t from-black/95 via-black/45 via-45% to-transparent pointer-events-none"></div>
 
-                <!-- Badge Superior "DOSSIER CINEMÁTICO" -->
-                <div class="absolute top-3 left-3 z-10 pointer-events-none">
-                  <span class="px-3 py-1 rounded-full bg-black/70 backdrop-blur-sm border border-vault-accent/40 text-[9px] font-mono uppercase tracking-widest text-vault-accent font-semibold flex items-center gap-1.5 shadow-md">
-                    <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
-                    {item.badge}
-                  </span>
-                </div>
-
-                <!-- Metadata Inferior Sobre la Imagen -->
-                <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[10px] font-mono text-primary/70 tracking-widest uppercase pointer-events-none z-10">
-                  <span class="px-2 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/10 text-highlight">
-                    {item.date}
-                  </span>
-                  <span class="text-vault-accent font-medium">
-                    {item.category}
-                  </span>
-                </div>
+                <!-- Marco perimetral sutil -->
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
               </div>
 
-              <!-- Bloque Textual Editorial Acompañante -->
-              <div class="p-5 sm:p-6 space-y-2">
-                <span class="text-[10px] font-mono text-vault-accent/80 tracking-widest uppercase block">
-                  {item.subtitle}
+              <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
+              <div class="cinemascope-meta z-10 flex items-center justify-between w-full text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/50">
+                <span class="flex items-center gap-2">
+                  <span class="text-white/80 font-semibold">{index + 1 < 10 ? `0${index + 1}` : index + 1}</span>
+                  <span>·</span>
+                  <span>{item.category}</span>
                 </span>
 
-                <h3
-                  class={`font-bodoni text-highlight group-hover:text-vault-accent transition-colors font-bold leading-tight ${
-                    isHero ? 'text-2xl lg:text-3xl' : 'text-lg lg:text-xl'
-                  }`}
-                >
+                <span class="text-white/40 tracking-widest">{item.date}</span>
+              </div>
+
+              <!-- 3. Contenido Inferior Anclado: Título Extra Bold Monumental > Logline > Botón de Cristal -->
+              <div class="cinemascope-content z-10 mt-auto pt-10 flex flex-col items-start gap-3">
+                <!-- TÍTULO EN EXTRA BOLD MONUMENTAL -->
+                <h3 class="cinemascope-title font-bodoni font-extrabold text-2xl sm:text-3xl lg:text-[2.1rem] text-white leading-[0.98] tracking-tight group-hover:text-vault-accent transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
                   {item.title}
                 </h3>
 
-                <p class="font-inter text-xs text-primary/70 leading-relaxed font-light line-clamp-2">
-                  {cleanText}
+                <!-- LOGLINE CINEMÁTICO DE AUTOR (UNA SOLA LÍNEA POÉTICA) -->
+                <p class="cinemascope-logline font-bodoni italic text-sm sm:text-base text-white/70 max-w-xl leading-relaxed tracking-wide [text-shadow:0_2px_12px_rgba(0,0,0,0.95)] line-clamp-1">
+                  {item.subtitle}
                 </p>
 
-                <div class="pt-3 flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-vault-accent font-semibold group-hover:translate-x-1 transition-transform">
-                  <span>Acceder al Dossier</span>
-                  <span>→</span>
+                <!-- BOTÓN DE CRISTAL APPLE / MUBI -->
+                <div class="pt-2">
+                  <span class="cinema-action-btn inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-white/10 group-hover:bg-white text-white group-hover:text-black border border-white/20 group-hover:border-white backdrop-blur-md text-[11px] font-mono tracking-[0.25em] uppercase font-bold transition-all duration-300 shadow-md group-hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                    <span>Acceder al Dossier</span>
+                    <span class="text-xs transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </span>
                 </div>
               </div>
             </a>
