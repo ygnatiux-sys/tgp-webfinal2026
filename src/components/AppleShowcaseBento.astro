@@ -1,0 +1,378 @@
+---
+// src/components/AppleShowcaseBento.astro
+// Bento Showcase "3D Z-Drop Masonry" (Tactile Deck Slotting + Impact Spark)
+// Inspirado en la presentación táctil de Apple y el diseño oscuro / cobrizo de The Great Puzzle Project
+
+import { getCollection } from 'astro:content';
+
+// Obtener posts / ensayos existentes para usar sus imágenes reales
+let postImages: any[] = [];
+try {
+  const ensayos = await getCollection('ensayos', ({ data }) => !data.draft);
+  if (Array.isArray(ensayos) && ensayos.length > 0) {
+    postImages = ensayos
+      .map(e => ({
+        title: e.data.title || 'Ensayo Histórico',
+        category: e.data.category || 'Archivo',
+        url: `/ensayos/${e.id}`,
+        imageUrl: e.data.coverImage || e.data.heroUrl || (e.data.gallery && e.data.gallery.length > 0 ? e.data.gallery[0] : null)
+      }))
+      .filter(item => Boolean(item.imageUrl));
+  }
+} catch (e) {
+  // Fallback si no está disponible la colección
+}
+
+// Catálogo Curado de Máxima Calidad con todas las imágenes de los posts del proyecto
+const fallbackCards = [
+  // Columna 1
+  {
+    title: 'Göbekli Tepe',
+    category: 'Arqueología',
+    aspect: 'aspect-[4/5]',
+    imageUrl: '/magazine-hero-gobekli.jpg',
+    url: '/magazine/gobekli-tepe'
+  },
+  {
+    title: 'Pompeya & Vesubio',
+    category: 'Cataclismo',
+    aspect: 'aspect-square',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/magazine/pompeya-y-el-vesubio/vesuvius-from-pompeii-hires-version-2png.webp',
+    url: '/magazine/pompeya'
+  },
+  {
+    title: 'El Sapiens Arquitecto',
+    category: 'Tesis I',
+    aspect: 'aspect-[4/5]',
+    imageUrl: '/tesis-01.png',
+    url: '/tesis-01'
+  },
+  // Columna 2
+  {
+    title: 'Biblioteca de Alejandría',
+    category: 'Historia',
+    aspect: 'aspect-[16/11]',
+    imageUrl: 'https://pub-83c92bfaf9bb4d07b46d0be774431f31.r2.dev/biblioteca-alejandria-o.webp',
+    url: '/archivo'
+  },
+  {
+    title: 'Pirámide de Dahshur',
+    category: 'Megalitismo',
+    aspect: 'aspect-[3/4]',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/magazine/piramide-roja-dahshur/26712-red-pyramid-in-morning-hazejpg.webp',
+    url: '/archivo'
+  },
+  {
+    title: 'The Caterpillar',
+    category: 'Ensayo',
+    aspect: 'aspect-square',
+    imageUrl: '/tgp-img-18.webp',
+    url: '/archivo'
+  },
+  // Columna 3
+  {
+    title: 'Pilar del Leopardo',
+    category: 'Oopart',
+    aspect: 'aspect-[4/5]',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/G%C3%B6bekli_Tepe_Birthing_Woman_in_Leopard_Pillar_Building.jpg',
+    url: '/historia-alternativa'
+  },
+  {
+    title: 'Heurística Alterna',
+    category: 'Tesis III',
+    aspect: 'aspect-[4/5]',
+    imageUrl: '/tesis-03.png',
+    url: '/tesis-03'
+  },
+  {
+    title: 'Prótesis de la Memoria',
+    category: 'Media Lab',
+    aspect: 'aspect-[4/5]',
+    imageUrl: '/media-podcast.png',
+    url: '/media'
+  }
+];
+
+// Integrar imágenes dinámicas de posts si existen, priorizando las de mayor resolución
+const cards = fallbackCards.map((item, idx) => {
+  if (postImages[idx] && postImages[idx].imageUrl) {
+    return {
+      ...item,
+      title: postImages[idx].title || item.title,
+      category: postImages[idx].category || item.category,
+      imageUrl: postImages[idx].imageUrl || item.imageUrl,
+      url: postImages[idx].url || item.url
+    };
+  }
+  return item;
+});
+
+const col1 = cards.slice(0, 3);
+const col2 = cards.slice(3, 6);
+const col3 = cards.slice(6, 9);
+---
+
+<section class="w-full px-4 md:px-10 py-12 md:py-20 bg-[#0b0b0d] relative overflow-hidden">
+  <!-- BENTO ULTRA-WIDE -->
+  <div
+    id="tgp-masonry-bento"
+    class="relative isolate w-full max-w-[1560px] h-[520px] sm:h-[480px] md:h-[460px] lg:h-[480px] mx-auto rounded-[28px] overflow-hidden bg-black border border-white/10 shadow-2xl"
+  >
+    <!-- 1. CÁMARA 3D Y SÁBANA MASONRY DESIGUAL (Derecha) -->
+    <!-- perspective-[1200px] es el secreto para que caigan "desde la pantalla" hacia adentro -->
+    <div class="absolute inset-0 z-0 overflow-hidden [perspective:1200px]">
+      
+      <!-- Grilla inclinada (-12deg) con 3 columnas de tamaños desiguales -->
+      <div
+        id="masonry-deck"
+        class="absolute right-[-10%] sm:right-[-6%] top-[-30%] w-[95%] sm:w-[80%] md:w-[68%] h-[170%] grid grid-cols-3 gap-3.5 -rotate-[12deg] [transform-style:preserve-3d]"
+      >
+        <!-- COLUMNA 1 (Desfasada arriba) -->
+        <div class="flex flex-col gap-3.5 -translate-y-8">
+          {col1.map((card) => (
+            <a
+              href={card.url}
+              class={`masonry-card relative ${card.aspect} rounded-2xl overflow-hidden border border-white/15 bg-zinc-900 shadow-2xl group cursor-pointer block`}
+              title={card.title}
+            >
+              <img
+                src={card.imageUrl}
+                alt={card.title}
+                class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-700"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+
+              <!-- Metadata sutil inferior -->
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/80 pointer-events-none z-10">
+                <span class="truncate max-w-[70%]">{card.title}</span>
+                <span class="text-vault-accent font-semibold">{card.category}</span>
+              </div>
+
+              <!-- El "Spark / Clinc" de luz al encajar -->
+              <div class="card-spark pointer-events-none absolute inset-0 bg-[linear-gradient(125deg,transparent_20%,rgba(255,220,160,0.85)_50%,transparent_80%)] opacity-0 -translate-x-full"></div>
+              <div class="card-ring pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-amber-300/0"></div>
+            </a>
+          ))}
+        </div>
+
+        <!-- COLUMNA 2 (Central, tamaños invertidos para romper simetría) -->
+        <div class="flex flex-col gap-3.5 translate-y-4">
+          {col2.map((card) => (
+            <a
+              href={card.url}
+              class={`masonry-card relative ${card.aspect} rounded-2xl overflow-hidden border border-white/15 bg-zinc-900 shadow-2xl group cursor-pointer block`}
+              title={card.title}
+            >
+              <img
+                src={card.imageUrl}
+                alt={card.title}
+                class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-700"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+
+              <!-- Metadata sutil inferior -->
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/80 pointer-events-none z-10">
+                <span class="truncate max-w-[70%]">{card.title}</span>
+                <span class="text-vault-accent font-semibold">{card.category}</span>
+              </div>
+
+              <!-- El "Spark / Clinc" de luz al encajar -->
+              <div class="card-spark pointer-events-none absolute inset-0 bg-[linear-gradient(125deg,transparent_20%,rgba(255,220,160,0.85)_50%,transparent_80%)] opacity-0 -translate-x-full"></div>
+              <div class="card-ring pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-amber-300/0"></div>
+            </a>
+          ))}
+        </div>
+
+        <!-- COLUMNA 3 (Derecha) -->
+        <div class="flex flex-col gap-3.5 -translate-y-12">
+          {col3.map((card) => (
+            <a
+              href={card.url}
+              class={`masonry-card relative ${card.aspect} rounded-2xl overflow-hidden border border-white/15 bg-zinc-900 shadow-2xl group cursor-pointer block`}
+              title={card.title}
+            >
+              <img
+                src={card.imageUrl}
+                alt={card.title}
+                class="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-700"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+
+              <!-- Metadata sutil inferior -->
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/80 pointer-events-none z-10">
+                <span class="truncate max-w-[70%]">{card.title}</span>
+                <span class="text-vault-accent font-semibold">{card.category}</span>
+              </div>
+
+              <!-- El "Spark / Clinc" de luz al encajar -->
+              <div class="card-spark pointer-events-none absolute inset-0 bg-[linear-gradient(125deg,transparent_20%,rgba(255,220,160,0.85)_50%,transparent_80%)] opacity-0 -translate-x-full"></div>
+              <div class="card-ring pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-amber-300/0"></div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. MÁSCARA DE FUSIÓN + AMBIENT GLOW COBRIZO (z-10) -->
+    <div class="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,#000000_0%,#000000_33%,rgba(0,0,0,0.85)_48%,rgba(0,0,0,0)_70%)]"></div>
+    <div class="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_0%_0%,rgba(195,90,50,0.4)_0%,transparent_54%)]"></div>
+
+    <!-- 3. BLOQUE DE TÍTULO Y CTA A LA IZQUIERDA (z-20) -->
+    <div
+      id="bento-copy"
+      class="relative z-20 h-full w-full md:w-[48%] pl-6 sm:pl-10 md:pl-14 pr-6 flex flex-col justify-center items-start"
+    >
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-white font-bold tracking-tight text-xl font-gloock">TGP</span>
+        <span class="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] px-2.5 py-0.5 rounded-full bg-white/10 text-amber-300/90 border border-white/15 font-mono">
+          14 Colecciones
+        </span>
+      </div>
+
+      <h2 class="font-bodoni text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-[1.12] tracking-tight mb-3">
+        Explorá sin límites.<br />
+        <span class="italic font-light text-vault-accent">Recorré el archivo TGP.</span>
+      </h2>
+
+      <p class="font-inter text-xs sm:text-sm text-white/65 mb-6 max-w-sm font-light leading-relaxed">
+        Ensayos, arquetipos y georreferencias en un solo mapa de arqueología cognitiva.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <a
+          href="/archivo"
+          class="px-6 py-2.5 rounded-full bg-[#f5f5f7] hover:bg-white text-black text-xs font-semibold tracking-wider transition shadow-lg inline-flex items-center gap-1.5"
+        >
+          <span>Explorar colecciones</span>
+          <span>→</span>
+        </a>
+        <a
+          href="/historia-alternativa"
+          class="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/20 text-white text-xs font-medium backdrop-blur-md transition tracking-wider inline-flex items-center gap-1.5"
+        >
+          <span>Ver todo el archivo</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     MOTOR GSAP: 3D Z-Drop Masonry + Impact Spark + Tensión Magnética
+═══════════════════════════════════════════════════════════════════════ -->
+<script>
+  import gsap from 'gsap';
+
+  const initMasonryBento = () => {
+    const container = document.getElementById('tgp-masonry-bento');
+    if (!container) return;
+
+    const cards = gsap.utils.toArray<HTMLElement>('.masonry-card');
+    const copyItems = gsap.utils.toArray<HTMLElement>('#bento-copy > *');
+    if (cards.length === 0) return;
+
+    let hasRun = false;
+
+    const runTimeline = () => {
+      if (hasRun) return;
+      hasRun = true;
+
+      const masterTl = gsap.timeline();
+
+      // 1. El título entra desde la izquierda con precisión Apple
+      masterTl.fromTo(
+        copyItems,
+        { opacity: 0, x: -24 },
+        { opacity: 1, x: 0, duration: 0.6, stagger: 0.06, ease: 'expo.out' },
+        0
+      );
+
+      // 2. CAÍDA 3D DESDE LA PANTALLA ("Z-Drop Masonry") una a una
+      cards.forEach((card, i) => {
+        const spark = card.querySelector<HTMLElement>('.card-spark');
+        const ring = card.querySelector<HTMLElement>('.card-ring');
+        const delay = 0.08 + i * 0.085; // Retardo escalonado entre cada tarjeta
+
+        // La tarjeta cae desde "arriba de la cámara" (z: 380, scale: 1.35) y se imanta en su lugar
+        masterTl.fromTo(
+          card,
+          {
+            opacity: 0,
+            z: 380,
+            y: -90,
+            x: 40,
+            scale: 1.35,
+            rotateX: 18,
+            rotateY: -12,
+            filter: 'blur(8px) brightness(1.5)'
+          },
+          {
+            opacity: 1,
+            z: 0,
+            y: 0,
+            x: 0,
+            scale: 1,
+            rotateX: 0,
+            rotateY: 0,
+            filter: 'blur(0px) brightness(1)',
+            duration: 0.58,
+            ease: 'expo.out'
+          },
+          delay
+        );
+
+        // 3. EL "CLINC" / SPARK DE BRILLO EXACTO AL ENCAJAR
+        const impactTime = delay + 0.38;
+
+        if (spark) {
+          masterTl.fromTo(
+            spark,
+            { opacity: 0.95, xPercent: -120 },
+            { opacity: 0, xPercent: 150, duration: 0.35, ease: 'power2.out' },
+            impactTime
+          );
+        }
+
+        if (ring) {
+          masterTl.fromTo(
+            ring,
+            { boxShadow: 'inset 0 0 0 2px rgba(252, 211, 77, 0.85), 0 0 25px rgba(245, 158, 11, 0.5)' },
+            { boxShadow: 'inset 0 0 0 0px rgba(252, 211, 77, 0), 0 0 0px rgba(245, 158, 11, 0)', duration: 0.45, ease: 'power2.out' },
+            impactTime
+          );
+        }
+      });
+
+      // 4. FASE POST-ENCASTRE: Leve atracción magnética continua entre columnas
+      masterTl
+        .to('#masonry-deck > div:nth-child(1)', { y: '+=14', x: '+=6', duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' }, 1.1)
+        .to('#masonry-deck > div:nth-child(2)', { y: '-=16', scale: 1.02, duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' }, 1.1)
+        .to('#masonry-deck > div:nth-child(3)', { y: '+=12', x: '-=6', duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' }, 1.1);
+    };
+
+    // Observar entrada en viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            runTimeline();
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(container);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMasonryBento);
+  } else {
+    initMasonryBento();
+  }
+  document.addEventListener('astro:page-load', initMasonryBento);
+</script>
