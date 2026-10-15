@@ -57,33 +57,98 @@
   h1, h2, h3, h4, h5, .font-bodoni {
     @apply font-bodoni;
     display: inline-block;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  h1:hover, h2:hover, h3:hover, .titulo-estilo-apple:hover {
-    animation: latido-suave 4s ease-in-out infinite;
-  }
-}
-
-@keyframes latido-suave {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.03);
   }
 }
 
 @layer utilities {
+  /* ── TOKENS CINEMÁTICOS MUBI × APPLE × A24 ── */
+  .t-display {
+    font-family: var(--font-bodoni), serif;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.95);
+  }
+
+  .t-logline {
+    font-family: var(--font-bodoni), serif;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.72);
+    font-weight: 300;
+    letter-spacing: 0.015em;
+    line-height: 1.5;
+  }
+
+  .t-telemetry {
+    font-family: monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .btn-glass {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 9999px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  .btn-glass:hover {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
+    transform: scale(1.02);
+  }
+  .btn-glass:active {
+    transform: scale(0.98);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.6rem;
+    border-radius: 9999px;
+    background-color: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    font-family: monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .btn-ghost:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
   .tracking-ultra-wide {
     letter-spacing: 0.3em;
   }
 
   .text-fade-gradient {
-    background: linear-gradient(to bottom, #d1d1d1 0%, rgba(209, 209, 209, 0.2) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: rgba(255, 255, 255, 0.75);
   }
 
   .lens-glow {
@@ -100,13 +165,8 @@
   }
 
   .titulo-estilo-apple {
-    font-weight: bold;
-    /* 1. El gradiente de grises (iluminado arriba, oscuro abajo) */
-    background: linear-gradient(to bottom, #ffffff 0%, #d1d1d1 50%, #6e6e6e 100%);
-    /* 2. El truco para meter el gradiente dentro de la letra */
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    color: #ffffff;
     display: inline-block;
   }
 

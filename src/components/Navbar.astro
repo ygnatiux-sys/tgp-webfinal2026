@@ -1,25 +1,177 @@
 ---
 // src/components/Navbar.astro
+// Barra de navegación cinemática estilo Apple TV+ (Vidrio esmerilado permanente, 5 enlaces sans, menú móvil)
+
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/historia-alternativa', label: 'Historia Alternativa' },
+  { href: '/archivo', label: 'Archivo' },
+  { href: '/series', label: 'Series' },
+  { href: '/tesis-home', label: 'Tesis' },
+  { href: '/media-home', label: 'Media Lab' }
+];
+
+const isActive = (href: string) => {
+  if (href === '/home' && (currentPath === '/' || currentPath === '/home')) return true;
+  if (href !== '/home' && currentPath.startsWith(href)) return true;
+  return false;
+};
 ---
 
-<!-- FIXED NAVBAR -->
-<nav class="fixed top-0 left-0 w-full z-50 border-b border-border/20 bg-bg/80 backdrop-blur-md px-6 py-5 flex justify-between items-center transition-all duration-500">
-    <div class="flex items-center gap-4 group cursor-pointer">
-        <a href="/home" class="flex items-center gap-3">
-            <img src="https://storage.thegreatpuzzleproject.com/vault-media/1792044296735-9c9d6816.webp" alt="Logo" class="h-8 w-auto rounded-sm object-contain group-hover:scale-105 transition-all duration-700" />
-            <div class="font-gloock tracking-[0.15em] text-lg md:text-xl lg:text-2xl uppercase titulo-estilo-apple">THE GREAT PUZZLE PROJECT</div>
+<!-- HEADER SIEMPRE VISIBLE ESTILO APPLE GLASS -->
+<header
+  id="main-navbar"
+  class="fixed top-0 left-0 w-full z-50 border-b border-white/10 bg-[#16161a]/80 backdrop-blur-xl transition-all duration-300"
+  style="backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);"
+>
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <!-- Brand / Wordmark (Enlace al Home en el Logo) -->
+    <a
+      href="/home"
+      class="flex items-center gap-3 group cursor-pointer select-none"
+      aria-label="The Great Puzzle Project - Inicio"
+    >
+      <img
+        src="https://storage.thegreatpuzzleproject.com/vault-media/1792044296735-9c9d6816.webp"
+        alt="Logo"
+        class="h-7 w-auto rounded-xs object-contain transition-transform duration-500 group-hover:scale-105"
+      />
+      <span class="font-gloock tracking-[0.18em] text-base sm:text-lg md:text-xl uppercase text-white font-bold">
+        THE GREAT PUZZLE PROJECT
+      </span>
+    </a>
+
+    <!-- Navegación Desktop: 5 Enlaces Sans Legibles y Funcionales -->
+    <nav class="hidden lg:flex items-center gap-6 xl:gap-8" aria-label="Navegación principal">
+      {navLinks.map((link) => {
+        const active = isActive(link.href);
+        return (
+          <a
+            href={link.href}
+            class={`relative text-xs tracking-[0.2em] uppercase font-medium transition-colors duration-200 py-1 ${
+              active
+                ? 'text-white font-semibold'
+                : 'text-white/65 hover:text-white'
+            }`}
+            aria-current={active ? 'page' : undefined}
+          >
+            {link.label}
+            {active && (
+              <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-vault-accent rounded-full pointer-events-none"></span>
+            )}
+          </a>
+        );
+      })}
+
+      <!-- Utilidad Directa: Bóveda Vault -->
+      <a
+        href="/tgp-vault"
+        class="text-vault-accent hover:text-white transition-all duration-300 flex items-center gap-1.5 border border-vault-accent/40 hover:border-vault-accent hover:bg-vault-accent/10 px-3.5 py-1.5 rounded-full text-[11px] font-mono tracking-widest uppercase shadow-[0_0_15px_rgba(201,169,110,0.12)] cursor-pointer"
+      >
+        <span class="text-[9px]">◈</span>
+        <span>Vault</span>
+      </a>
+    </nav>
+
+    <!-- Botón Hamburguesa Móvil -->
+    <button
+      id="mobile-menu-btn"
+      type="button"
+      class="lg:hidden p-2 text-white/80 hover:text-white transition-colors focus:outline-hidden cursor-pointer"
+      aria-label="Abrir menú de navegación"
+      aria-expanded="false"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path id="hamburger-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Overlay Móvil Cinemático A24 / Apple -->
+  <div
+    id="mobile-menu-overlay"
+    class="fixed inset-0 top-[65px] bg-[#0e0e12]/95 backdrop-blur-2xl z-40 hidden flex-col justify-between p-8 sm:p-12 border-t border-white/10 overflow-y-auto"
+  >
+    <div class="flex flex-col gap-6 pt-4">
+      <span class="text-[10px] font-mono uppercase tracking-[0.3em] text-vault-accent">
+        ◈ Navegación Editorial
+      </span>
+
+      <nav class="flex flex-col gap-5">
+        <a
+          href="/home"
+          class="mobile-nav-link font-bodoni text-3xl sm:text-4xl text-white/85 hover:text-white transition-colors"
+        >
+          Inicio
         </a>
-    </div>
-    <div class="hidden lg:flex items-center gap-5 xl:gap-7 text-[10px] uppercase tracking-ultra-wide font-light text-primary/80">
-        <a href="/home" class="hover:text-vault-accent transition-all duration-500 hover:tracking-[0.35em] text-highlight/90 font-medium">Home</a>
-        <a href="/historia-alternativa" class="hover:text-vault-accent transition-all duration-500 hover:tracking-[0.35em] text-vault-accent/90 font-medium">Historia Alternativa</a>
-        <a href="/archivo" class="hover:text-vault-loading transition-all duration-500 hover:tracking-[0.35em]">Archivo</a>
-        <a href="/series" class="hover:text-vault-loading transition-all duration-500 hover:tracking-[0.35em] text-terracota-light">Series</a>
-        <a href="/tesis-home" class="hover:text-vault-loading transition-all duration-500 hover:tracking-[0.35em]">Tesis</a>
-        <a href="/media-home" class="hover:text-vault-loading transition-all duration-500 hover:tracking-[0.35em]">Media Lab</a>
-        <a href="/tgp-vault" class="text-vault-accent hover:text-highlight transition-all duration-500 hover:tracking-[0.35em] flex items-center gap-1.5 border border-vault-accent/40 px-3.5 py-1.5 rounded-full hover:border-vault-accent hover:bg-vault-accent/10 shadow-[0_0_15px_rgba(201,169,110,0.12)]">
-            <span class="text-[9px]">◈</span> Vault
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="mobile-nav-link font-bodoni text-3xl sm:text-4xl text-white/85 hover:text-white transition-colors"
+          >
+            {link.label}
+          </a>
+        ))}
+        <a
+          href="/tgp-vault"
+          class="mobile-nav-link font-bodoni text-3xl sm:text-4xl text-vault-accent hover:text-highlight transition-colors flex items-center gap-3 pt-2 border-t border-white/10"
+        >
+          <span>◈ Bóveda TGP-Vault</span>
         </a>
-        <a href="/about" class="hover:text-vault-loading transition-all duration-500 hover:tracking-[0.35em] text-primary/60">Xavier</a>
+        <a
+          href="/about"
+          class="mobile-nav-link font-bodoni text-2xl text-white/50 hover:text-white transition-colors"
+        >
+          Sobre Xavier
+        </a>
+      </nav>
     </div>
-</nav>
+
+    <div class="pt-8 border-t border-white/10 flex items-center justify-between text-[10px] font-mono tracking-widest text-white/40 uppercase">
+      <span>The Great Puzzle Project</span>
+      <span>2026</span>
+    </div>
+  </div>
+</header>
+
+<script>
+  function setupNavbar() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const overlay = document.getElementById('mobile-menu-overlay');
+    const links = document.querySelectorAll('.mobile-nav-link');
+
+    if (!btn || !overlay) return;
+
+    let isOpen = false;
+
+    function toggleMenu() {
+      isOpen = !isOpen;
+      btn?.setAttribute('aria-expanded', String(isOpen));
+      if (isOpen) {
+        overlay?.classList.remove('hidden');
+        overlay?.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      } else {
+        overlay?.classList.add('hidden');
+        overlay?.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+    }
+
+    btn.addEventListener('click', toggleMenu);
+
+    links.forEach((link) => {
+      link.addEventListener('click', () => {
+        if (isOpen) toggleMenu();
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen) toggleMenu();
+    });
+  }
+
+  setupNavbar();
+  document.addEventListener('astro:page-load', setupNavbar);
+</script>

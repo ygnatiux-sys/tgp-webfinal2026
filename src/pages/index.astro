@@ -11,35 +11,47 @@ import Footer from '../components/Footer.astro';
 
 	<Navbar />
 
-	<main class="relative z-10 overflow-x-hidden pt-20">
-		<!-- HERO SECTION -->
-		<section id="hero" class="relative min-h-[calc(100vh-80px)] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+	<main class="relative z-10 overflow-x-hidden pt-24 md:pt-32">
+		<!-- HERO SECTION CINEMÁTICO -->
+		<section id="hero" class="relative min-h-[calc(100vh-120px)] flex flex-col items-center justify-center text-center px-6 overflow-hidden py-16">
 			<div class="absolute -z-10 opacity-5 w-[70%] max-w-225 pointer-events-none">
 				<img src="https://storage.thegreatpuzzleproject.com/vault-media/1792044296735-9c9d6816.webp" alt="" class="w-full h-auto blur-[1px]" />
 			</div>
 
-			<h1 class="font-bodoni text-5xl md:text-8xl font-bold leading-tight max-w-6xl mx-auto mb-12 titulo-estilo-apple tracking-tighter">
-				Comprender por qué <span class="italic highlight-word">pensamos</span> lo que pensamos.
+			<!-- Telemetría superior -->
+			<div class="flex items-center justify-center gap-2 t-telemetry text-vault-accent mb-6">
+				<span class="font-semibold">◈</span>
+				<span>THE GREAT PUZZLE PROJECT · ENSAYOS & ARCHIVÍSTICA DIGITAL</span>
+			</div>
+
+			<h1 class="t-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.95] max-w-6xl mx-auto mb-8">
+				Comprender por qué <span class="italic font-light text-vault-accent">pensamos</span> lo que pensamos.
 			</h1>
-			<p class="font-inter font-thin text-[11px] md:text-sm tracking-[0.5em] uppercase text-fade-gradient max-w-3xl leading-[2.5] hero-subtitle">
+			
+			<p class="t-logline text-base sm:text-xl md:text-2xl max-w-3xl mx-auto mb-12 text-white/80">
 				Una investigación sobre la arquitectura técnica del olvido y la gestión del sentido en la era digital.
 			</p>
 			
-			<div class="mt-16 flex flex-wrap items-center justify-center gap-5 hero-subtitle reveal-buttons">
-				<a href="/home" class="cta-vault" title="Ingresar al Home">
-					<span class="text-xs">✦</span>
-					<span>Home Principal</span>
+			<div class="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
+				<a href="/home" class="btn-glass group">
+					<span class="text-vault-accent">✦</span>
+					<span>Explorar Ensayos</span>
+					<span class="group-hover:translate-x-0.5 transition-transform text-white/70">→</span>
 				</a>
-				<a href="/historia-alternativa" class="cta-editorial">Historia Alternativa</a>
-				<a href="/archivo" class="cta-editorial">Archivo Vivo</a>
-				<a href="/tgp-vault" class="cta-glass" title="Acceder a TGP-Vault">
-					<span class="text-xs">◈</span>
+				<a href="/historia-alternativa" class="btn-ghost">
+					Historia Alternativa
+				</a>
+				<a href="/archivo" class="btn-ghost">
+					Archivo Vivo
+				</a>
+				<a href="/tgp-vault" class="btn-ghost text-vault-accent border-vault-accent/30 hover:border-vault-accent">
+					<span>◈</span>
 					<span>TGP-Vault</span>
 				</a>
 			</div>
 			
-			<div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-pulse opacity-40">
-				<div class="w-px h-12 bg-border"></div>
+			<div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-pulse opacity-40">
+				<div class="w-px h-10 bg-white/20"></div>
 			</div>
 		</section>
 	</main>

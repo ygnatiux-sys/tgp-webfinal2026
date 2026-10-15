@@ -88,21 +88,17 @@ const secondaryImages = allImages.slice(1);
     <div class="max-w-6xl mx-auto mb-12 flex justify-between items-center">
       <a
         href="/archivo"
-        class="cta-glass rounded-full! px-6! py-2.5! text-[10px]! uppercase tracking-widest group flex items-center gap-2"
+        class="btn-ghost flex items-center gap-2 group"
       >
         <span class="group-hover:-translate-x-1 inline-block transition-transform">←</span>
         <span>Volver al Archivo</span>
       </a>
 
-      <div class="flex items-center gap-3 text-[10px] font-mono tracking-widest text-vault-accent uppercase">
-        {data.category && (
-          <span class="px-3.5 py-1 rounded-full border border-vault-accent/30 bg-vault-accent/10">
-            {data.category}
-          </span>
-        )}
+      <div class="flex items-center gap-2 t-telemetry text-vault-accent">
+        {data.category && <span>{data.category}</span>}
         {data.powertype && (
-          <span class="opacity-60 hidden sm:inline-block">
-            ◈ {data.powertype}
+          <span class="text-white/40 hidden sm:inline-block">
+            · {data.powertype}
           </span>
         )}
       </div>
@@ -110,12 +106,12 @@ const secondaryImages = allImages.slice(1);
 
     <header class="max-w-4xl mx-auto text-center mb-16 space-y-6">
       {data.volanta && (
-        <p class="text-[11px] md:text-xs uppercase tracking-[0.4em] text-vault-accent/80 font-mono font-medium">
+        <p class="t-telemetry text-vault-accent font-medium">
           {data.volanta}
         </p>
       )}
 
-      <h1 class="font-bodoni text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.05] tracking-tight titulo-estilo-apple">
+      <h1 class="t-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.05]">
         {data.title}
       </h1>
 

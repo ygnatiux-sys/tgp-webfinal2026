@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import PageHeader from '../components/PageHeader.astro';
 import AppleShowcaseBento from '../components/AppleShowcaseBento.astro';
 ---
 
@@ -12,16 +13,22 @@ import AppleShowcaseBento from '../components/AppleShowcaseBento.astro';
 
 	<Navbar />
 
-	<main class="relative z-10 overflow-x-hidden pt-20">
+	<main class="relative z-10 overflow-x-hidden pt-24 md:pt-32 pb-32">
+		<!-- MEDIA LAB HEADER CINEMÁTICO -->
+		<PageHeader
+			kicker="THE GREAT PUZZLE PROJECT · LABORATORIO TRANSMEDIA"
+			title="Media"
+			accent="Lab"
+			logline="Exploración transmedia, arqueología de las ideas en formato sonoro y prototipado simbólico."
+			primaryAction={{
+				href: "/media",
+				label: "Ver Canales & Plataformas",
+				icon: "→"
+			}}
+		/>
+
 		<!-- MEDIA LAB SECTION -->
-		<section id="media" class="px-6 md:px-16 py-40 bg-bg relative overflow-hidden min-h-screen">
-			<div class="w-full flex flex-col items-center mb-64 text-center">
-				<h2 class="font-bodoni text-7xl md:text-[10rem] leading-[0.8] titulo-estilo-apple font-extrabold mb-12 tracking-tighter">
-					<span class="highlight-word">Media</span> Lab
-				</h2>
-				<div class="w-24 h-px bg-highlight/30 mb-12"></div>
-				<p class="font-inter text-[10px] tracking-[0.8em] uppercase opacity-40">Exploración de Nichos</p>
-			</div>
+		<section id="media" class="px-6 md:px-16 bg-bg relative overflow-hidden">
 
 			<!-- Media Lab Category Bentos -->
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
