@@ -262,17 +262,18 @@
 
   /* ══════════════════════════════════════════════════════════════════════════
      SISTEMA DE PROPORCIONES INMERSIVAS Y PROTECCIÓN DE CABEZAS / BUSTOS
-     Ecosistema TGP: Panorámica Tectónica (19:10) vs Busto Monumental (16:10)
+     Ecosistema TGP: Univisium (2:1 / 4:3 móvil) vs Busto Monumental (16:10)
      ══════════════════════════════════════════════════════════════════════════ */
 
-  /* Variante 1: Panorámica Tectónica (IMAX Digital 19:10) - Paisajes, horizontes, georeferencias */
+  /* Variante 1: Univisium Master (2:1 / 18:9) - Franjas maestras, crónicas, georreferencias */
   .tgp-hero-card,
   .tgp-hero-card.panoramico,
   .tgp-card-panoramico,
   .cinemascope-card,
   .cartel-univisium {
-    aspect-ratio: 19 / 10;
-    max-height: 640px;
+    aspect-ratio: 2 / 1;
+    min-height: 420px;
+    max-height: 76vh;
     position: relative;
     overflow: hidden;
     border-radius: 2.25rem;
@@ -287,7 +288,8 @@
   .cinemascope-card.monumental,
   .cinemascope-card.busto {
     aspect-ratio: 16 / 10;
-    max-height: 760px;
+    min-height: 460px;
+    max-height: 82vh;
   }
 
   .tgp-hero-card:hover,
@@ -297,16 +299,25 @@
     box-shadow: 0 35px 90px -20px rgba(0, 0, 0, 0.9), 0 0 40px rgba(201, 169, 110, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
-  @media (max-width: 768px) {
+  /* Adaptación Móvil de Oro: 4:3 en pantallas menores a 640px para evitar tarjetas achatadas */
+  @media (max-width: 640px) {
     .tgp-hero-card,
     .tgp-hero-card.panoramico,
     .tgp-card-panoramico,
-    .tgp-hero-card.monumental,
-    .tgp-card-monumental,
     .cinemascope-card,
     .cartel-univisium {
-      aspect-ratio: auto;
-      min-height: 520px;
+      aspect-ratio: 4 / 3;
+      min-height: 400px;
+      max-height: none;
+    }
+
+    .tgp-hero-card.monumental,
+    .tgp-card-monumental,
+    .cinemascope-card.monumental,
+    .cinemascope-card.busto {
+      aspect-ratio: 4 / 3;
+      min-height: 440px;
+      max-height: none;
     }
   }
 
