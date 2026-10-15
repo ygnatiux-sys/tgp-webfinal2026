@@ -1,12 +1,25 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Opción 1: Archivo Cinematográfico
+   ========================================================================== */
+:root {
+  --main-bg: #16161a;
+  --card-bg: #23232a;
+  --text-primary: #eae6df;   /* Blanco pergamino / marfil suave */
+  --text-secondary: #a5a19a; /* Gris arena atenuado */
+}
+
 @theme {
   --font-bodoni: "Bodoni Moda", serif;
   --font-inter: "Inter", sans-serif;
   --font-outfit: "Outfit", sans-serif;
   
-  --color-bg: #11141c;
-  --color-primary: #d5d5d5;
+  --color-main-bg: #16161a;
+  --color-card-bg: #23232a;
+  --color-bg: #16161a;
+  --color-primary: #eae6df;
+  --color-secondary: #a5a19a;
   --color-highlight: #fdfbf7;
   --color-border: #2a2e3d;
 
@@ -23,8 +36,8 @@
 
 @layer base {
   html, body {
-    background-color: var(--color-bg, #11141c);
-    color: var(--color-primary, #d5d5d5);
+    background-color: var(--main-bg, #16161a);
+    color: var(--text-primary, #eae6df);
     @apply font-inter antialiased;
     color-scheme: dark;
     scroll-behavior: smooth;
