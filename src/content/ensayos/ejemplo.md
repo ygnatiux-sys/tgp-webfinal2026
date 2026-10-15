@@ -1,4 +1,5 @@
 ---
+draft: true
 title: "Ensayo de prueba"
 abstract: "Este es un ensayo de prueba para inicializar la colección."
 date: "2026-08-18"
