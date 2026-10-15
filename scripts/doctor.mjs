@@ -15,9 +15,11 @@ console.log('============================================================\n');
 
 let issues = [];
 
-// 1. CHEQUEO DE SEGURIDAD: Archivos de Desk protegidos
+// 1. CHEQUEO DE SEGURIDAD: Archivos de Desk y Secretos Protegidos
 try {
-  const trackedForbidden = execSync('git ls-files .env .history scratch *.bak extra-kelvin *.ps1 scripts/test-*', { 
+  // A. Archivos y carpetas prohibidas que nunca deben ser rastreados por Git
+  const forbiddenPatterns = '.env .env.local .env.production .history scratch *.bak extra-kelvin *.ps1 scripts/test-* *.key *.pem *.secret scripts/*-report.json';
+  const trackedForbidden = execSync(`git ls-files ${forbiddenPatterns}`, { 
     cwd: ROOT_DIR,
     stdio: ['pipe', 'pipe', 'ignore'] 
   }).toString().trim();
@@ -26,15 +28,46 @@ try {
     const files = trackedForbidden.split('\n').map(f => f.trim()).filter(Boolean);
     issues.push({
       tipo: 'SEGURIDAD_DESK_FILTRADO',
-      mensaje: 'Archivos locales de Desk detectados en el seguimiento de Git',
+      mensaje: 'Archivos locales o de seguridad detectados en el seguimiento de Git',
       archivos: files,
       solucion: 'Ejecutar git rm --cached -r <archivo> y verificar .gitignore'
     });
-    console.log('❌ [SEGURIDAD] Archivos de Desk rastreados en Git (deben ser locales):');
+    console.log('❌ [SEGURIDAD] Archivos prohibidos rastreados en Git (deben ser locales):');
     files.forEach(f => console.log(`   - ${f}`));
     console.log('');
   } else {
-    console.log('🔒 [SEGURIDAD] .env, .history, scratch y backups están 100% protegidos y locales.');
+    console.log('🔒 [SEGURIDAD] .env, .history, scratch, scripts de test y backups están 100% protegidos y locales.');
+  }
+
+  // B. Escaneo anti-fugas de secretos en archivos rastreados
+  const trackedCodeFiles = execSync('git ls-files src scripts', {
+    cwd: ROOT_DIR,
+    stdio: ['pipe', 'pipe', 'ignore']
+  }).toString().trim().split('\n').map(f => f.trim()).filter(Boolean);
+
+  const secretRegexes = [
+    { name: 'Cloudflare API Token', regex: /cfut_[a-zA-Z0-9_-]{30,}/ },
+    { name: 'Google API Key', regex: /AIza[0-9A-Za-z-_]{35}/ },
+    { name: 'Hardcoded PIN', regex: /VAULT_PIN\s*=\s*['"]?\d{4}['"]?/ },
+    { name: 'Private Key', regex: /-----BEGIN (RSA|EC|PRIVATE) KEY-----/ }
+  ];
+
+  for (const relPath of trackedCodeFiles) {
+    const fullPath = path.join(ROOT_DIR, relPath);
+    if (!fs.existsSync(fullPath)) continue;
+    const content = fs.readFileSync(fullPath, 'utf8');
+
+    for (const { name, regex } of secretRegexes) {
+      if (regex.test(content)) {
+        issues.push({
+          tipo: 'SECRETO_HARDCODEADO',
+          archivo: relPath,
+          mensaje: `Posible secreto expuesto (${name}) en archivo rastreado`,
+          solucion: 'Mover la clave o token a .env y leer desde process.env'
+        });
+        console.log(`🚨 [SEGURIDAD CRÍTICA] Secreto detectado (${name}) en: ${relPath}`);
+      }
+    }
   }
 } catch (e) {
   // git no disponible o no repo

@@ -13,6 +13,10 @@ function run(cmd) {
 try {
   console.log(`\n🚀 Iniciando sincronización para [${SUBDOMINIO}]...\n`);
   
+  // Guardián de Seguridad: Ejecutar Doctor antes de tocar Git
+  console.log('🩺 Verificando integridad del repositorio con Doctor...');
+  run('node scripts/doctor.mjs');
+
   run(`git pull origin ${BRANCH}`);
   run('git add .');
   

@@ -334,7 +334,7 @@
       title: title,
       subtitle: resJson.subtitulo || 'Edición Forjada por TGP Mind',
       excerpt: resJson.excerpt || '',
-      heroUrl: resJson.heroUrl || (resJson.galeria?.slider?.[0]?.url) || '/magazine-hero-gobekli.jpg',
+      heroUrl: resJson.heroUrl || (resJson.galeria?.slider?.[0]?.url) || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
       category: resJson.category || 'TGP Mind · En Vivo',
       date: resJson.date || new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
       folios: (resJson.galeria?.slider?.length || 0) + 1,

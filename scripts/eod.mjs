@@ -42,13 +42,16 @@ function runStep(title, scriptPath) {
 }
 
 // 1. Ejecución Escalonada: Sanear primero para corregir tags y formatos
-runStep('1/3 Sanear Contenido & Sintaxis MDX', path.join(__dirname, 'sanear.mjs'));
+runStep('1/4 Sanear Contenido & Sintaxis MDX', path.join(__dirname, 'sanear.mjs'));
 
-// 2. Ejecución Escalonada: Doctor para auditar integridad y seguridad de Desk
-runStep('2/3 Doctor: Auditoría de Imágenes, Assets & Seguridad', path.join(__dirname, 'doctor.mjs'));
+// 2. Ejecución Escalonada: Auto-Vault R2 para subir assets locales y transmutar Wikimedia
+runStep('2/4 Auto-Vault R2: Subida y Transmutación a Cloudflare R2', path.join(__dirname, 'auto-r2-vault.mjs'));
 
-// 3. Ejecución Escalonada: Git Sync a Main
-runStep('3/3 Git Sync: Commit Seguro y Push a Cloudflare', path.join(__dirname, 'sync.mjs'));
+// 3. Ejecución Escalonada: Doctor para auditar integridad y seguridad de Desk
+runStep('3/4 Doctor: Auditoría de Integridad, Secretos & Seguridad', path.join(__dirname, 'doctor.mjs'));
+
+// 4. Ejecución Escalonada: Git Sync a Main
+runStep('4/4 Git Sync: Commit Seguro y Push a Cloudflare', path.join(__dirname, 'sync.mjs'));
 
 console.log('\n╔══════════════════════════════════════════════════════════╗');
 console.log('║  🎉 CIERRE DE JORNADA EOD COMPLETADO CON ÉXITO           ║');

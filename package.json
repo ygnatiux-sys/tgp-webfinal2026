@@ -13,6 +13,7 @@
     "doctor": "node scripts/doctor.mjs",
     "sanear": "node scripts/sanear.mjs",
     "sync": "node scripts/sync.mjs",
+    "vault:r2": "node scripts/auto-r2-vault.mjs",
     "eod": "node scripts/eod.mjs",
     "generate-types": "wrangler types"
   },

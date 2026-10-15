@@ -19,7 +19,7 @@
       title: 'Göbekli Tepe',
       subtitle: 'El santuario antes del tiempo',
       excerpt: 'Doce mil años antes de los primeros faraones, manos anónimas esculpieron pilares de caliza de seis toneladas en las colinas de Anatolia. La evidencia de que la religión antecede a la agricultura.',
-      heroUrl: '/magazine-hero-gobekli.jpg',
+      heroUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
       category: 'Arqueología Cognitiva',
       date: '3 sept 2026',
       folios: 3,
@@ -72,7 +72,7 @@
       title: 'Monolito Antropomorfo Recinto C',
       description: 'Pilar calizo de 5 metros con relieve dorsal y cinturón ceremonial. Transmutado a WebP y preservado en Cloudflare R2.',
       category: 'Bóveda D1 · Artefacto',
-      imageUrl: '/magazine-hero-gobekli.jpg',
+      imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
       date: '3 sept 2026',
       tags: ['megalitismo', 'anatolia', 'webp'],
       source: 'd1'
@@ -92,7 +92,7 @@
       title: 'Relieve Zoomorfo del Leopardo',
       description: 'Pilar con grabado zoomorfo de leopardo y relieves de fauna pleistocénica. Indexado en D1.',
       category: 'Bóveda D1 · Artefacto',
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/G%C3%B6bekli_Tepe_Birthing_Woman_in_Leopard_Pillar_Building.jpg',
+      imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792044288450-2fe181a6.webp',
       date: '3 sept 2026',
       tags: ['simbolismo', 'chamanismo'],
       source: 'd1'
@@ -133,7 +133,7 @@
               title: lObj.titulo,
               subtitle: lObj.subtitulo || 'Edición Forjada por TGP Mind',
               excerpt: lObj.excerpt || '',
-              heroUrl: lObj.heroUrl || (lObj.galeria?.slider?.[0]?.url) || '/magazine-hero-gobekli.jpg',
+              heroUrl: lObj.heroUrl || (lObj.galeria?.slider?.[0]?.url) || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
               category: lObj.category || 'TGP Mind · En Vivo',
               date: lObj.date || 'Reciente',
               folios: (lObj.galeria?.slider?.length || 0) + 1,
@@ -938,7 +938,7 @@
               <!-- 1. Fondo Cinemático Panorámico Full-Bleed Limpio y Brillante (Sin Scrims) -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
-                  src={item.imageUrl || '/magazine-hero-gobekli.jpg'}
+                  src={item.imageUrl || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp'}
                   alt={item.title}
                   class="w-full h-full object-cover object-[center_35%] filter brightness-100 contrast-[1.04] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform"
                   loading="lazy"
