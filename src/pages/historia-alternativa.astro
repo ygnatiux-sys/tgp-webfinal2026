@@ -18,6 +18,18 @@ const sanitizeSnippet = (text: string) => {
 // Casos de Investigación de Historia Alternativa
 const casosAlternativos = [
   {
+    id: 'vinca-belo-brdo',
+    title: 'El Tel y la Sombra: Belo Brdo',
+    subtitle: 'La Cultura Vinča y el Enigma de Tărtăria',
+    category: 'Proto-Escritura & Neolítico',
+    date: '5.700–4.500 a.C.',
+    era: 'Calcolítico Balcánico',
+    imageUrl: '/vinca-belo-brdo.jpg',
+    excerpt: '### Diez metros de estratigrafía en las riberas del Danubio revelan la metalurgia de cobre más antigua del mundo y signos pre-sumerios que fracturan la cronología oficial.',
+    badge: 'Proto-Escritura Litúrgica',
+    url: '/ensayos/el-tel-y-la-sombra-belo-brdo'
+  },
+  {
     id: 'younger-dryas',
     title: 'El Cataclismo del Younger Dryas',
     subtitle: 'La Hipótesis del Impacto Cósmico',
@@ -101,33 +113,139 @@ const casosAlternativos = [
   <Navbar />
 
   <main class="relative z-10 overflow-x-hidden pt-24 md:pt-32">
-    <!-- ENCABEZADO HERO DE LA SECCIÓN (HEREDADO DE ARCHIVO) -->
-    <section class="relative px-6 md:px-16 max-w-7xl mx-auto text-center mb-10">
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         HERO CINEMÁTICO UNIVISIUM DE APPLE (2:1 / 18:9)
+         - Inicia la página directamente con la escala Univisium de Apple
+         - Dentro de la imagen: Presentación cinemática H1/H2 con GSAP Timeline
+         - Fades cinemáticos, blur reveal y movimientos de título impresionantes
+         - CTA destacado: > VER DOSSIER ARQUEOLÓGICO >
+    ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         HERO CINEMÁTICO UNIVISIUM DE APPLE (2:1 / 18:9) — INMERSIÓN TOTAL
+         - Sin scrims ni máscaras oclusivas (solo viñeta perimetral anti-costuras)
+         - Mayor amplitud horizontal (max-w-[1680px]) y profundidad vertical
+         - Encuadre óptico preciso (object-[center_36%]) que realza el Danubio y el tel
+         - Tipografía inline flotante con sombras nítidas y CTA > VER DOSSIER >
+    ═══════════════════════════════════════════════════════════════════════ -->
+    <section id="univisium-hero-section" class="relative px-2 sm:px-5 md:px-8 lg:px-12 w-full max-w-[1680px] mx-auto pt-1 pb-16">
+      <div 
+        id="univisium-billboard"
+        class="cartel-univisium w-full min-h-[580px] sm:min-h-[660px] md:min-h-[720px] lg:min-h-[780px] xl:min-h-[820px] bg-bg flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 xl:p-20 group relative isolate rounded-[2.5rem] shadow-[0_40px_120px_rgba(0,0,0,0.95)] border border-white/15 overflow-hidden"
+      >
+        <!-- Fondo Fotográfico Cinemático Limpio con GSAP Parallax -->
+        <div class="absolute inset-0 -z-10 overflow-hidden">
+          <img
+            id="univisium-bg-img"
+            src="/vinca-belo-brdo.jpg"
+            alt="Belo Brdo, Cultura Vinča - Escala Univisium"
+            class="w-full h-full object-cover object-[center_36%] filter contrast-105 saturate-105 will-change-transform"
+          />
+          <!-- 1. ÚNICA Viñeta Perimetral: Suaviza los bordes para eliminar costuras sin oscurecer la foto -->
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_58%,rgba(17,20,28,0.78)_100%)] pointer-events-none"></div>
+          <!-- 2. Sutil degradado inferior exclusivo para fijación del CTA -->
+          <div class="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-bg/95 via-bg/40 to-transparent pointer-events-none"></div>
+          <!-- 3. Remate interno sutil de borde de cristal -->
+          <div class="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/10 pointer-events-none"></div>
+        </div>
+
+        <!-- Badges Superiores del Cartel Univisium (Animados por GSAP) -->
+        <div class="univisium-anim-elem flex items-center justify-between w-full z-10 opacity-0">
+          <div class="flex items-center gap-2.5 px-4 py-2 rounded-full bg-black/60 border border-vault-accent/40 backdrop-blur-md shadow-xl">
+            <span class="w-2 h-2 rounded-full bg-vault-accent animate-pulse"></span>
+            <span class="text-[9px] sm:text-[10px] font-mono tracking-[0.28em] uppercase text-vault-accent font-semibold">
+              ✦ Formato Univisium 2.00:1 · Registro Arqueológico
+            </span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="px-4 py-1.5 rounded-full bg-black/50 border border-white/15 text-[9px] sm:text-[10px] font-mono tracking-widest text-highlight uppercase font-medium backdrop-blur-md shadow-lg">
+              Belo Brdo · c. 5700–4500 a.C.
+            </span>
+            <span class="text-[10px] font-mono text-primary/60 uppercase tracking-widest hidden md:inline-block bg-black/40 px-3 py-1 rounded-full border border-white/10 backdrop-blur-xs">
+              18:9 Apple Master
+            </span>
+          </div>
+        </div>
+
+        <!-- Contenido Central / Inferior del Cartel (Animación Cinematográfica H1 / H2) -->
+        <div class="my-auto py-6 sm:py-8 z-10 max-w-5xl">
+          <!-- Volanta inline con cápsula de vidrio -->
+          <div class="univisium-anim-elem opacity-0 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/65 border border-vault-accent/40 backdrop-blur-md text-[10px] sm:text-[11px] font-mono tracking-[0.4em] uppercase text-vault-accent font-bold mb-4 shadow-lg">
+            <span>◈</span> CULTURA VINČA · PRIMERA METALURGIA DEL VIEJO MUNDO
+          </div>
+
+          <!-- H1 Monumental Cinematográfico con Sombras Nítidas (Legibilidad Pura sin Scrim) -->
+          <h1 class="univisium-anim-elem opacity-0 font-bodoni font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-[5.4vw] leading-[0.92] tracking-tighter text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)] drop-shadow-[0_1px_4px_rgba(0,0,0,1)] mb-4">
+            El Tel y la Sombra: <span class="highlight-word italic font-light font-bodoni text-vault-accent drop-shadow-[0_0_30px_rgba(201,169,110,0.5)]">Belo Brdo</span>.
+          </h1>
+
+          <!-- H2 Exegético Cinematográfico -->
+          <h2 class="univisium-anim-elem opacity-0 font-outfit font-normal text-base sm:text-xl md:text-2xl text-white/95 tracking-wide max-w-3xl leading-relaxed mb-5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+            Mucho antes de Mesopotamia, el fuego domesticado y los signos sagrados fundaron en las riberas del Danubio una civilización que fractura la cronología oficial.
+          </h2>
+
+          <!-- Cita histórica de Vasić (1908) -->
+          <blockquote class="univisium-anim-elem opacity-0 hidden sm:block font-bodoni italic text-sm md:text-base text-primary/85 border-l-2 border-vault-accent/80 pl-4 py-2 max-w-2xl bg-black/50 backdrop-blur-md rounded-r-2xl mb-2 shadow-lg">
+            «Diez metros de estratigrafía en Belo Brdo nos hablan no de una aldea efímera, sino de una metrópolis de la prehistoria.»
+          </blockquote>
+        </div>
+
+        <!-- Pie del Cartel Univisium: > CTA VER DOSSIER > -->
+        <div class="univisium-anim-elem opacity-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 pt-4 border-t border-white/15 z-10">
+          <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+            <!-- CTA PRINCIPAL: > VER DOSSIER > -->
+            <a
+              href="/ensayos/el-tel-y-la-sombra-belo-brdo"
+              class="cta-univisium-dossier inline-flex items-center gap-3 px-8 py-4 rounded-full bg-vault-accent text-black hover:bg-highlight hover:scale-105 transition-all duration-300 text-xs sm:text-sm font-mono uppercase tracking-[0.25em] font-black shadow-[0_0_40px_rgba(201,169,110,0.5)] group/btn cursor-pointer"
+            >
+              <span>Ver Dossier Arqueológico</span>
+              <span class="text-base font-black group-hover/btn:translate-x-1.5 transition-transform duration-300">❯</span>
+            </a>
+
+            <!-- CTA SECUNDARIO: Explorar Casos Alternativos -->
+            <a
+              href="#grid-editorial"
+              class="inline-flex items-center gap-2 px-6 py-4 rounded-full bg-black/60 hover:bg-vault-accent/20 border border-white/20 hover:border-vault-accent/60 text-white hover:text-vault-accent transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-medium backdrop-blur-md cursor-pointer shadow-lg"
+            >
+              <span>Explorar Dossier de Casos</span>
+              <span class="text-xs">↓</span>
+            </a>
+          </div>
+
+          <span class="text-[10px] font-mono text-primary/60 uppercase tracking-[0.25em] bg-black/40 px-3.5 py-1.5 rounded-full border border-white/10 backdrop-blur-xs hidden lg:inline-block">
+            Investigación Primaria · The Great Puzzle Vault
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSICIÓN EDITORIAL Y FILTROS DE SECCIÓN -->
+    <section class="relative px-6 md:px-16 max-w-7xl mx-auto text-center mb-14">
       <div class="w-full flex flex-col items-center">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-vault-accent/30 bg-vault-accent/5 backdrop-blur-md mb-6">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-vault-accent/30 bg-vault-accent/5 backdrop-blur-md mb-4">
           <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
           <span class="text-[10px] uppercase font-mono tracking-[0.35em] text-vault-accent font-medium">
             The Great Puzzle Project · Solapa Historia Alternativa
           </span>
         </div>
 
-        <h1 class="font-bodoni text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] font-extrabold tracking-tighter titulo-estilo-apple mb-8">
-          Historia <span class="highlight-word italic font-light font-bodoni text-vault-accent">Alternativa</span>
-        </h1>
+        <h3 class="font-bodoni text-3xl sm:text-5xl md:text-6xl leading-[0.95] font-extrabold tracking-tighter titulo-estilo-apple mb-4">
+          Paradigmas <span class="highlight-word italic font-light font-bodoni text-vault-accent">Disidentes</span>
+        </h3>
 
-        <div class="w-24 h-px bg-highlight/30 mb-8"></div>
+        <div class="w-20 h-px bg-highlight/30 mb-6"></div>
 
-        <p class="font-inter font-light text-sm md:text-base tracking-[0.2em] uppercase text-fade-gradient max-w-3xl leading-relaxed mb-6">
-          Cartografía de paradigmas disidentes, arqueología cognitiva y las anomalías no resueltas de la cronología oficial.
+        <p class="font-inter font-light text-xs md:text-sm tracking-[0.2em] uppercase text-fade-gradient max-w-2xl leading-relaxed mb-6">
+          Cartografía de arqueología cognitiva, anomalías de la cronología oficial y archivos desclasificados.
         </p>
 
-        <div class="flex flex-wrap items-center justify-center gap-4">
+        <div class="flex flex-wrap items-center justify-center gap-3">
           <a
             href="/archivo"
             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-vault-accent/40 bg-vault-accent/10 hover:bg-vault-accent hover:text-black transition-all text-xs font-mono uppercase tracking-[0.2em] font-semibold text-vault-accent shadow-[0_0_20px_rgba(201,169,110,0.15)] group cursor-pointer"
           >
             <span class="w-1.5 h-1.5 rounded-full bg-vault-accent group-hover:bg-black animate-pulse"></span>
-            <span>◈ Explorar Archivo & Magazines</span>
+            <span>◈ Explorar Archivo General</span>
             <span class="text-sm group-hover:translate-x-0.5 transition-transform">→</span>
           </a>
 
@@ -137,86 +255,6 @@ const casosAlternativos = [
           >
             <span>Volver al Home</span>
           </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         CARTEL PRINCIPAL EN TAMAÑO UNIVISIUM DE APPLE (2:1)
-         - Proporción Cinematográfica 2:1 Univisium
-         - Estilo Billboard Premium Apple
-         - Acabado Bento Obsidian con lens glows y tipografía Bodoni / Outfit
-    ═══════════════════════════════════════════════════════════════════════ -->
-    <section class="relative px-4 sm:px-6 md:px-16 max-w-7xl mx-auto mb-24">
-      <div class="cartel-univisium w-full bg-bg flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 group">
-        <!-- Fondo Fotográfico Cinemático con Gradiente de Inmersión Apple -->
-        <div class="absolute inset-0 -z-10 overflow-hidden">
-          <img
-            src="/magazine-hero-gobekli.jpg"
-            alt="Göbekli Tepe - Cartel Univisium"
-            class="w-full h-full object-cover opacity-40 group-hover:scale-105 group-hover:opacity-55 transition-all duration-1000 filter contrast-125"
-          />
-          <div class="absolute inset-0 bg-linear-to-t from-bg via-bg/75 to-bg/30"></div>
-          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,169,110,0.25)_0%,transparent_60%)] pointer-events-none"></div>
-        </div>
-
-        <!-- Badges Superiores del Cartel Univisium -->
-        <div class="flex items-center justify-between w-full z-10">
-          <div class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/70 border border-vault-accent/40 backdrop-blur-md">
-            <span class="w-2 h-2 rounded-full bg-vault-accent animate-pulse"></span>
-            <span class="text-[9px] sm:text-[10px] font-mono tracking-[0.25em] uppercase text-vault-accent font-semibold">
-              ✦ Cartel Univisium 2.00:1 · Expedición Anatolia
-            </span>
-          </div>
-
-          <div class="flex items-center gap-3">
-            <span class="px-3 py-1 rounded-full bg-black/60 border border-white/10 text-[9px] font-mono tracking-widest text-highlight/80 uppercase font-medium backdrop-blur-md">
-              10.000 a.C. · Oopart
-            </span>
-            <span class="text-[10px] font-mono text-primary/40 uppercase tracking-widest hidden md:inline-block">
-              Apple Cinematic Ratio
-            </span>
-          </div>
-        </div>
-
-        <!-- Contenido Central del Cartel Univisium -->
-        <div class="my-auto py-6 sm:py-8 z-10 max-w-4xl">
-          <div class="inline-flex items-center gap-2 text-[10px] sm:text-[11px] font-mono tracking-[0.35em] uppercase text-vault-accent font-semibold mb-3">
-            <span>◈</span> Documento de Investigación Primario
-          </div>
-
-          <h2 class="font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-none tracking-tighter titulo-estilo-apple mb-4">
-            La Civilización Olvidada del <span class="highlight-word italic font-light font-bodoni text-vault-accent">Younger Dryas</span>.
-          </h2>
-
-          <p class="font-outfit font-light text-base sm:text-xl md:text-2xl text-primary/85 tracking-wide max-w-3xl leading-relaxed">
-            Monolitos astronómicos esculpidos milenios antes de la invención de la rueda. La evidencia geológica que fractura el relato lineal del progreso humano.
-          </p>
-        </div>
-
-        <!-- Pie del Cartel Univisium -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-white/10 z-10">
-          <div class="flex flex-wrap items-center gap-3 sm:gap-4">
-            <a
-              href="/magazine/gobekli-tepe"
-              class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-vault-accent text-black hover:bg-highlight transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-bold shadow-[0_0_25px_rgba(201,169,110,0.3)] group/btn cursor-pointer"
-            >
-              <span>Abrir Revista Inmersiva 60/40</span>
-              <span class="group-hover/btn:translate-x-1 transition-transform">↗</span>
-            </a>
-
-            <a
-              href="/tesis-03"
-              class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/5 hover:bg-vault-accent/15 border border-white/15 hover:border-vault-accent/50 text-highlight hover:text-vault-accent transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] font-medium backdrop-blur-md cursor-pointer"
-            >
-              <span>Leer Tesis III: Heurística Alterna</span>
-              <span>→</span>
-            </a>
-          </div>
-
-          <span class="text-[10px] font-mono text-primary/40 uppercase tracking-[0.2em]">
-            Curaduría TGP · Bóveda Digital
-          </span>
         </div>
       </div>
     </section>
@@ -233,7 +271,7 @@ const casosAlternativos = [
          - <img>: w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-105
          - Sanitización de Markdown en descripciones con line-clamp-2
     ═══════════════════════════════════════════════════════════════════════ -->
-    <section class="relative px-6 md:px-16 max-w-7xl mx-auto pb-32">
+    <section id="grid-editorial" class="relative px-6 md:px-16 max-w-7xl mx-auto pb-32">
       <div class="flex items-center justify-between mb-12">
         <div>
           <div class="flex items-center gap-2 text-[10px] font-mono tracking-[0.3em] uppercase text-vault-accent">
@@ -379,3 +417,83 @@ const casosAlternativos = [
     }
   }
 </style>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     GSAP TIMELINE CINEMÁTICO: REVELACIÓN UNIVISIUM (2:1) APPLE
+     - Fades cinematográficos escalonados con easing natural
+     - Reveal gradual de H1 / H2 con filter blur
+     - Parallax y zoom-in lento de la imagen arqueológica del Danubio
+     - Glow / hover interaction en el botón > VER DOSSIER >
+═══════════════════════════════════════════════════════════════════════ -->
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const initUnivisiumHero = () => {
+    const heroSection = document.getElementById('univisium-hero-section');
+    const bgImg = document.getElementById('univisium-bg-img');
+    const animElems = gsap.utils.toArray<HTMLElement>('.univisium-anim-elem');
+
+    if (!heroSection || animElems.length === 0) return;
+
+    // Timeline principal de revelación cinematográfica
+    const tl = gsap.timeline({
+      defaults: { ease: 'expo.out' },
+      delay: 0.2
+    });
+
+    // 1. Imagen de fondo entra con slow push cinematográfico
+    if (bgImg) {
+      tl.fromTo(
+        bgImg,
+        { scale: 1.14, opacity: 0.3 },
+        { scale: 1, opacity: 0.65, duration: 1.8, ease: 'power2.out' },
+        0
+      );
+    }
+
+    // 2. Fades cinemáticos y movimientos de título impresionantes (H1/H2, badges, CTA)
+    tl.fromTo(
+      animElems,
+      {
+        opacity: 0,
+        y: 45,
+        scale: 0.95,
+        filter: 'blur(10px)'
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: 'blur(0px)',
+        duration: 1.2,
+        stagger: 0.14,
+        ease: 'expo.out'
+      },
+      0.25
+    );
+
+    // 3. Parallax sutil con ScrollTrigger en la imagen
+    if (bgImg) {
+      gsap.to(bgImg, {
+        yPercent: 12,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: heroSection,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initUnivisiumHero);
+  } else {
+    initUnivisiumHero();
+  }
+  document.addEventListener('astro:page-load', initUnivisiumHero);
+</script>
