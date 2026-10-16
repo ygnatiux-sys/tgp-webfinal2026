@@ -559,7 +559,7 @@
   }
 </script>
 
-<div class="w-[96%] max-w-[1540px] mx-auto font-inter text-left">
+<div class="w-full font-inter text-left">
 
   <!-- ── BARRA DE SOLAPAS Y BUSCADOR (DISEÑO EDITORIAL OBSIDIAN) ── -->
   <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 border-b border-white/10 pb-8">
@@ -672,10 +672,10 @@
           {#each filteredMagazines as mag, idx}
             {@const hook = getIntelligentHook(mag)}
             {@const focal = detectFocalPoint(mag)}
-            <!-- ── CARD CINEMASCOPE 84dvh (MUBI × APPLE TV) ── -->
+            <!-- ── CARD CINEMASCOPE 85dvh (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-card-${idx}`}
-              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-[78dvh] sm:min-h-[82dvh] md:min-h-[84dvh] rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-[78dvh] sm:min-h-[82dvh] md:min-h-[85dvh] rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group/cinemascope text-left select-none opacity-100 visible"
             >
               <!-- 1. Fondo Cinemático Panorámico con Foco Protegido -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
@@ -773,10 +773,10 @@
           {#each filteredEnsayos as ensayo, idx}
             {@const hook = getIntelligentHook(ensayo)}
             {@const focal = detectFocalPoint(ensayo)}
-            <!-- ── CARD CINEMASCOPE ENSAYOS 84dvh (MUBI × APPLE TV) ── -->
+            <!-- ── CARD CINEMASCOPE ENSAYOS 85dvh (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-ensayo-${idx}`}
-              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-[78dvh] sm:min-h-[82dvh] md:min-h-[84dvh] rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-[78dvh] sm:min-h-[82dvh] md:min-h-[85dvh] rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group/cinemascope text-left select-none opacity-100 visible"
             >
               <!-- 1. Fondo Cinemático Panorámico con Foco Protegido -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
@@ -873,10 +873,10 @@
           {#each filteredD1 as item, idx}
             {@const hook = getIntelligentHook(item)}
             {@const focal = detectFocalPoint(item)}
-            <!-- ── CARD CINEMASCOPE BÓVEDA D1 84dvh (MUBI × APPLE TV) ── -->
+            <!-- ── CARD CINEMASCOPE BÓVEDA D1 85dvh (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-d1-${idx}`}
-              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-[78dvh] sm:min-h-[82dvh] md:min-h-[84dvh] rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/18 hover:border-vault-success/50 transition-all duration-700 flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-[78dvh] sm:min-h-[82dvh] md:min-h-[85dvh] rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/18 hover:border-vault-success/50 transition-all duration-700 flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group/cinemascope text-left select-none opacity-100 visible"
             >
               <!-- 1. Fondo Cinemático Panorámico con Foco Protegido -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
