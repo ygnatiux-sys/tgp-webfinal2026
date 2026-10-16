@@ -7,6 +7,7 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import ArticleKenBurnsModal from '../../components/ArticleKenBurnsModal';
+import { detectFocalPoint } from '../../lib/focalPointDetector';
 
 export async function getStaticPaths() {
   const ensayos = await getCollection('ensayos', ({ data }) => {
@@ -75,6 +76,22 @@ const allImages: string[] = Array.from(new Set([
 
 const mainImage = allImages[0];
 const secondaryImages = allImages.slice(1);
+
+// Detección automática del punto focal de la imagen para encuadre IMAX
+const focal = detectFocalPoint({
+  title: data.title,
+  imageUrl: mainImage,
+  category: data.category,
+  volanta: data.volanta
+});
+
+// Determinación inteligente de ruta de vuelta
+const isAlternativeCategory = (data.category || '').toLowerCase().includes('alternativa') ||
+  (data.volanta || '').toLowerCase().includes('disidente') ||
+  (data.volanta || '').toLowerCase().includes('megalítico') ||
+  (data.volanta || '').toLowerCase().includes('catastrofismo');
+const backUrl = isAlternativeCategory ? '/historia-alternativa' : '/archivo';
+const backLabel = isAlternativeCategory ? 'Volver a Historia Alternativa' : 'Volver al Archivo';
 ---
 
 <Layout title={`${data.title} | The Great Puzzle Project`}>
@@ -85,16 +102,28 @@ const secondaryImages = allImages.slice(1);
   <Navbar />
 
   <main class="relative z-10 min-h-screen pt-28 md:pt-36 pb-32 px-6 md:px-12">
-    <div class="max-w-6xl mx-auto mb-12 flex justify-between items-center">
-      <a
-        href="/archivo"
-        class="btn-ghost flex items-center gap-2 group"
-      >
-        <span class="group-hover:-translate-x-1 inline-block transition-transform">←</span>
-        <span>Volver al Archivo</span>
-      </a>
+    <!-- NAVEGACIÓN INTELIGENTE DE RETORNO Y BREADCRUMB -->
+    <div class="max-w-6xl mx-auto mb-10 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <a
+          href={backUrl}
+          class="btn-ghost flex items-center gap-2 group text-xs sm:text-sm font-mono tracking-wider"
+        >
+          <span class="group-hover:-translate-x-1 inline-block transition-transform text-vault-accent">←</span>
+          <span>{backLabel}</span>
+        </a>
 
-      <div class="flex items-center gap-2 t-telemetry text-vault-accent">
+        {isAlternativeCategory && (
+          <a
+            href="/archivo"
+            class="text-[11px] font-mono tracking-widest uppercase text-white/40 hover:text-white/80 transition-colors hidden sm:inline-block"
+          >
+            · Archivo General
+          </a>
+        )}
+      </div>
+
+      <div class="flex items-center gap-2 t-telemetry text-vault-accent text-xs">
         {data.category && <span>{data.category}</span>}
         {data.powertype && (
           <span class="text-white/40 hidden sm:inline-block">
@@ -127,7 +156,7 @@ const secondaryImages = allImages.slice(1);
         <div class="flex items-center justify-between mb-4 px-2">
           <div class="text-[10px] font-mono tracking-widest text-vault-accent uppercase flex items-center gap-2">
             <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
-            <span>Registro Visual Arqueológico</span>
+            <span>Registro Visual Arqueológico · Escala IMAX 16:10</span>
           </div>
 
           {allImages.length > 0 && (
@@ -141,25 +170,27 @@ const secondaryImages = allImages.slice(1);
           )}
         </div>
 
+        <!-- CONTENEDOR HERO MONUMENTAL (16:10 IMAX MINIMO) -->
         <div
-          class="bento-glass rounded-[2.5rem] p-3 md:p-5 border border-white/10 shadow-2xl overflow-hidden group cursor-pointer relative"
+          class="bento-glass rounded-[2.5rem] p-3 md:p-5 border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.9)] overflow-hidden group cursor-pointer relative"
           data-kenburns-index="0"
-          title="Click para ver en Visor Cinemático Ken Burns (100dvh)"
+          title="Click para expandir en Visor Cinemático Ken Burns (100dvh)"
         >
-          <div class="relative w-full h-[55vh] md:h-[72vh] rounded-4xl overflow-hidden bg-black/40">
+          <div class="relative w-full aspect-16/10 min-h-[460px] md:min-h-[640px] max-h-[82vh] rounded-4xl overflow-hidden bg-black/40">
             <img
               src={mainImage}
               alt={data.title}
-              class="w-full h-full object-cover object-[center_22%] ken-burns-cinematic tgp-img-protected"
+              class={`w-full h-full object-cover ${focal.objectPositionClass} ken-burns-cinematic tgp-img-protected will-change-transform`}
             />
-            <div class="absolute inset-0 bg-linear-to-t from-bg/90 via-transparent to-transparent pointer-events-none"></div>
+            <div class="absolute inset-0 bg-linear-to-t from-bg/95 via-transparent via-55% to-transparent pointer-events-none"></div>
+            <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-4xl pointer-events-none"></div>
 
-            <div class="absolute bottom-6 left-6 z-20 flex items-center gap-2 bg-black/75 backdrop-blur-md px-4 py-2 rounded-full border border-vault-accent/40 text-[10px] font-mono tracking-widest uppercase text-vault-accent group-hover:bg-vault-accent group-hover:text-black transition-all shadow-lg">
+            <div class="absolute bottom-6 left-6 z-20 flex items-center gap-2 bg-black/80 backdrop-blur-md px-4 py-2 rounded-full border border-vault-accent/40 text-[10px] font-mono tracking-widest uppercase text-vault-accent group-hover:bg-vault-accent group-hover:text-black transition-all shadow-lg">
               <span>◈ Click para expandir en Visor Ken Burns (100dvh)</span>
             </div>
 
             {allImages.length > 1 && (
-              <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2 bg-black/70 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-mono tracking-widest uppercase text-white/80">
+              <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2 bg-black/75 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-mono tracking-widest uppercase text-white/80">
                 <span>◈ {allImages.length} Registros Visuales</span>
               </div>
             )}

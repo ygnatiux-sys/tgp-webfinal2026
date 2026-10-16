@@ -26,18 +26,19 @@ const TOP_FOCUS_KEYWORDS = [
   'escultura', 'perfil', 'moctezuma', 'cortez', 'mascara', 'caterpillar',
   'san agustin', 'nestoriano', 'cristo', 'santo', 'virgen', 'corona', 'torre',
   'piramide roja', 'dahshur', 'obelisco', 'masuda', 'iwafune', 'asuka',
-  'pumapunku', 'tiwanaku', 'nan madol', 'longyou', 'cueva'
+  'pumapunku', 'tiwanaku', 'nan madol', 'longyou', 'cueva', 'saflieni', 'hipogeo'
 ];
 
 const BOTTOM_FOCUS_KEYWORDS = [
   'estratigrafia', 'excavacion', 'cimiento', 'suelo', 'base', 'piso', 'subterraneo',
-  'fosa', 'cripta', 'catacumba', 'sedimento', 'trinchera', 'cantera'
+  'fosa', 'cripta', 'catacumba', 'sedimento', 'trinchera', 'cantera', 'black mat'
 ];
 
 const CENTER_FOCUS_KEYWORDS = [
   'valle', 'horizonte', 'panoramica', 'mar', 'costa', 'oceano', 'danubio',
   'vesubio', 'pompeya', 'gobekli', 'dryas', 'cometa', 'impacto', 'cielo',
-  'biblioteca', 'alejandria', 'plano', 'mapa', 'piri reis', 'yonaguni', 'submarino', 'terraza'
+  'biblioteca', 'alejandria', 'plano', 'mapa', 'piri reis', 'yonaguni', 'submarino', 'terraza',
+  'bronce', '1177', 'colapso', 'amnesia'
 ];
 
 /**
