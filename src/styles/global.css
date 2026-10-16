@@ -4,16 +4,16 @@
    Opción 1: Archivo Cinematográfico
    ========================================================================== */
 :root {
-  /* Soft Obsidian / Midnight Charcoal cinematográfico con tinte pizarra (224) */
-  --bg-base: 224 16% 8.5%;          /* #12151d: carbón profundo sin ser negro absoluto */
-  --bg-surface: 224 14% 12%;        /* #191d28: superficies y tarjetas */
-  --bg-surface-elevated: 224 14% 16%;/* #222736: modales y estados elevados */
+  /* Material You Dark / Carbón Grafito con Acabado Brillo Mate */
+  --bg-base: 226 12% 12.5%;           /* #1c1f28: carbón base perceptiblemente más claro, aterciopelado */
+  --bg-surface: 226 11% 17%;           /* #262a36: superficie de tarjetas carbón mate */
+  --bg-surface-elevated: 226 11% 21%;  /* #303544: superficies elevadas / hover */
 
   --main-bg: hsl(var(--bg-base));
   --card-bg: hsl(var(--bg-surface));
-  --text-primary: #f2eee8;          /* Marfil cálido con mayor luminosidad */
-  --text-secondary: #b5b1a8;        /* Tono arena claro (70% luminosidad) */
-  --border-subtle: hsla(224, 20%, 90%, 0.12); /* Separadores y contornos nítidos */
+  --text-primary: #f5f2ec;             /* Marfil puro de alta luminosidad */
+  --text-secondary: #bdb9b0;           /* Arena claro con contraste óptimo */
+  --border-subtle: hsla(226, 16%, 90%, 0.16); /* Contornos y biseles nítidos */
 }
 
 @theme {
@@ -21,13 +21,13 @@
   --font-inter: "Inter", sans-serif;
   --font-outfit: "Outfit", sans-serif;
   
-  --color-main-bg: hsl(224 16% 8.5%);
-  --color-card-bg: hsl(224 14% 12%);
-  --color-bg: hsl(224 16% 8.5%);
-  --color-primary: #f2eee8;
-  --color-secondary: #b5b1a8;
+  --color-main-bg: hsl(226 12% 12.5%);
+  --color-card-bg: hsl(226 11% 17%);
+  --color-bg: hsl(226 12% 12.5%);
+  --color-primary: #f5f2ec;
+  --color-secondary: #bdb9b0;
   --color-highlight: #fdfbf7;
-  --color-border: #2a2e3d;
+  --color-border: #323746;
 
   /* Paleta de Época Vintage / Hemeroteca 70s-80s */
   --color-terracota: #a93f2f;
@@ -177,12 +177,36 @@
     height: 650px;
     background: radial-gradient(
       ellipse 75% 55% at 50% -10%,
-      rgba(201, 169, 110, 0.16) 0%,     /* Resplandor ámbar TGP sutil */
-      rgba(40, 50, 75, 0.18) 45%,      /* Difusión fría nocturna */
+      rgba(201, 169, 110, 0.18) 0%,     /* Resplandor ámbar TGP sutil */
+      rgba(55, 68, 98, 0.22) 45%,      /* Difusión slate nocturna Material You */
       transparent 80%
     );
     pointer-events: none;
     z-index: 0;
+  }
+
+  /* Acabado Brillo Mate Material You: Carbón Grafito con Reflejo Tonal Superior */
+  .bg-carbon-matte {
+    background-color: hsl(var(--bg-surface));
+    background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 28%,
+      rgba(0, 0, 0, 0.16) 100%
+    );
+    box-shadow: 
+      0 20px 48px -12px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .bg-carbon-matte:hover {
+    background-color: hsl(var(--bg-surface-elevated));
+    box-shadow: 
+      0 28px 65px -12px rgba(0, 0, 0, 0.58),
+      0 0 35px rgba(201, 169, 110, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.38),
+      inset 0 0 0 1px rgba(201, 169, 110, 0.4);
   }
 
   .card-lift {
@@ -385,17 +409,17 @@
    ============================================================ */
 
 @theme {
-  /* Superficie y fondos — Coherencia absoluta con Midnight Obsidian (#12151d) */
-  --color-vault-bg:      hsl(224 16% 8.5%);
-  --color-vault-surface: rgba(25, 29, 40, 0.85);
-  --color-vault-raised:  rgba(34, 39, 54, 0.9);
-  --color-vault-border:  rgba(255, 255, 255, 0.12);
-  --color-vault-border-subtle: rgba(255, 255, 255, 0.2);
+  /* Superficie y fondos — Coherencia absoluta con Material You Carbon (#1c1f28 / #262a36) */
+  --color-vault-bg:      hsl(226 12% 12.5%);
+  --color-vault-surface: rgba(38, 42, 54, 0.88);
+  --color-vault-raised:  rgba(48, 53, 68, 0.94);
+  --color-vault-border:  rgba(255, 255, 255, 0.15);
+  --color-vault-border-subtle: rgba(255, 255, 255, 0.24);
 
   /* Tipografía mineral / marfil */
   --color-vault-text:    #fdfbf7;   /* highlight marfil */
-  --color-vault-muted:   #b0abb0;   /* texto secundario refinado con contraste */
-  --color-vault-ghost:   #6b7280;   /* placeholders & counters legibles */
+  --color-vault-muted:   #c2beb6;   /* texto secundario refinado con contraste */
+  --color-vault-ghost:   #798192;   /* placeholders & counters legibles */
 
   /* Acentos */
   --color-vault-accent:  #c9a96e;   /* ámbar arcaico / cobre */

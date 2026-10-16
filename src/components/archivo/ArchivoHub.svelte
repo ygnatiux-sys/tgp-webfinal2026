@@ -572,8 +572,8 @@
         on:click={() => activeTab = 'all'}
         class="px-4 sm:px-5 py-2.5 rounded-full text-xs font-mono uppercase tracking-[0.2em] transition-all duration-300 border flex items-center gap-2
                {activeTab === 'all'
-                 ? 'border-vault-accent bg-vault-accent/20 text-highlight shadow-[0_0_20px_rgba(201,169,110,0.3)] font-bold'
-                 : 'border-white/10 text-white/70 hover:text-white hover:border-white/25 hover:bg-white/5'}"
+                 ? 'border-vault-accent bg-vault-accent/25 text-highlight shadow-[0_0_20px_rgba(201,169,110,0.35)] font-bold'
+                 : 'border-white/15 bg-white/4 text-white/80 hover:text-white hover:border-white/30 hover:bg-white/8 shadow-xs'}"
       >
         <span>Todos</span>
         <span class="px-2 py-0.5 rounded-full text-[10px] bg-white/10 text-white/90">{totalItemsCount}</span>
@@ -586,8 +586,8 @@
         on:click={() => activeTab = 'magazine'}
         class="px-4 sm:px-5 py-2.5 rounded-full text-xs font-mono uppercase tracking-[0.2em] transition-all duration-300 border flex items-center gap-2
                {activeTab === 'magazine'
-                 ? 'border-vault-accent bg-vault-accent/20 text-highlight shadow-[0_0_20px_rgba(201,169,110,0.3)] font-bold'
-                 : 'border-white/10 text-white/70 hover:text-white hover:border-white/25 hover:bg-white/5'}"
+                 ? 'border-vault-accent bg-vault-accent/25 text-highlight shadow-[0_0_20px_rgba(201,169,110,0.35)] font-bold'
+                 : 'border-white/15 bg-white/4 text-white/80 hover:text-white hover:border-white/30 hover:bg-white/8 shadow-xs'}"
       >
         <span>✦ Magazines</span>
         <span class="px-2 py-0.5 rounded-full text-[10px] bg-vault-accent/25 text-vault-accent font-semibold">{filteredMagazines.length}</span>
@@ -600,8 +600,8 @@
         on:click={() => activeTab = 'ensayos'}
         class="px-4 sm:px-5 py-2.5 rounded-full text-xs font-mono uppercase tracking-[0.2em] transition-all duration-300 border flex items-center gap-2
                {activeTab === 'ensayos'
-                 ? 'border-vault-accent bg-vault-accent/20 text-highlight shadow-[0_0_20px_rgba(201,169,110,0.3)] font-bold'
-                 : 'border-white/10 text-white/70 hover:text-white hover:border-white/25 hover:bg-white/5'}"
+                 ? 'border-vault-accent bg-vault-accent/25 text-highlight shadow-[0_0_20px_rgba(201,169,110,0.35)] font-bold'
+                 : 'border-white/15 bg-white/4 text-white/80 hover:text-white hover:border-white/30 hover:bg-white/8 shadow-xs'}"
       >
         <span>✎ Ensayos & Artículos</span>
         <span class="px-2 py-0.5 rounded-full text-[10px] bg-vault-accent/25 text-vault-accent font-semibold">{filteredEnsayos.length}</span>
@@ -614,8 +614,8 @@
         on:click={() => activeTab = 'd1'}
         class="px-4 sm:px-5 py-2.5 rounded-full text-xs font-mono uppercase tracking-[0.2em] transition-all duration-300 border flex items-center gap-2
                {activeTab === 'd1'
-                 ? 'border-vault-accent bg-vault-accent/20 text-highlight shadow-[0_0_20px_rgba(201,169,110,0.3)] font-bold'
-                 : 'border-white/10 text-white/70 hover:text-white hover:border-white/25 hover:bg-white/5'}"
+                 ? 'border-vault-accent bg-vault-accent/25 text-highlight shadow-[0_0_20px_rgba(201,169,110,0.35)] font-bold'
+                 : 'border-white/15 bg-white/4 text-white/80 hover:text-white hover:border-white/30 hover:bg-white/8 shadow-xs'}"
       >
         <span>◈ Bóveda D1 / R2</span>
         <span class="px-2 py-0.5 rounded-full text-[10px] bg-white/10 text-white/90">{filteredD1.length}</span>
@@ -628,7 +628,7 @@
         type="text"
         placeholder="Buscar en el archivo…"
         bind:value={searchQuery}
-        class="w-full bg-white/5 border border-white/15 focus:border-vault-accent text-xs font-inter text-white px-4 py-2.5 rounded-full outline-none transition-all placeholder:text-white/45 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
+        class="w-full bg-white/7 border border-white/18 focus:border-vault-accent text-xs font-inter text-white px-4 py-2.5 rounded-full outline-none transition-all placeholder:text-white/50 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
       />
       {#if searchQuery}
         <button
@@ -673,22 +673,22 @@
             <!-- ── CARD CINEMASCOPE MINIMAL (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-card-${idx}`}
-              class="cinemascope-card relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden bg-[#151822] border border-white/15 hover:border-vault-accent/40 shadow-[0_20px_60px_rgba(0,0,0,0.65)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
             >
               <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={mag.heroUrl}
                   alt={mag.title}
-                  class="w-full h-full object-cover object-[center_22%] filter brightness-[1.03] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
+                  class="w-full h-full object-cover object-[center_22%] filter brightness-[1.04] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
                   loading={idx === 0 ? "eager" : "lazy"}
                 />
 
                 <!-- Degradado cinematográfico aireado: solo oscurece la zona de lectura inferior -->
-                <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/35 via-50% to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/30 via-50% to-transparent pointer-events-none"></div>
 
-                <!-- Marco perimetral sutil -->
-                <div class="absolute inset-0 ring-1 ring-inset ring-white/15 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
+                <!-- Marco perimetral sutil con brillo mate interior -->
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
               </div>
 
               <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
@@ -773,22 +773,22 @@
             <!-- ── CARD CINEMASCOPE MINIMAL ENSAYOS (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-ensayo-${idx}`}
-              class="cinemascope-card relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden bg-[#151822] border border-white/15 hover:border-vault-accent/40 shadow-[0_20px_60px_rgba(0,0,0,0.65)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
             >
               <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={ensayo.imageUrl}
                   alt={ensayo.title}
-                  class="w-full h-full object-cover object-[center_22%] filter brightness-[1.03] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
+                  class="w-full h-full object-cover object-[center_22%] filter brightness-[1.04] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
                   loading="lazy"
                 />
 
                 <!-- Degradado cinematográfico aireado: solo oscurece la zona de lectura inferior -->
-                <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/35 via-50% to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/30 via-50% to-transparent pointer-events-none"></div>
 
-                <!-- Marco perimetral sutil -->
-                <div class="absolute inset-0 ring-1 ring-inset ring-white/15 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
+                <!-- Marco perimetral sutil con brillo mate interior -->
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
               </div>
 
               <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
@@ -872,22 +872,22 @@
             <!-- ── CARD CINEMASCOPE MINIMAL BÓVEDA D1 (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-d1-${idx}`}
-              class="cinemascope-card relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden bg-[#151822] border border-white/15 hover:border-vault-success/40 shadow-[0_20px_60px_rgba(0,0,0,0.65)] transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden border border-white/18 hover:border-vault-success/50 transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
             >
               <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={item.imageUrl || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp'}
                   alt={item.title}
-                  class="w-full h-full object-cover object-[center_22%] filter brightness-[1.03] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
+                  class="w-full h-full object-cover object-[center_22%] filter brightness-[1.04] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
                   loading="lazy"
                 />
 
                 <!-- Degradado cinematográfico aireado: solo oscurece la zona de lectura inferior -->
-                <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/35 via-50% to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/30 via-50% to-transparent pointer-events-none"></div>
 
-                <!-- Marco perimetral sutil -->
-                <div class="absolute inset-0 ring-1 ring-inset ring-white/15 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
+                <!-- Marco perimetral sutil con brillo mate interior -->
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
               </div>
 
               <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
