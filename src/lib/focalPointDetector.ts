@@ -36,7 +36,7 @@ const BOTTOM_FOCUS_KEYWORDS = [
 const CENTER_FOCUS_KEYWORDS = [
   'valle', 'horizonte', 'panoramica', 'mar', 'costa', 'oceano', 'danubio',
   'vesubio', 'pompeya', 'gobekli', 'dryas', 'cometa', 'impacto', 'cielo',
-  'biblioteca', 'alejandria', 'plano', 'mapa', 'piri reis'
+  'biblioteca', 'alejandria', 'plano', 'mapa', 'piri reis', 'yonaguni', 'submarino', 'terraza'
 ];
 
 /**
