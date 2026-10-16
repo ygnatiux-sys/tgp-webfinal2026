@@ -141,7 +141,9 @@ const col3 = cards.slice(6, 9);
                 class="w-full h-full object-cover object-[center_22%] tgp-img-protected select-none group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
               />
-              <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+              <!-- Viñeta mínima inferior solo para contraste del texto -->
+              <div class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent via-30% to-transparent pointer-events-none"></div>
+              <div class="absolute inset-0 ring-1 ring-inset ring-white/12 rounded-2xl pointer-events-none"></div>
 
               <!-- Metadata sutil inferior -->
               <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/80 pointer-events-none z-10">
@@ -170,7 +172,9 @@ const col3 = cards.slice(6, 9);
                 class="w-full h-full object-cover object-[center_22%] tgp-img-protected select-none group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
               />
-              <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+              <!-- Viñeta mínima inferior solo para contraste del texto -->
+              <div class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent via-30% to-transparent pointer-events-none"></div>
+              <div class="absolute inset-0 ring-1 ring-inset ring-white/12 rounded-2xl pointer-events-none"></div>
 
               <!-- Metadata sutil inferior -->
               <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/80 pointer-events-none z-10">
@@ -199,7 +203,9 @@ const col3 = cards.slice(6, 9);
                 class="w-full h-full object-cover object-[center_22%] tgp-img-protected select-none group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
               />
-              <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+              <!-- Viñeta mínima inferior solo para contraste del texto -->
+              <div class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent via-30% to-transparent pointer-events-none"></div>
+              <div class="absolute inset-0 ring-1 ring-inset ring-white/12 rounded-2xl pointer-events-none"></div>
 
               <!-- Metadata sutil inferior -->
               <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/80 pointer-events-none z-10">
@@ -216,10 +222,12 @@ const col3 = cards.slice(6, 9);
       </div>
     </div>
 
-    <!-- 2. MÁSCARA DE FUSIÓN INTEGRADA AL COLOR PRINCIPAL OBSIDIAN (#0e0e12) (z-10) -->
-    <div class="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,#0e0e12_0%,#0e0e12_36%,rgba(14,14,18,0.85)_52%,rgba(14,14,18,0)_76%)]"></div>
-    <!-- Ambient glow sutil dorado de la Bóveda en lugar de terracota marrón (z-10) -->
-    <div class="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_12%_30%,rgba(201,169,110,0.12)_0%,transparent_55%)]"></div>
+    <!-- 2. VIÑETA MÍNIMA PERIMETRAL: limpia y solo disimula costuras de bordes (z-10) -->
+    <div class="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_60%,rgba(7,7,9,0.55)_100%)]"></div>
+    <!-- Gradiente lateral suave solo tras el copy de texto para legibilidad sin oscurecer las cards -->
+    <div class="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(7,7,9,0.85)_0%,rgba(7,7,9,0.5)_28%,transparent_50%)]"></div>
+    <!-- Ambient glow dorado sutil -->
+    <div class="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_12%_30%,rgba(201,169,110,0.08)_0%,transparent_50%)]"></div>
 
     <!-- 3. BLOQUE DE TÍTULO Y CTA A LA IZQUIERDA (z-20) -->
     <div
