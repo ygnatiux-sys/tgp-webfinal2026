@@ -144,32 +144,42 @@ async function buscarOgenerarImagen(termino) {
   }
 
   console.log(`[1/4] 🔍 Rastreando artefactos visuales en Wikimedia Commons para "${termino}"...`);
-  const cleanTerm = termino.split('(')[0].trim();
-  const apiUrl = `https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(cleanTerm)}&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url|size|mime`;
+  const cleanTerm = termino.replace(/[:(].*$/, '').trim();
 
   try {
-    const res = await fetch(apiUrl, {
+    // Motor A: list=search con filtro de mapa de bits para obtener las fotos de mayor resolución
+    const searchUrl = `https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srsearch=${encodeURIComponent(cleanTerm + ' filetype:bitmap')}&srnamespace=6&srlimit=8`;
+    const searchRes = await fetch(searchUrl, {
       headers: { 'User-Agent': 'TGP-Research-Bot/1.0 (contact@thegreatpuzzleproject.com)' }
     });
-    const data = await res.json();
-    const pages = Object.values(data.query?.pages || {});
-    
-    // Filtrar imágenes con calidad y dimensiones razonables
-    const validImages = pages
-      .map(p => ({
-        url: p.imageinfo?.[0]?.url,
-        width: p.imageinfo?.[0]?.width || 0,
-        height: p.imageinfo?.[0]?.height || 0
-      }))
-      .filter(img => img.url && (img.url.endsWith('.jpg') || img.url.endsWith('.png') || img.url.endsWith('.webp') || img.url.endsWith('.jpeg')))
-      .sort((a, b) => (b.width * b.height) - (a.width * a.height)); // ordenar de mayor a menor resolución
+    const searchData = await searchRes.json();
+    const titles = (searchData.query?.search || []).map(s => s.title);
 
-    if (validImages.length > 0) {
-      console.log(`  ✓ Encontradas ${validImages.length} imágenes en Wikimedia Commons.`);
-      console.log(`  ✓ Imagen de mayor resolución seleccionada: ${validImages[0].url} (${validImages[0].width}x${validImages[0].height})`);
-      return validImages[0].url;
+    if (titles.length > 0) {
+      const infoUrl = `https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=url|size|mime&titles=${encodeURIComponent(titles.join('|'))}`;
+      const infoRes = await fetch(infoUrl, {
+        headers: { 'User-Agent': 'TGP-Research-Bot/1.0 (contact@thegreatpuzzleproject.com)' }
+      });
+      const infoData = await infoRes.json();
+      const pages = Object.values(infoData.query?.pages || {});
+
+      const validImages = pages
+        .map(p => ({
+          title: p.title,
+          url: p.imageinfo?.[0]?.url,
+          width: p.imageinfo?.[0]?.width || 0,
+          height: p.imageinfo?.[0]?.height || 0
+        }))
+        .filter(img => img.url && (img.url.endsWith('.jpg') || img.url.endsWith('.png') || img.url.endsWith('.webp') || img.url.endsWith('.jpeg')))
+        .sort((a, b) => (b.width * b.height) - (a.width * a.height)); // ordenar de mayor a menor resolución
+
+      if (validImages.length > 0) {
+        console.log(`  ✓ Encontradas ${validImages.length} imágenes en Wikimedia Commons.`);
+        console.log(`  ✓ Imagen de máxima resolución (Best Image Hero): ${validImages[0].title} [${validImages[0].width}x${validImages[0].height} px]`);
+        return validImages[0].url;
+      }
     } else {
-      console.warn(`  ⚠ Wikimedia Commons no devolvió imágenes válidas para "${cleanTerm}".`);
+      console.warn(`  ⚠ Wikimedia Commons no devolvió archivos en list=search para "${cleanTerm}".`);
     }
   } catch (err) {
     console.warn('  ⚠ Error al buscar en Wikimedia Commons:', err.message);
@@ -281,7 +291,13 @@ Devuelve estrictamente un JSON válido con esta estructura:
 async function guardarPostYVincular(ensayo, primaryImageUrl, secondaryImageUrl) {
   console.log(`[4/4] 📁 Guardando archivo MDX y actualizando dossier en historia-alternativa.astro...`);
   
-  const slug = 'masuda-no-iwafune';
+  const rawSlug = (ensayo.title || topic)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+  const slug = rawSlug.slice(0, 45).replace(/-$/, '');
 
   const galleryList = [primaryImageUrl];
   if (secondaryImageUrl && secondaryImageUrl !== primaryImageUrl) {
@@ -319,9 +335,9 @@ ${ensayo.content}
     id: '${slug}',
     title: '${ensayo.title.replace(/'/g, "\\'")}',
     subtitle: '${(ensayo.subtitle || '').replace(/'/g, "\\'")}',
-    category: '${(ensayo.volanta || 'Arqueología Megalítica Japonesa').replace(/'/g, "\\'")}',
+    category: '${(ensayo.volanta || 'Historia Alternativa').replace(/'/g, "\\'")}',
     date: '${ensayo.date || 'c. 650 d.C.'}',
-    era: '${ensayo.era || 'Período Asuka'}',
+    era: '${ensayo.era || 'Antigüedad Tardía'}',
     imageUrl: '${primaryImageUrl}',
     excerpt: '### ${(ensayo.abstract || '').replace(/'/g, "\\'")}',
     badge: '${ensayo.badge || 'Anomalía Lítica'}',

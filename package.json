@@ -15,6 +15,7 @@
     "sync": "node scripts/sync.mjs",
     "vault:r2": "node scripts/auto-r2-vault.mjs",
     "content": "node scripts/generate-alternative-post.mjs",
+    "content:alt": "node scripts/generate-alternative-post.mjs",
     "eod": "node scripts/eod.mjs",
     "generate-types": "wrangler types"
   },
