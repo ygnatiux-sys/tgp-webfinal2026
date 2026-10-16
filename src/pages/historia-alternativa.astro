@@ -6,6 +6,7 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import { detectFocalPoint } from '../lib/focalPointDetector';
 
 // Sanitizador de texto Markdown crudo para descripciones/extractos
 const sanitizeSnippet = (text: string) => {
@@ -116,21 +117,17 @@ const casosAlternativos = [
     <!-- ═══════════════════════════════════════════════════════════════════════
          HERO CINEMÁTICO UNIVISIUM DE APPLE (2:1 / 18:9)
          - Inicia la página directamente con la escala Univisium de Apple
-         - Dentro de la imagen: Presentación cinemática H1/H2 con GSAP Timeline
-         - Fades cinemáticos, blur reveal y movimientos de título impresionantes
-         - CTA destacado: > VER DOSSIER ARQUEOLÓGICO >
+         - Dentro de la imagen: Presentación cinemática H1/H2 con GSAP Timeline    <!-- ═══════════════════════════════════════════════════════════════════════
+         HERO CINEMÁTICO MONUMENTAL (85dvh) — INMERSIÓN TOTAL DESACOPLADA
+         - W-96% Max-1540px: llega cerca de los bordes con elegancia
+         - Min-h-[82-85dvh]: profundidad vertical cinematográfica
+         - Masa tipográfica empujada abajo (flex-col justify-end pb-16)
+         - 60% superior completamente libre para contemplar el paisaje y el tel
     ═══════════════════════════════════════════════════════════════════════ -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         HERO CINEMÁTICO UNIVISIUM DE APPLE (2:1 / 18:9) — INMERSIÓN TOTAL
-         - Sin scrims ni máscaras oclusivas (solo viñeta perimetral anti-costuras)
-         - Mayor amplitud horizontal (max-w-[1680px]) y profundidad vertical
-         - Encuadre óptico preciso (object-[center_36%]) que realza el Danubio y el tel
-         - Tipografía inline flotante con sombras nítidas y CTA > VER DOSSIER >
-    ═══════════════════════════════════════════════════════════════════════ -->
-    <section id="univisium-hero-section" class="relative px-2 sm:px-5 md:px-8 lg:px-12 w-full max-w-420 mx-auto pt-1 pb-16">
+    <section id="univisium-hero-section" class="relative px-2 sm:px-4 md:px-8 w-[96%] max-w-[1540px] mx-auto pt-1 pb-16">
       <div 
         id="univisium-billboard"
-        class="cartel-univisium w-full min-h-145 sm:min-h-165 md:min-h-180 lg:min-h-195 xl:min-h-205 bg-bg flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 xl:p-20 group relative isolate rounded-[2.5rem] shadow-[0_40px_120px_rgba(0,0,0,0.95)] border border-white/15 overflow-hidden"
+        class="cartel-univisium w-full min-h-[80dvh] md:min-h-[85dvh] bg-carbon-matte flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group relative isolate rounded-[2.5rem] shadow-[0_40px_120px_rgba(0,0,0,0.95)] border border-white/18 overflow-hidden"
       >
         <!-- Fondo Fotográfico Cinemático Limpio con GSAP Parallax -->
         <div class="absolute inset-0 -z-10 overflow-hidden">
@@ -138,18 +135,18 @@ const casosAlternativos = [
             id="univisium-bg-img"
             src="https://storage.thegreatpuzzleproject.com/vault-media/1792044269358-6342485e.webp"
             alt="Belo Brdo, Cultura Vinča - Escala Univisium"
-            class="w-full h-full object-cover object-[center_22%] filter contrast-105 saturate-105 will-change-transform tgp-img-protected"
+            class="w-full h-full object-cover object-[center_26%] filter contrast-105 saturate-105 will-change-transform tgp-img-protected"
           />
           <!-- 1. ÚNICA Viñeta Perimetral: Suaviza los bordes para eliminar costuras sin oscurecer la foto -->
           <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_58%,rgba(17,20,28,0.78)_100%)] pointer-events-none"></div>
-          <!-- 2. Sutil degradado inferior exclusivo para fijación del CTA -->
-          <div class="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-bg/95 via-bg/40 to-transparent pointer-events-none"></div>
+          <!-- 2. Sutil degradado inferior exclusivo para fijación del texto y CTA -->
+          <div class="absolute inset-x-0 bottom-0 h-64 bg-linear-to-t from-black/85 via-black/30 via-45% to-transparent pointer-events-none"></div>
           <!-- 3. Remate interno sutil de borde de cristal -->
-          <div class="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/10 pointer-events-none"></div>
+          <div class="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/15 pointer-events-none"></div>
         </div>
 
-        <!-- Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
-        <div class="univisium-anim-elem flex items-center justify-between w-full z-10 opacity-0 text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/50">
+        <!-- Telemetría Superior MUBI (Anclada al borde superior) -->
+        <div class="univisium-anim-elem absolute top-6 sm:top-8 left-6 sm:left-10 md:left-14 right-6 sm:right-10 md:right-14 flex items-center justify-between z-10 opacity-0 text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/70">
           <span class="flex items-center gap-2">
             <span class="text-vault-accent font-semibold">01</span>
             <span>·</span>
@@ -158,13 +155,13 @@ const casosAlternativos = [
             <span class="hidden sm:inline text-white/50">BELO BRDO</span>
           </span>
 
-          <span class="text-white/40 tracking-widest">5.700–4.500 A.C.</span>
+          <span class="text-white/60 tracking-widest">5.700–4.500 A.C.</span>
         </div>
 
-        <!-- Contenido Central / Inferior del Cartel (Animación Cinematográfica H1 / H2) -->
-        <div class="my-auto py-6 sm:py-8 z-10 max-w-5xl">
+        <!-- Contenido Inferior del Cartel: empujado a la base -->
+        <div class="z-10 max-w-5xl mt-auto">
           <!-- H1 Monumental Cinematográfico con Sombras Nítidas -->
-          <h1 class="univisium-anim-elem opacity-0 font-bodoni font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-[5.4vw] leading-[0.92] tracking-tighter text-white [text-shadow:0_4px_24px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)] mb-4">
+          <h1 class="univisium-anim-elem opacity-0 font-bodoni font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-[5.2vw] leading-[0.92] tracking-tighter text-white [text-shadow:0_4px_24px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)] mb-4">
             El Tel y la Sombra: <span class="italic font-light font-bodoni text-vault-accent drop-shadow-[0_0_30px_rgba(201,169,110,0.5)]">Belo Brdo</span>.
           </h1>
 
@@ -172,14 +169,28 @@ const casosAlternativos = [
           <p class="univisium-anim-elem opacity-0 font-bodoni italic text-base sm:text-xl md:text-2xl text-white/85 tracking-wide max-w-3xl leading-relaxed mb-6 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
             Mucho antes de Mesopotamia, el fuego domesticado y los signos sagrados fundaron en las riberas del Danubio una civilización que fractura la cronología oficial.
           </p>
-        </div>
 
-        <!-- Pie del Cartel Univisium: Botones Apple Glass -->
-        <div class="univisium-anim-elem opacity-0 flex flex-wrap items-center gap-3 sm:gap-4 pt-4 border-t border-white/15 z-10">
-          <a
-            href="/ensayos/el-tel-y-la-sombra-belo-brdo"
-            class="cinema-action-btn inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white backdrop-blur-md text-xs font-mono tracking-[0.25em] uppercase font-bold transition-all duration-300 group cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,255,255,0.35)] hover:scale-[1.02] active:scale-[0.98]"
-          >
+          <!-- Botones Apple Glass -->
+          <div class="univisium-anim-elem opacity-0 flex flex-wrap items-center gap-3 sm:gap-4 pt-2 border-t border-white/15">
+            <a
+              href="/ensayos/el-tel-y-la-sombra-belo-brdo"
+              class="cinema-action-btn inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white backdrop-blur-md text-xs font-mono tracking-[0.25em] uppercase font-bold transition-all duration-300 group cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,255,255,0.35)] hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span>Ver Dossier Arqueológico</span>
+              <span class="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </a>
+
+            <a
+              href="#grid-editorial"
+              class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/5 hover:bg-white/15 text-white/80 hover:text-white border border-white/15 hover:border-white/30 backdrop-blur-md text-xs font-mono tracking-[0.2em] uppercase font-medium transition-all duration-300 cursor-pointer"
+            >
+              <span>Explorar Casos</span>
+              <span class="text-xs">↓</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>       >
             <span>Ver Dossier Arqueológico</span>
             <span class="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
           </a>
@@ -241,12 +252,12 @@ const casosAlternativos = [
          - Títulos monumentales Bodoni Extra Bold y Loglines en Bodoni Italic
          - Botones cápsula Apple Glass interactivos
     ═══════════════════════════════════════════════════════════════════════ -->
-    <section id="grid-editorial" class="relative px-3 sm:px-6 md:px-10 lg:px-12 w-full max-w-[1540px] mx-auto pb-32">
+    <section id="grid-editorial" class="relative px-2 sm:px-4 md:px-8 w-[96%] max-w-[1540px] mx-auto pb-32">
       <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-4">
         <div>
           <div class="flex items-center gap-2 text-[10px] font-mono tracking-[0.35em] uppercase text-vault-accent mb-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-vault-accent"></span>
-            Dossier Estratigráfico · Formato Monumental 16:10
+            <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
+            Dossier Estratigráfico · Formato IMAX Monumental (82dvh)
           </div>
           <h2 class="font-bodoni text-3xl sm:text-4xl md:text-5xl text-highlight font-extrabold tracking-tight">
             Anomalías & <span class="italic text-vault-accent font-light">Enigmas Históricos</span>
@@ -254,36 +265,37 @@ const casosAlternativos = [
         </div>
 
         <span class="text-[11px] font-mono text-white/50 uppercase tracking-widest hidden sm:inline-block">
-          {casosAlternativos.length} Registros Monumentales
+          {casosAlternativos.length} Registros Inmersivos
         </span>
       </div>
 
-      <!-- ── LISTADO CONTINUO 19:10 IMAX (UNO DEBAJO DEL OTRO) ── -->
-      <div class="flex flex-col gap-12 sm:gap-16 lg:gap-20 w-full">
+      <!-- ── LISTADO CONTINUO 82dvh DESACOPLADO (UNO DEBAJO DEL OTRO) ── -->
+      <div class="flex flex-col gap-14 sm:gap-20 lg:gap-24 w-full">
         {casosAlternativos.map((caso, idx) => {
+          const focal = detectFocalPoint(caso);
           return (
             <article
               id={`cinemascope-caso-${idx}`}
-              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-140 sm:min-h-160 md:min-h-175 lg:min-h-190 lg:aspect-16/10 rounded-3xl sm:rounded-4xl overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 group text-left select-none opacity-100 visible"
+              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-[78dvh] sm:min-h-[82dvh] md:min-h-[85dvh] rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group text-left select-none opacity-100 visible"
             >
-              <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
+              <!-- 1. Fondo Cinemático Panorámico con Foco Heurístico Protegido -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={caso.imageUrl}
                   alt={caso.title}
-                  class="w-full h-full object-cover object-[center_22%] filter brightness-[1.03] contrast-[1.02] transition-transform duration-1000 ease-out group-hover:scale-105 will-change-transform tgp-img-protected"
+                  class={`w-full h-full object-cover ${focal.objectPositionClass} filter brightness-[1.03] contrast-[1.02] transition-transform duration-1000 ease-out group-hover:scale-105 will-change-transform tgp-img-protected`}
                   loading={idx === 0 ? "eager" : "lazy"}
                 />
 
-                <!-- Degradado cinematográfico aireado: solo oscurece la base de lectura -->
-                <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 via-45% to-transparent pointer-events-none"></div>
+                <!-- Degradado cinematográfico aireado: 60% superior 100% puro para la imagen -->
+                <div class={`absolute inset-0 ${focal.gradientClass} pointer-events-none`}></div>
 
                 <!-- Marco perimetral sutil con brillo mate -->
-                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-[2.5rem] pointer-events-none"></div>
               </div>
 
-              <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
-              <div class="cinemascope-meta z-10 flex items-center justify-between w-full text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/75">
+              <!-- 2. Telemetría Superior MUBI (Anclada al borde superior) -->
+              <div class="cinemascope-meta absolute top-6 sm:top-8 left-6 sm:left-10 md:left-14 right-6 sm:right-10 md:right-14 z-10 flex items-center justify-between text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/75">
                 <span class="flex items-center gap-2">
                   <span class="text-vault-accent font-semibold">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</span>
                   <span>·</span>
@@ -295,14 +307,14 @@ const casosAlternativos = [
                 <span class="text-white/60 tracking-widest">{caso.date}</span>
               </div>
 
-              <!-- 3. Contenido Inferior Anclado: Título Extra Bold Monumental > Logline > Botón de Cristal -->
-              <div class="cinemascope-content z-10 mt-auto pt-20 max-w-4xl flex flex-col items-start gap-4">
+              <!-- 3. Contenido Inferior Anclado: empujado abajo para no tapar el centro ni arriba -->
+              <div class="cinemascope-content z-10 max-w-4xl flex flex-col items-start gap-4">
                 <!-- TÍTULO EN EXTRA BOLD MONUMENTAL -->
                 <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.98] tracking-tight group-hover:text-vault-accent transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
                   {caso.title}
                 </h3>
 
-                <!-- LOGLINE CINEMÁTICO DE AUTOR (UNA SOLA LÍNEA POÉTICA) -->
+                <!-- LOGLINE CINEMÁTICO DE AUTOR -->
                 <p class="cinemascope-logline font-bodoni italic text-base sm:text-lg md:text-xl text-[#ded8cf] max-w-2xl leading-relaxed tracking-wide [text-shadow:0_2px_14px_rgba(0,0,0,0.95)]">
                   {caso.subtitle}
                 </p>

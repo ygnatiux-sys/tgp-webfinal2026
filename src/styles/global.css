@@ -314,24 +314,27 @@
      Ecosistema TGP: Univisium (2:1 / 4:3 móvil) vs Busto Monumental (16:10)
      ══════════════════════════════════════════════════════════════════════════ */
 
-  /* Variante 1: Univisium Master (2:1 / 18:9) - Franjas maestras, crónicas, georreferencias */
-  .tgp-hero-card,
-  .tgp-hero-card.panoramico,
-  .tgp-card-panoramico,
+  /* Variante 1: Formato IMAX Monumental Desacoplado (80-85dvh / W-96% Max-1540px) */
   .cinemascope-card,
-  .cartel-univisium {
-    aspect-ratio: 2 / 1;
-    min-height: 420px;
-    max-height: 76vh;
+  .cartel-univisium,
+  .tgp-hero-card {
     position: relative;
     overflow: hidden;
-    border-radius: 2.25rem;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-radius: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.22);
     transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
-  /* Variante 2: Busto y Monolito Monumental (Retina 16:10) - Arquetipos, bustos, esculturas, retratos */
+  .cinemascope-card.aspect-fixed,
+  .tgp-hero-card.panoramico,
+  .tgp-card-panoramico {
+    aspect-ratio: 2 / 1;
+    min-height: 420px;
+    max-height: 76vh;
+  }
+
+  /* Variante 2: Busto y Monolito Monumental (Retina 16:10) */
   .tgp-hero-card.monumental,
   .tgp-card-monumental,
   .cinemascope-card.monumental,
@@ -345,16 +348,14 @@
   .cinemascope-card:hover,
   .cartel-univisium:hover {
     border-color: rgba(201, 169, 110, 0.45);
-    box-shadow: 0 35px 90px -20px rgba(0, 0, 0, 0.9), 0 0 40px rgba(201, 169, 110, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow: 0 35px 95px -15px rgba(0, 0, 0, 0.85), 0 0 40px rgba(201, 169, 110, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   }
 
-  /* Adaptación Móvil de Oro: 4:3 en pantallas menores a 640px para evitar tarjetas achatadas */
+  /* Adaptación Móvil de Oro */
   @media (max-width: 640px) {
-    .tgp-hero-card,
+    .cinemascope-card.aspect-fixed,
     .tgp-hero-card.panoramico,
-    .tgp-card-panoramico,
-    .cinemascope-card,
-    .cartel-univisium {
+    .tgp-card-panoramico {
       aspect-ratio: 4 / 3;
       min-height: 400px;
       max-height: none;

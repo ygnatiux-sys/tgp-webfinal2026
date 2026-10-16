@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { detectFocalPoint } from '../../lib/focalPointDetector';
 
   export let initialEnsayos: any[] = [];
   export let initialD1Items: any[] = [];
@@ -558,7 +559,7 @@
   }
 </script>
 
-<div class="w-full max-w-7xl mx-auto font-inter text-left">
+<div class="w-[96%] max-w-[1540px] mx-auto font-inter text-left">
 
   <!-- ── BARRA DE SOLAPAS Y BUSCADOR (DISEÑO EDITORIAL OBSIDIAN) ── -->
   <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 border-b border-white/10 pb-8">
@@ -667,32 +668,33 @@
       </div>
 
       {#if filteredMagazines.length > 0}
-        <div class="flex flex-col gap-12 sm:gap-16 lg:gap-20 w-full">
+        <div class="flex flex-col gap-14 sm:gap-20 lg:gap-24 w-full">
           {#each filteredMagazines as mag, idx}
             {@const hook = getIntelligentHook(mag)}
-            <!-- ── CARD CINEMASCOPE MINIMAL (MUBI × APPLE TV) ── -->
+            {@const focal = detectFocalPoint(mag)}
+            <!-- ── CARD CINEMASCOPE 84dvh (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-card-${idx}`}
-              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-[78dvh] sm:min-h-[82dvh] md:min-h-[84dvh] rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group/cinemascope text-left select-none opacity-100 visible"
             >
-              <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
+              <!-- 1. Fondo Cinemático Panorámico con Foco Protegido -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={mag.heroUrl}
                   alt={mag.title}
-                  class="w-full h-full object-cover object-[center_22%] filter brightness-[1.04] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
+                  class="w-full h-full object-cover {focal.objectPositionClass} filter brightness-[1.04] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
                   loading={idx === 0 ? "eager" : "lazy"}
                 />
 
-                <!-- Degradado cinematográfico aireado: solo oscurece la zona de lectura inferior -->
-                <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/30 via-50% to-transparent pointer-events-none"></div>
+                <!-- Degradado cinematográfico aireado: 60% superior libre -->
+                <div class="absolute inset-0 {focal.gradientClass} pointer-events-none"></div>
 
                 <!-- Marco perimetral sutil con brillo mate interior -->
-                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-[2.5rem] pointer-events-none"></div>
               </div>
 
-              <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
-              <div class="cinemascope-meta z-10 flex items-center justify-between w-full text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/75">
+              <!-- 2. Telemetría Superior MUBI (Anclada al borde superior) -->
+              <div class="cinemascope-meta absolute top-6 sm:top-8 left-6 sm:left-10 md:left-14 right-6 sm:right-10 md:right-14 z-10 flex items-center justify-between text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/75">
                 <span class="flex items-center gap-2">
                   <span class="text-vault-accent font-semibold">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</span>
                   <span>·</span>
@@ -705,8 +707,8 @@
                 <span class="text-white/60 tracking-widest">{mag.date}</span>
               </div>
 
-              <!-- 3. Contenido Inferior Anclado: Título Extra Bold Monumental > Logline > Botón de Cristal -->
-              <div class="cinemascope-content z-10 mt-auto pt-16 max-w-4xl flex flex-col items-start gap-4">
+              <!-- 3. Contenido Inferior Anclado: empujado a la base -->
+              <div class="cinemascope-content z-10 max-w-4xl flex flex-col items-start gap-4">
                 
                 <!-- TÍTULO EN EXTRA BOLD MONUMENTAL -->
                 <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-white/90 transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
@@ -767,32 +769,33 @@
       </div>
 
       {#if filteredEnsayos.length > 0}
-        <div class="flex flex-col gap-12 sm:gap-16 lg:gap-20 w-full">
+        <div class="flex flex-col gap-14 sm:gap-20 lg:gap-24 w-full">
           {#each filteredEnsayos as ensayo, idx}
             {@const hook = getIntelligentHook(ensayo)}
-            <!-- ── CARD CINEMASCOPE MINIMAL ENSAYOS (MUBI × APPLE TV) ── -->
+            {@const focal = detectFocalPoint(ensayo)}
+            <!-- ── CARD CINEMASCOPE ENSAYOS 84dvh (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-ensayo-${idx}`}
-              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-[78dvh] sm:min-h-[82dvh] md:min-h-[84dvh] rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/18 hover:border-vault-accent/50 transition-all duration-700 flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group/cinemascope text-left select-none opacity-100 visible"
             >
-              <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
+              <!-- 1. Fondo Cinemático Panorámico con Foco Protegido -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={ensayo.imageUrl}
                   alt={ensayo.title}
-                  class="w-full h-full object-cover object-[center_22%] filter brightness-[1.04] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
+                  class="w-full h-full object-cover {focal.objectPositionClass} filter brightness-[1.04] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
                   loading="lazy"
                 />
 
-                <!-- Degradado cinematográfico aireado: solo oscurece la zona de lectura inferior -->
-                <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/30 via-50% to-transparent pointer-events-none"></div>
+                <!-- Degradado cinematográfico aireado: 60% superior libre -->
+                <div class="absolute inset-0 {focal.gradientClass} pointer-events-none"></div>
 
                 <!-- Marco perimetral sutil con brillo mate interior -->
-                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-[2.5rem] pointer-events-none"></div>
               </div>
 
-              <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
-              <div class="cinemascope-meta z-10 flex items-center justify-between w-full text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/75">
+              <!-- 2. Telemetría Superior MUBI (Anclada al borde superior) -->
+              <div class="cinemascope-meta absolute top-6 sm:top-8 left-6 sm:left-10 md:left-14 right-6 sm:right-10 md:right-14 z-10 flex items-center justify-between text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/75">
                 <span class="flex items-center gap-2">
                   <span class="text-vault-accent font-semibold">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</span>
                   <span>·</span>
@@ -802,8 +805,8 @@
                 <span class="text-white/60 tracking-widest">{ensayo.date}</span>
               </div>
 
-              <!-- 3. Contenido Inferior Anclado: Título Extra Bold Monumental > Logline > Botón de Cristal -->
-              <div class="cinemascope-content z-10 mt-auto pt-16 max-w-4xl flex flex-col items-start gap-4">
+              <!-- 3. Contenido Inferior Anclado: empujado a la base -->
+              <div class="cinemascope-content z-10 max-w-4xl flex flex-col items-start gap-4">
                 
                 <!-- TÍTULO EN EXTRA BOLD MONUMENTAL -->
                 <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-white/90 transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
@@ -866,32 +869,33 @@
       </div>
 
       {#if filteredD1.length > 0}
-        <div class="flex flex-col gap-12 sm:gap-16 lg:gap-20 w-full">
+        <div class="flex flex-col gap-14 sm:gap-20 lg:gap-24 w-full">
           {#each filteredD1 as item, idx}
             {@const hook = getIntelligentHook(item)}
-            <!-- ── CARD CINEMASCOPE MINIMAL BÓVEDA D1 (MUBI × APPLE TV) ── -->
+            {@const focal = detectFocalPoint(item)}
+            <!-- ── CARD CINEMASCOPE BÓVEDA D1 84dvh (MUBI × APPLE TV) ── -->
             <article
               id={`cinemascope-d1-${idx}`}
-              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-125 sm:min-h-140 lg:min-h-150 lg:aspect-19/10 rounded-3xl sm:rounded-4xl overflow-hidden border border-white/18 hover:border-vault-success/50 transition-all duration-700 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 group/cinemascope text-left select-none opacity-100 visible"
+              class="cinemascope-card bg-carbon-matte relative isolate w-full min-h-[78dvh] sm:min-h-[82dvh] md:min-h-[84dvh] rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/18 hover:border-vault-success/50 transition-all duration-700 flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group/cinemascope text-left select-none opacity-100 visible"
             >
-              <!-- 1. Fondo Cinemático Panorámico con Gradiente Atmosférico Inferior Suave -->
+              <!-- 1. Fondo Cinemático Panorámico con Foco Protegido -->
               <div class="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
                 <img
                   src={item.imageUrl || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp'}
                   alt={item.title}
-                  class="w-full h-full object-cover object-[center_22%] filter brightness-[1.04] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
+                  class="w-full h-full object-cover {focal.objectPositionClass} filter brightness-[1.04] contrast-[1.02] transition-transform duration-1000 ease-out group-hover/cinemascope:scale-105 will-change-transform tgp-img-protected"
                   loading="lazy"
                 />
 
-                <!-- Degradado cinematográfico aireado: solo oscurece la zona de lectura inferior -->
-                <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/30 via-50% to-transparent pointer-events-none"></div>
+                <!-- Degradado cinematográfico aireado: 60% superior libre -->
+                <div class="absolute inset-0 {focal.gradientClass} pointer-events-none"></div>
 
                 <!-- Marco perimetral sutil con brillo mate interior -->
-                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-4xl pointer-events-none"></div>
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-3xl sm:rounded-[2.5rem] pointer-events-none"></div>
               </div>
 
-              <!-- 2. Telemetría Superior MUBI (Sin Cápsulas Ni Emojis) -->
-              <div class="cinemascope-meta z-10 flex items-center justify-between w-full text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/75">
+              <!-- 2. Telemetría Superior MUBI (Anclada al borde superior) -->
+              <div class="cinemascope-meta absolute top-6 sm:top-8 left-6 sm:left-10 md:left-14 right-6 sm:right-10 md:right-14 z-10 flex items-center justify-between text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/75">
                 <span class="flex items-center gap-2">
                   <span class="text-vault-success font-semibold">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</span>
                   <span>·</span>
@@ -903,8 +907,8 @@
                 <span class="text-white/60 tracking-widest">{item.date}</span>
               </div>
 
-              <!-- 3. Contenido Inferior Anclado: Título Extra Bold Monumental > Logline > Botón de Cristal -->
-              <div class="cinemascope-content z-10 mt-auto pt-16 max-w-4xl flex flex-col items-start gap-4">
+              <!-- 3. Contenido Inferior Anclado: empujado a la base -->
+              <div class="cinemascope-content z-10 max-w-4xl flex flex-col items-start gap-4">
                 
                 <!-- TÍTULO EN EXTRA BOLD MONUMENTAL -->
                 <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-vault-success transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
