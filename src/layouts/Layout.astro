@@ -4,9 +4,11 @@ import { ClientRouter } from 'astro:transitions';
 
 interface Props {
 	title: string;
+	bodyClass?: string;
+	bodyStyle?: string;
 }
 
-const { title } = Astro.props;
+const { title, bodyClass = '', bodyStyle = '' } = Astro.props;
 ---
 
 <!doctype html>
@@ -27,7 +29,7 @@ const { title } = Astro.props;
 		<!-- Astro View Transitions Cinemáticas -->
 		<ClientRouter />
 	</head>
-	<body class="bg-bg text-primary">
+	<body class={`bg-bg text-primary ${bodyClass}`} style={bodyStyle}>
 		<slot />
 		
 		<!-- Back to Top Button -->
