@@ -25,7 +25,7 @@ const TOP_FOCUS_KEYWORDS = [
   'antropomorfo', 'sapiens', 'nefertiti', 'priapo', 'fresco', 'dios', 'faraon',
   'escultura', 'perfil', 'moctezuma', 'cortez', 'mascara', 'caterpillar',
   'san agustin', 'nestoriano', 'cristo', 'santo', 'virgen', 'corona', 'torre',
-  'piramide roja', 'dahshur', 'obelisco'
+  'piramide roja', 'dahshur', 'obelisco', 'masuda', 'iwafune', 'asuka'
 ];
 
 const BOTTOM_FOCUS_KEYWORDS = [
