@@ -43,7 +43,7 @@ function getArg(name, fallback = '') {
 
 const topic = getArg('topic', 'Pumapunku y la tecnología megalítica en Tiwanaku');
 const engine = getArg('engine', 'flash').toLowerCase(); // 'flash' | 'pro'
-const modelName = engine === 'pro' ? 'gemini-1.5-pro' : 'gemini-2.0-flash';
+const modelName = engine === 'pro' ? 'gemini-3.1-pro-preview' : 'gemini-2.5-flash';
 
 console.log('\n╔══════════════════════════════════════════════════════════════════════╗');
 console.log('║  ⚡ PIPELINE TGP: GENERADOR DIRECTO DE CONTENIDOS ALTERNATIVE       ║');
