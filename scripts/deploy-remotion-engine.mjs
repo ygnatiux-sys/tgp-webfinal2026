@@ -12,8 +12,17 @@ for (const line of envContent.split(/\r?\n/)) {
   }
 }
 
+let localPin = process.env.VAULT_PIN;
+if (!localPin && fs.existsSync('.env')) {
+  const localEnv = fs.readFileSync('.env', 'utf8');
+  const m = localEnv.match(/VAULT_PIN\s*=\s*(.*)/);
+  if (m) localPin = m[1].trim().replace(/^['"]|['"]$/g, '');
+}
+
+const vaultPin = localPin || env.VAULT_PIN || '';
+
 const envVars = [
-  `VAULT_PIN=2771`,
+  ...(vaultPin ? [`VAULT_PIN=${vaultPin}`] : []),
   `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true`,
   `PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium`,
   `R2_BUCKET_NAME=${env.R2_BUCKET_NAME || 'tgp-storage'}`,
