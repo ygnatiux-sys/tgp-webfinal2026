@@ -7,6 +7,7 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { detectFocalPoint } from '../lib/focalPointDetector';
+import { getCollection } from 'astro:content';
 
 // Sanitizador de texto Markdown crudo para descripciones/extractos
 const sanitizeSnippet = (text: string) => {
@@ -16,8 +17,10 @@ const sanitizeSnippet = (text: string) => {
     .trim();
 };
 
-// Casos de Investigación de Historia Alternativa
-const casosAlternativos = [
+const DEFAULT_VAULT_IMAGE = 'https://storage.thegreatpuzzleproject.com/vault-media/1792193779598-ffcdb2f8.webp';
+
+// Casos de Investigación de Historia Alternativa (Curaduría Base)
+const casosCurados = [
   {
     id: 'masuda-no-iwafune',
     title: 'Masuda no Iwafune: La Nave de Roca y el Abismo del Tiempo en Asuka',
@@ -30,7 +33,6 @@ const casosAlternativos = [
     badge: 'Anomalía Lítica de Asuka',
     url: '/ensayos/masuda-no-iwafune'
   },
-
   {
     id: 'las-cuevas-de-longyou-en-china',
     title: 'Las Cuevas de Longyou en China',
@@ -43,7 +45,6 @@ const casosAlternativos = [
     badge: 'Anomalía Lítica de Zhejiang',
     url: '/ensayos/las-cuevas-de-longyou-en-china'
   },
-
   {
     id: 'pumapunku-la-geometria-del-silencio',
     title: 'Pumapunku: La Geometría del Silencio',
@@ -56,7 +57,6 @@ const casosAlternativos = [
     badge: 'Misterio Arqueométrico',
     url: '/ensayos/pumapunku-la-geometria-del-silencio'
   },
-
   {
     id: 'nan-madol-el-enigma-megalitico',
     title: 'Nan Madol: El Enigma Megalítico',
@@ -69,9 +69,8 @@ const casosAlternativos = [
     badge: 'Investigación Lítica Marina',
     url: '/ensayos/nan-madol-el-enigma-megalitico'
   },
-
   {
-    id: 'vinca-belo-brdo',
+    id: 'el-tel-y-la-sombra-belo-brdo',
     title: 'El Tel y la Sombra: Belo Brdo',
     subtitle: 'La Cultura Vinča y el Enigma de Tărtăria',
     category: 'Proto-Escritura & Neolítico',
@@ -83,7 +82,7 @@ const casosAlternativos = [
     url: '/ensayos/el-tel-y-la-sombra-belo-brdo'
   },
   {
-    id: 'yonaguni-monumento',
+    id: 'yonaguni-monumento-sumergido',
     title: 'El Monumento Sumergido de Yonaguni',
     subtitle: 'La Anomalía Megalítica de las Ryukyu',
     category: 'Arqueología Submarina',
@@ -107,7 +106,7 @@ const casosAlternativos = [
     url: '/ensayos/younger-dryas'
   },
   {
-    id: 'gobekli-monolitos',
+    id: 'gobekli-tepe',
     title: 'Göbekli Tepe: El Templo Pre-Agrícola',
     subtitle: 'La Paradoja Megalítica de Anatolia',
     category: 'Arqueología Cognitiva',
@@ -143,7 +142,7 @@ const casosAlternativos = [
     url: '/ensayos/colapso-1177'
   },
   {
-    id: 'acustica-hal-saflieni',
+    id: 'hal-saflieni',
     title: 'Hal Saflieni y la Resonancia 111 Hz',
     subtitle: 'Acústica Subterránea y Conciencia',
     category: 'Arqueoacústica',
@@ -167,6 +166,78 @@ const casosAlternativos = [
     url: '/ensayos/amnesia-programada'
   }
 ];
+
+// Carga Dinámica desde Content Collections
+let dynamicEnsayos: any[] = [];
+try {
+  const rawEnsayos = await getCollection('ensayos', ({ data }) => !data.draft);
+  if (Array.isArray(rawEnsayos)) {
+    dynamicEnsayos = rawEnsayos.map(ensayo => {
+      const data = ensayo.data;
+      const rawDate = data.date ? new Date(data.date).getTime() : 0;
+      const cover = (data.coverImage && data.coverImage.trim().length > 10)
+        ? data.coverImage
+        : ((data.heroUrl && data.heroUrl.trim().length > 10)
+          ? data.heroUrl
+          : ((data.gallery && data.gallery.length > 0 && data.gallery[0].trim().length > 10) ? data.gallery[0] : DEFAULT_VAULT_IMAGE));
+
+      const rawText = ensayo.body ? ensayo.body.slice(0, 280).replace(/<[^>]*>?/gm, '').replace(/^[#\s*—-]+/gm, '').trim() : '';
+      const isRedundantAbstract = !data.abstract || data.abstract.trim() === data.title?.trim() || data.abstract.length < 25;
+      const snippet = isRedundantAbstract ? (rawText ? rawText + '...' : (data.abstract || '')) : data.abstract;
+
+      return {
+        id: ensayo.id,
+        title: data.title || 'Investigación Lítica',
+        subtitle: snippet,
+        category: data.category || data.volanta || 'Historia Alternativa',
+        date: data.date ? new Date(data.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : 'c. 2026',
+        rawDate: isNaN(rawDate) ? 0 : rawDate,
+        era: data.powertype || 'Investigación Primaria',
+        imageUrl: cover,
+        excerpt: snippet,
+        badge: data.powertype || 'Anomalía Lítica',
+        url: `/ensayos/${ensayo.id}`
+      };
+    });
+  }
+} catch (e: any) {
+  console.warn('[Historia Alternativa] Error al cargar colección ensayos:', e?.message);
+}
+
+// Fusionar catálogo base con colección dinámica
+const casosMap = new Map();
+for (const c of casosCurados) {
+  casosMap.set(c.id, {
+    ...c,
+    rawDate: 0
+  });
+}
+
+for (const e of dynamicEnsayos) {
+  const existing = casosMap.get(e.id);
+  if (existing) {
+    casosMap.set(e.id, {
+      ...existing,
+      ...e,
+      subtitle: (existing.subtitle && existing.subtitle.length > 15) ? existing.subtitle : e.subtitle,
+      era: existing.era || e.era,
+      category: existing.category || e.category,
+      badge: existing.badge || e.badge,
+      imageUrl: (e.imageUrl && e.imageUrl !== DEFAULT_VAULT_IMAGE) ? e.imageUrl : existing.imageUrl,
+      rawDate: e.rawDate
+    });
+  } else {
+    casosMap.set(e.id, e);
+  }
+}
+
+// Los más recientes SIEMPRE van al principio
+const todosLosCasos = Array.from(casosMap.values()).sort((a, b) => {
+  return (b.rawDate || 0) - (a.rawDate || 0);
+});
+
+// Los 4 últimos posteos para el Hero Bento Carousel
+const heroSlides = todosLosCasos.slice(0, 4);
 ---
 
 <Layout title="Historia Alternativa & Paradigmas Disidentes | The Great Puzzle Project">
@@ -179,78 +250,126 @@ const casosAlternativos = [
 
   <main class="relative z-10 overflow-x-hidden pt-24 md:pt-32">
     <!-- ═══════════════════════════════════════════════════════════════════════
-         HERO CINEMÁTICO UNIVISIUM DE APPLE (2:1 / 18:9)
-         - Inicia la página directamente con la escala Univisium de Apple
-         - Dentro de la imagen: Presentación cinemática H1/H2 con GSAP Timeline    <!-- ═══════════════════════════════════════════════════════════════════════
-         HERO CINEMÁTICO MONUMENTAL (85dvh) — INMERSIÓN TOTAL DESACOPLADA
-         - W-96% Max-1540px: llega cerca de los bordes con elegancia
-         - Min-h-[82-85dvh]: profundidad vertical cinematográfica
-         - Masa tipográfica empujada abajo (flex-col justify-end pb-16)
-         - 60% superior completamente libre para contemplar el paisaje y el tel
+         HERO CINEMÁTICO UNIVISIUM (2:1) — CAROUSEL SECUENCIAL DE LOS 4 ÚLTIMOS POSTS
+         - El post más reciente SIEMPRE entra primero como Slide 01
+         - Corre en secuencia con elegante GSAP Timeline y fundido suave (fade-out / cross-fade)
+         - Scrubber interactivo y pausa en hover
     ═══════════════════════════════════════════════════════════════════════ -->
     <section id="univisium-hero-section" class="relative px-2 sm:px-4 md:px-8 w-[96%] max-w-385 mx-auto pt-1 pb-16">
       <div 
         id="univisium-billboard"
-        class="cartel-univisium w-full min-h-[80dvh] md:min-h-[85dvh] bg-carbon-matte flex flex-col justify-end p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group relative isolate rounded-[2.5rem] shadow-[0_40px_120px_rgba(0,0,0,0.95)] border border-white/18 overflow-hidden"
+        class="cartel-univisium w-full min-h-[82dvh] md:min-h-[86dvh] bg-carbon-matte flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 pb-12 sm:pb-16 md:pb-20 group relative isolate rounded-[2.5rem] shadow-[0_40px_120px_rgba(0,0,0,0.95)] border border-white/18 overflow-hidden select-none"
       >
-        <!-- Fondo Fotográfico Cinemático Limpio con GSAP Parallax -->
-        <div class="absolute inset-0 -z-10 overflow-hidden">
-          <img
-            id="univisium-bg-img"
-            src="https://storage.thegreatpuzzleproject.com/vault-media/1792044269358-6342485e.webp"
-            alt="Belo Brdo, Cultura Vinča - Escala Univisium"
-            class="w-full h-full object-cover object-[center_26%] filter contrast-105 saturate-105 will-change-transform tgp-img-protected"
-          />
-          <!-- 1. ÚNICA Viñeta Perimetral: Suaviza los bordes para eliminar costuras sin oscurecer la foto -->
-          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_58%,rgba(17,20,28,0.78)_100%)] pointer-events-none"></div>
-          <!-- 2. Sutil degradado inferior exclusivo para fijación del texto y CTA -->
-          <div class="absolute inset-x-0 bottom-0 h-64 bg-linear-to-t from-black/85 via-black/30 via-45% to-transparent pointer-events-none"></div>
-          <!-- 3. Remate interno sutil de borde de cristal -->
-          <div class="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/15 pointer-events-none"></div>
+        <!-- FONDOS CINEMÁTICOS (1 POR CADA UNO DE LOS 4 POSTS) -->
+        <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+          {heroSlides.map((slide, idx) => {
+            const focal = detectFocalPoint(slide);
+            return (
+              <div 
+                class={`hero-slide-bg absolute inset-0 transition-none ${idx === 0 ? 'opacity-100 z-1' : 'opacity-0 z-0'}`}
+                data-slide-index={idx}
+              >
+                <img
+                  src={slide.imageUrl}
+                  alt={slide.title}
+                  class={`hero-bg-img w-full h-full object-cover ${focal.objectPositionClass} filter contrast-105 saturate-105 will-change-transform tgp-img-protected`}
+                  loading={idx === 0 ? "eager" : "lazy"}
+                />
+                <!-- 1. Viñeta Perimetral -->
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_52%,rgba(17,20,28,0.85)_100%)] pointer-events-none"></div>
+                <!-- 2. Gradiente inferior profundo y focalizado -->
+                <div class={`absolute inset-0 ${focal.gradientClass} pointer-events-none`}></div>
+                <!-- 3. Remate de borde de cristal -->
+                <div class="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/15 pointer-events-none"></div>
+              </div>
+            );
+          })}
         </div>
 
-        <!-- Telemetría Superior MUBI (Anclada al borde superior) -->
-        <div class="univisium-anim-elem absolute top-6 sm:top-8 left-6 sm:left-10 md:left-14 right-6 sm:right-10 md:right-14 flex items-center justify-between z-10 opacity-0 text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/70">
-          <span class="flex items-center gap-2">
-            <span class="text-vault-accent font-semibold">01</span>
-            <span>·</span>
-            <span class="text-white/85">CULTURA VINČA</span>
-            <span class="hidden sm:inline text-white/30">·</span>
-            <span class="hidden sm:inline text-white/50">BELO BRDO</span>
-          </span>
+        <!-- CONTENIDO TIPOGRÁFICO DE CADA SLIDE -->
+        <div class="hero-slides-content-container relative w-full h-full min-h-[72dvh] md:min-h-[76dvh] flex flex-col justify-between z-10 pointer-events-none">
+          {heroSlides.map((slide, idx) => (
+            <div 
+              class={`hero-slide-item absolute inset-0 flex flex-col justify-between ${idx === 0 ? 'pointer-events-auto opacity-100 visible' : 'pointer-events-none opacity-0 invisible'}`}
+              data-slide-index={idx}
+            >
+              <!-- Telemetría Superior MUBI (Anclada al borde superior) -->
+              <div class="slide-anim-meta flex items-center justify-between z-10 text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-white/75 pt-1">
+                <span class="flex items-center gap-2">
+                  <span class="text-vault-accent font-bold px-2.5 py-0.5 rounded-full bg-vault-accent/15 border border-vault-accent/30 text-[9px] tracking-widest">
+                    {idx === 0 ? '★ ÚLTIMO REGISTRO' : `REGISTRO 0${idx + 1}`}
+                  </span>
+                  <span class="text-white/30 hidden sm:inline">·</span>
+                  <span class="text-white/90 font-medium">{slide.category}</span>
+                  <span class="hidden md:inline text-white/30">·</span>
+                  <span class="hidden md:inline text-white/60">{slide.era}</span>
+                </span>
 
-          <span class="text-white/60 tracking-widest">5.700–4.500 A.C.</span>
+                <div class="flex items-center gap-3">
+                  <span class="text-white/60 tracking-widest font-mono hidden sm:inline">{slide.date}</span>
+                  <span class="text-vault-accent/80 font-mono text-[10px] bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
+                    0{idx + 1} / 0{heroSlides.length}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Contenido Inferior: H1 Monumental, Logline y CTAs -->
+              <div class="slide-anim-body max-w-5xl mt-auto pb-2 sm:pb-4">
+                <h1 class="slide-title font-bodoni font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-[4.8vw] leading-[0.94] tracking-tighter text-white [text-shadow:0_4px_24px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)] mb-4">
+                  {slide.title}
+                </h1>
+
+                <p class="slide-logline font-bodoni italic text-base sm:text-xl md:text-2xl text-white/85 tracking-wide max-w-3xl leading-relaxed mb-6 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] line-clamp-3">
+                  {slide.subtitle || slide.excerpt}
+                </p>
+
+                <!-- Botones Apple Glass -->
+                <div class="slide-actions flex flex-wrap items-center gap-3 sm:gap-4 pt-3 border-t border-white/15">
+                  <a
+                    href={slide.url}
+                    class="cinema-action-btn inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white backdrop-blur-md text-xs font-mono tracking-[0.25em] uppercase font-bold transition-all duration-300 group cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,255,255,0.35)] hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <span>Ver Dossier Arqueológico</span>
+                    <span class="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </a>
+
+                  <a
+                    href="#grid-editorial"
+                    class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/5 hover:bg-white/15 text-white/80 hover:text-white border border-white/15 hover:border-white/30 backdrop-blur-md text-xs font-mono tracking-[0.2em] uppercase font-medium transition-all duration-300 cursor-pointer"
+                  >
+                    <span>Explorar Todos los Casos</span>
+                    <span class="text-xs">↓</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
-        <!-- Contenido Inferior del Cartel: empujado a la base -->
-        <div class="z-10 max-w-5xl mt-auto">
-          <!-- H1 Monumental Cinematográfico con Sombras Nítidas -->
-          <h1 class="univisium-anim-elem opacity-0 font-bodoni font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-[5.2vw] leading-[0.92] tracking-tighter text-white [text-shadow:0_4px_24px_rgba(0,0,0,0.98),0_1px_4px_rgba(0,0,0,1)] mb-4">
-            El Tel y la Sombra: <span class="italic font-light font-bodoni text-vault-accent drop-shadow-[0_0_30px_rgba(201,169,110,0.5)]">Belo Brdo</span>.
-          </h1>
-
-          <!-- H2 Exegético Cinematográfico en Bodoni Italic -->
-          <p class="univisium-anim-elem opacity-0 font-bodoni italic text-base sm:text-xl md:text-2xl text-white/85 tracking-wide max-w-3xl leading-relaxed mb-6 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-            Mucho antes de Mesopotamia, el fuego domesticado y los signos sagrados fundaron en las riberas del Danubio una civilización que fractura la cronología oficial.
-          </p>
-
-          <!-- Botones Apple Glass -->
-          <div class="univisium-anim-elem opacity-0 flex flex-wrap items-center gap-3 sm:gap-4 pt-2 border-t border-white/15">
-            <a
-              href="/ensayos/el-tel-y-la-sombra-belo-brdo"
-              class="cinema-action-btn inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white backdrop-blur-md text-xs font-mono tracking-[0.25em] uppercase font-bold transition-all duration-300 group cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,255,255,0.35)] hover:scale-[1.02] active:scale-[0.98]"
+        <!-- CONTROLADORES Y TIMELINE SCRUBBER FLOTANTE (ESTILO A24 / APPLE) -->
+        <div class="hero-timeline-nav absolute bottom-6 right-6 sm:bottom-10 sm:right-10 md:bottom-14 md:right-14 z-20 flex items-center gap-2 sm:gap-3 bg-black/60 backdrop-blur-xl border border-white/15 px-3 py-2 rounded-full pointer-events-auto shadow-2xl">
+          {heroSlides.map((slide, idx) => (
+            <button
+              class={`timeline-nav-btn relative flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer text-left text-xs font-mono ${idx === 0 ? 'bg-white/20 text-white border border-vault-accent/60 shadow-[0_0_15px_rgba(201,169,110,0.3)]' : 'text-white/50 hover:text-white/80 border border-transparent'}`}
+              data-target-index={idx}
+              title={slide.title}
             >
-              <span>Ver Dossier Arqueológico</span>
-              <span class="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </a>
+              <span class="nav-btn-num font-bold">{`0${idx + 1}`}</span>
+              <span class="nav-btn-label hidden xl:inline max-w-27.5 truncate text-[10px] tracking-wider uppercase opacity-80">{slide.title}</span>
+              <!-- Barra de progreso individual -->
+              <div class="nav-progress-track absolute bottom-0 left-2 right-2 h-0.5 bg-white/15 rounded-full overflow-hidden">
+                <div class="nav-progress-bar h-full w-full bg-vault-accent origin-left scale-x-0" data-bar-index={idx}></div>
+              </div>
+            </button>
+          ))}
 
-            <a
-              href="#grid-editorial"
-              class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/5 hover:bg-white/15 text-white/80 hover:text-white border border-white/15 hover:border-white/30 backdrop-blur-md text-xs font-mono tracking-[0.2em] uppercase font-medium transition-all duration-300 cursor-pointer"
-            >
-              <span>Explorar Casos</span>
-              <span class="text-xs">↓</span>
-            </a>
+          <div class="flex items-center gap-1 pl-2 border-l border-white/20">
+            <button id="hero-prev-btn" class="p-1.5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer" title="Anterior">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button id="hero-next-btn" class="p-1.5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer" title="Siguiente">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 5l7 7-7 7"/></svg>
+            </button>
           </div>
         </div>
       </div>
@@ -315,13 +434,13 @@ const casosAlternativos = [
         </div>
 
         <span class="text-[11px] font-mono text-white/50 uppercase tracking-widest hidden sm:inline-block">
-          {casosAlternativos.length} Registros Inmersivos
+          {todosLosCasos.length} Registros Inmersivos
         </span>
       </div>
 
       <!-- ── LISTADO CONTINUO 82dvh DESACOPLADO (UNO DEBAJO DEL OTRO) ── -->
       <div class="flex flex-col gap-14 sm:gap-20 lg:gap-24 w-full">
-        {casosAlternativos.map((caso, idx) => {
+        {todosLosCasos.map((caso, idx) => {
           const focal = detectFocalPoint(caso);
           return (
             <article
@@ -417,7 +536,7 @@ const casosAlternativos = [
 </style>
 
 <!-- ═══════════════════════════════════════════════════════════════════════
-     GSAP TIMELINE CINEMÁTICO: REVELACIÓN UNIVISIUM (2:1) APPLE & CARDS 19:10
+     GSAP TIMELINE CINEMÁTICO: REVELACIÓN Y SECUENCIA DE LOS 4 ÚLTIMOS POSTS
 ═══════════════════════════════════════════════════════════════════════ -->
 <script>
   import gsap from 'gsap';
@@ -425,65 +544,218 @@ const casosAlternativos = [
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const initUnivisiumHero = () => {
-    const heroSection = document.getElementById('univisium-hero-section');
-    const bgImg = document.getElementById('univisium-bg-img');
-    const animElems = gsap.utils.toArray<HTMLElement>('.univisium-anim-elem');
+  const initHeroSequence = () => {
+    const billboard = document.getElementById('univisium-billboard');
+    if (!billboard) return;
 
-    if (!heroSection || animElems.length === 0) return;
+    const bgSlides = gsap.utils.toArray<HTMLElement>('.hero-slide-bg');
+    const contentSlides = gsap.utils.toArray<HTMLElement>('.hero-slide-item');
+    const navBtns = gsap.utils.toArray<HTMLElement>('.timeline-nav-btn');
+    const progressBars = gsap.utils.toArray<HTMLElement>('.nav-progress-bar');
+    const prevBtn = document.getElementById('hero-prev-btn');
+    const nextBtn = document.getElementById('hero-next-btn');
 
-    // Timeline principal de revelación cinematográfica
-    const tl = gsap.timeline({
-      defaults: { ease: 'expo.out' },
-      delay: 0.2
+    const totalSlides = contentSlides.length;
+    if (totalSlides === 0) return;
+
+    let currentIndex = 0;
+    let isTransitioning = false;
+    let progressTween: gsap.core.Tween | null = null;
+    const SLIDE_DURATION = 5.5; // Segundos de contemplación por cada posteo
+
+    // Actualiza el estado visual de los botones de navegación
+    const updateNavButtons = (activeIdx: number) => {
+      navBtns.forEach((btn, idx) => {
+        if (idx === activeIdx) {
+          btn.classList.add('bg-white/20', 'text-white', 'border-vault-accent/60', 'shadow-[0_0_15px_rgba(201,169,110,0.3)]');
+          btn.classList.remove('text-white/50', 'border-transparent');
+        } else {
+          btn.classList.remove('bg-white/20', 'text-white', 'border-vault-accent/60', 'shadow-[0_0_15px_rgba(201,169,110,0.3)]');
+          btn.classList.add('text-white/50', 'border-transparent');
+          if (progressBars[idx]) {
+            gsap.set(progressBars[idx], { scaleX: 0 });
+          }
+        }
+      });
+    };
+
+    // Función de transición elegante con GSAP Timeline (fade-out y cross-fade)
+    const goToSlide = (nextIndex: number) => {
+      if (isTransitioning || nextIndex === currentIndex) return;
+      isTransitioning = true;
+
+      if (progressTween) {
+        progressTween.kill();
+        progressTween = null;
+      }
+
+      const prevIdx = currentIndex;
+      currentIndex = nextIndex;
+
+      const currentBg = bgSlides[prevIdx];
+      const nextBg = bgSlides[nextIndex];
+      const currentContent = contentSlides[prevIdx];
+      const nextContent = contentSlides[nextIndex];
+
+      const currentMeta = currentContent ? currentContent.querySelector('.slide-anim-meta') : null;
+      const currentTitle = currentContent ? currentContent.querySelector('.slide-title') : null;
+      const currentLogline = currentContent ? currentContent.querySelector('.slide-logline') : null;
+      const currentActions = currentContent ? currentContent.querySelector('.slide-actions') : null;
+
+      const nextMeta = nextContent ? nextContent.querySelector('.slide-anim-meta') : null;
+      const nextTitle = nextContent ? nextContent.querySelector('.slide-title') : null;
+      const nextLogline = nextContent ? nextContent.querySelector('.slide-logline') : null;
+      const nextActions = nextContent ? nextContent.querySelector('.slide-actions') : null;
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          if (currentContent) {
+            currentContent.classList.remove('pointer-events-auto', 'visible', 'opacity-100');
+            currentContent.classList.add('pointer-events-none', 'invisible', 'opacity-0');
+            gsap.set(currentContent, { opacity: 0, visibility: 'hidden' });
+          }
+          if (currentBg) {
+            gsap.set(currentBg, { zIndex: 0, opacity: 0 });
+          }
+
+          isTransitioning = false;
+          startProgressTimer();
+        }
+      });
+
+      // 1. Breve Fade-out y elevación del contenido activo
+      if (currentContent) {
+        tl.to([currentActions, currentLogline, currentTitle, currentMeta].filter(Boolean), {
+          opacity: 0,
+          y: -18,
+          filter: 'blur(8px)',
+          duration: 0.5,
+          stagger: 0.04,
+          ease: 'power2.in'
+        }, 0);
+      }
+
+      // 2. Cross-fade suave del fondo: la nueva imagen sube y entra
+      if (nextBg) {
+        gsap.set(nextBg, { zIndex: 1 });
+        tl.fromTo(nextBg, 
+          { opacity: 0, scale: 1.07 },
+          { opacity: 1, scale: 1, duration: 1.1, ease: 'power2.out' },
+          0.15
+        );
+      }
+
+      // 3. Fade-in con stagger y blur del nuevo contenido
+      if (nextContent) {
+        nextContent.classList.remove('invisible', 'opacity-0', 'pointer-events-none');
+        nextContent.classList.add('visible', 'opacity-100', 'pointer-events-auto');
+        gsap.set(nextContent, { opacity: 1, visibility: 'visible' });
+
+        tl.fromTo([nextMeta, nextTitle, nextLogline, nextActions].filter(Boolean),
+          { opacity: 0, y: 35, filter: 'blur(10px)' },
+          { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.85, stagger: 0.1, ease: 'expo.out' },
+          0.35
+        );
+      }
+
+      updateNavButtons(nextIndex);
+    };
+
+    // Temporizador de la barra de progreso de cada slide
+    const startProgressTimer = () => {
+      const activeBar = progressBars[currentIndex];
+      if (!activeBar) return;
+
+      gsap.set(activeBar, { scaleX: 0 });
+      progressTween = gsap.to(activeBar, {
+        scaleX: 1,
+        duration: SLIDE_DURATION,
+        ease: 'none',
+        onComplete: () => {
+          const nextIndex = (currentIndex + 1) % totalSlides;
+          goToSlide(nextIndex);
+        }
+      });
+    };
+
+    // Pausar y reanudar al posar el cursor sobre el billboard
+    billboard.addEventListener('mouseenter', () => {
+      if (progressTween) progressTween.pause();
+    });
+    billboard.addEventListener('mouseleave', () => {
+      if (progressTween && !isTransitioning) progressTween.resume();
     });
 
-    // 1. Imagen de fondo entra con slow push cinematográfico
-    if (bgImg) {
-      tl.fromTo(
-        bgImg,
-        { scale: 1.14, opacity: 0.3 },
-        { scale: 1, opacity: 0.65, duration: 1.8, ease: 'power2.out' },
-        0
-      );
-    }
+    // Control por botones numéricos / pills
+    navBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = parseInt(btn.getAttribute('data-target-index') || '0', 10);
+        goToSlide(target);
+      });
+    });
 
-    // 2. Fades cinemáticos y movimientos de título impresionantes (H1/H2, badges, CTA)
-    tl.fromTo(
-      animElems,
-      {
-        opacity: 0,
-        y: 45,
-        scale: 0.95,
-        filter: 'blur(10px)'
-      },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        filter: 'blur(0px)',
-        duration: 1.2,
-        stagger: 0.14,
-        ease: 'expo.out'
-      },
-      0.25
-    );
-
-    // 3. Parallax sutil con ScrollTrigger en la imagen
-    if (bgImg) {
-      gsap.to(bgImg, {
-        yPercent: 12,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: heroSection,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true
-        }
+    // Flechas anterior y siguiente
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const prevIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        goToSlide(prevIndex);
       });
     }
 
-    // 4. Secuencia cinematográfica para cada tarjeta 19:10 individual
+    if (nextBtn) {
+      nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const nextIndex = (currentIndex + 1) % totalSlides;
+        goToSlide(nextIndex);
+      });
+    }
+
+    // Animación de entrada inicial para Slide 0 (Latest Post)
+    const initialSlide = contentSlides[0];
+    const initialBg = bgSlides[0];
+    if (initialSlide && initialBg) {
+      const initMeta = initialSlide.querySelector('.slide-anim-meta');
+      const initTitle = initialSlide.querySelector('.slide-title');
+      const initLogline = initialSlide.querySelector('.slide-logline');
+      const initActions = initialSlide.querySelector('.slide-actions');
+
+      const initTl = gsap.timeline({
+        delay: 0.2,
+        onComplete: () => {
+          startProgressTimer();
+        }
+      });
+
+      initTl.fromTo(initialBg,
+        { scale: 1.14, opacity: 0.3 },
+        { scale: 1, opacity: 1, duration: 1.6, ease: 'power2.out' },
+        0
+      );
+
+      initTl.fromTo([initMeta, initTitle, initLogline, initActions].filter(Boolean),
+        { opacity: 0, y: 40, filter: 'blur(10px)' },
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, stagger: 0.12, ease: 'expo.out' },
+        0.3
+      );
+    } else {
+      startProgressTimer();
+    }
+
+    // ScrollTrigger Parallax en el fondo
+    gsap.to('.hero-slide-bg', {
+      yPercent: 10,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#univisium-hero-section',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
+
+    // Animaciones para las cards inferiores en el grid editorial
     const cards = document.querySelectorAll<HTMLElement>('.cinemascope-card');
     cards.forEach((card) => {
       card.style.opacity = '1';
@@ -518,9 +790,9 @@ const casosAlternativos = [
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initUnivisiumHero);
+    document.addEventListener('DOMContentLoaded', initHeroSequence);
   } else {
-    initUnivisiumHero();
+    initHeroSequence();
   }
-  document.addEventListener('astro:page-load', initUnivisiumHero);
+  document.addEventListener('astro:page-load', initHeroSequence);
 </script>
