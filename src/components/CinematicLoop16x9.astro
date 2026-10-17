@@ -44,17 +44,17 @@ const posterImage = frames[0] || 'https://storage.thegreatpuzzleproject.com/vaul
   <div class={`relative w-full ${aspectRatioClass} min-h-75 sm:min-h-110 lg:min-h-145 overflow-hidden bg-neutral-950`}>
     
     <!-- MODO A: VIDEO CONTINUO SI EXISTE RENDER REMOTION -->
-    {videoWebmUrl && (
+    {(videoMp4Url || videoWebmUrl) && (
       <video
-        class="loop-video-player absolute inset-0 w-full h-full object-cover z-10 pointer-events-none"
+        class="loop-video-player absolute inset-0 w-full h-full object-cover z-10"
         autoplay
         loop
         muted
         playsinline
-        preload="metadata"
+        preload="auto"
         poster={posterImage}
       >
-        <source src={videoWebmUrl} type="video/webm" />
+        {videoWebmUrl && <source src={videoWebmUrl} type="video/webm" />}
         {videoMp4Url && <source src={videoMp4Url} type="video/mp4" />}
       </video>
     )}
@@ -80,7 +80,7 @@ const posterImage = frames[0] || 'https://storage.thegreatpuzzleproject.com/vaul
     <!-- Indicador de Emisión / Telemetría -->
     <div class="absolute top-4 left-4 z-30 flex items-center gap-2 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-[10px] font-mono tracking-widest uppercase text-amber-300">
       <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-      <span>4S LOOP · 16:9</span>
+      <span>10S LOOP · 16:9</span>
     </div>
 
     <!-- Paginador de Cuadros en Tiempo Real -->
@@ -127,15 +127,67 @@ const posterImage = frames[0] || 'https://storage.thegreatpuzzleproject.com/vaul
     const container = document.getElementById(loopId);
     if (!container) return;
 
+    const videoEl = container.querySelector('.loop-video-player');
     const frameEls = container.querySelectorAll('.loop-frame');
     const pillEls = container.querySelectorAll('.loop-pill');
     const pauseBtn = container.querySelector('.btn-toggle-pause');
 
-    if (frameEls.length === 0) return;
-
     let currentIdx = 0;
     let isPaused = false;
     let timer = null;
+
+    function updatePills(activeIdx) {
+      pillEls.forEach((p, idx) => {
+        if (idx === activeIdx) {
+          p.classList.add('bg-amber-400', 'w-5');
+          p.classList.remove('bg-white/30', 'w-2');
+        } else {
+          p.classList.remove('bg-amber-400', 'w-5');
+          p.classList.add('bg-white/30', 'w-2');
+        }
+      });
+    }
+
+    if (videoEl) {
+      // ── MODO VIDEO ACTIVO ──
+      videoEl.addEventListener('timeupdate', () => {
+        if (!videoEl.duration || pillEls.length === 0) return;
+        const progress = videoEl.currentTime / videoEl.duration;
+        const activeIdx = Math.min(Math.floor(progress * pillEls.length), pillEls.length - 1);
+        updatePills(activeIdx);
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              if (!isPaused) videoEl.play().catch(() => {});
+            } else {
+              videoEl.pause();
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      observer.observe(container);
+
+      pauseBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (videoEl.paused) {
+          videoEl.play();
+          isPaused = false;
+          pauseBtn.textContent = '⏸';
+        } else {
+          videoEl.pause();
+          isPaused = true;
+          pauseBtn.textContent = '▶';
+        }
+      });
+      return;
+    }
+
+    // ── MODO B: FALLBACK DE FOTOGRAMAS ──
+    if (frameEls.length === 0) return;
 
     function advanceFrame() {
       if (isPaused) return;
@@ -151,16 +203,7 @@ const posterImage = frames[0] || 'https://storage.thegreatpuzzleproject.com/vaul
       frameEls[currentIdx].classList.remove('opacity-0', 'scale-105');
       frameEls[currentIdx].classList.add('opacity-100', 'scale-100');
 
-      // Actualizar pills
-      pillEls.forEach((p, idx) => {
-        if (idx === currentIdx) {
-          p.classList.add('bg-amber-400', 'w-5');
-          p.classList.remove('bg-white/30', 'w-2');
-        } else {
-          p.classList.remove('bg-amber-400', 'w-5');
-          p.classList.add('bg-white/30', 'w-2');
-        }
-      });
+      updatePills(currentIdx);
     }
 
     function startLoop() {
@@ -168,7 +211,6 @@ const posterImage = frames[0] || 'https://storage.thegreatpuzzleproject.com/vaul
       timer = setInterval(advanceFrame, duracionSegundos * 1000);
     }
 
-    // IntersectionObserver para no consumir GPU si el lector no tiene el loop a la vista
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -181,10 +223,8 @@ const posterImage = frames[0] || 'https://storage.thegreatpuzzleproject.com/vaul
       },
       { threshold: 0.2 }
     );
-
     observer.observe(container);
 
-    // Botón de Pausa / Play
     pauseBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
       isPaused = !isPaused;

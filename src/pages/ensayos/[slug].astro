@@ -102,6 +102,7 @@ const NAN_MADOL_HERO_FRAMES = [
   'https://storage.thegreatpuzzleproject.com/vault-media/1792217519518-b5ba057e.webp', // Plano 3: Puerta cripta
   'https://storage.thegreatpuzzleproject.com/vault-media/1792217532545-045e2f7b.webp', // Plano 4: Océano y arrecife
 ];
+const NAN_MADOL_HERO_VIDEO_MP4 = 'https://storage.thegreatpuzzleproject.com/vault-media/loops/nan-madol/nan-madol-hero-16x9.mp4';
 ---
 
 <Layout title={`${data.title} | The Great Puzzle Project`}>
@@ -167,9 +168,10 @@ const NAN_MADOL_HERO_FRAMES = [
           loopId="nan-madol-hero-stage"
           title="Nan Madol · Registro Atmosférico en 4 Momentos"
           subtitle="FASE I • ARRECIFE Y CANTERA BASÁLTICA"
-          caption="Loop 16:9 de 4 segundos · Fotogramas sintéticos correlativos blindados en Cloudflare R2 con fundido cruzado continuo."
+          caption="Loop 16:9 de 10 segundos · Master Dark Academia con Ken Burns orgánico, viñeta cinematográfica y grano de 35mm sobre Cloudflare R2."
+          videoMp4Url={NAN_MADOL_HERO_VIDEO_MP4}
           frames={NAN_MADOL_HERO_FRAMES}
-          duracionPorFrame={1.0}
+          duracionPorFrame={2.5}
           mode="hero"
         />
       </div>
@@ -260,6 +262,7 @@ const NAN_MADOL_HERO_FRAMES = [
               title="El Santuario Ciclópeo de Nan Douwas"
               subtitle="FASE II • EL CLÍMAX MEGALÍTICO & CRIPTA REAL"
               caption="Perspectiva inmersiva de las cámaras y troncos prismáticos de basalto apilados sin argamasa."
+              videoMp4Url={NAN_MADOL_HERO_VIDEO_MP4}
               frames={[
                 NAN_MADOL_HERO_FRAMES[1],
                 NAN_MADOL_HERO_FRAMES[2],
