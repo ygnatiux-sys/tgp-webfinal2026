@@ -17,6 +17,9 @@
 }
 
 @theme {
+  --font-gloock: "Gloock", Georgia, serif;
+  --font-literata: "Literata", Georgia, serif;
+  --font-google-sans: "Google Sans", "Plus Jakarta Sans", system-ui, sans-serif;
   --font-bodoni: "Bodoni Moda", serif;
   --font-inter: "Inter", sans-serif;
   --font-outfit: "Outfit", sans-serif;
@@ -51,20 +54,44 @@
     max-width: 100%;
   }
 
-
   .font-gloock {
-    font-family: 'Gloock', serif;
+    font-family: var(--font-gloock), 'Gloock', Georgia, serif;
+  }
+
+  .font-literata {
+    font-family: var(--font-literata), 'Literata', Georgia, serif;
+  }
+
+  .font-google-sans {
+    font-family: var(--font-google-sans), 'Google Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 
   .font-outfit {
     font-family: 'Outfit', sans-serif;
   }
 
-  h1, h2, h3, h4, h5, .font-bodoni {
+  /* Jerarquía tipográfica estricta TGP */
+  h1 {
+    font-family: var(--font-gloock), 'Gloock', Georgia, serif;
+    font-weight: 800;
+  }
+
+  h2 {
+    font-family: var(--font-literata), 'Literata', Georgia, serif;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-family: var(--font-google-sans), 'Google Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 500;
+  }
+
+  h4, h5, .font-bodoni {
     @apply font-bodoni;
     display: inline-block;
   }
 }
+
 
 @layer utilities {
   /* ── TOKENS CINEMÁTICOS MUBI × APPLE × A24 ── */

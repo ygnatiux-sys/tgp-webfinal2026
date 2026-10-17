@@ -1,0 +1,595 @@
+---
+// src/pages/tgp-app/imprenta.astro
+// Atelier de Imprenta & Loops Cinemáticos — Pantalla Limpia de Forja Editorial
+import Layout from '../../layouts/Layout.astro';
+
+// Datos de demostración para el visor de la revista (Spreads 60/40)
+const DEMO_SPREADS = [
+  {
+    id: 1,
+    tag: 'FOLIO I · EL SANTUARIO PRIMIGENIO',
+    title: 'Göbekli Tepe',
+    subtitle: 'La piedra que antecede al tiempo agrícola',
+    excerpt: 'Doce mil años antes de los primeros templos faraónicos, cazadores nómadas erigieron círculos megalíticos de dieciséis toneladas en el sudeste de Anatolia.',
+    body: 'Göbekli Tepe destruyó el dogma antropológico tradicional: no fue el trigo ni el sedentarismo lo que inventó la arquitectura sagrada, sino el fervor litúrgico el que forzó el nacimiento de la comunidad.\n\nLos pilares monolíticos en forma de T son figuras personificadas cuyos brazos doblados protegen el ombligo del mundo en un tiempo donde el hombre dialogaba con bestias totémicas esculpidas en alto relieve.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
+    imageCaption: 'Pilar central del Recinto C de Göbekli Tepe, tallado en caliza blanca ca. 9500 a.C.',
+    imageCredit: 'Archivo Arqueológico DAI / TGP Vault',
+    year: 'ca. 9500 a.C.',
+    directorBadge: 'TARKOVSKY · Memoria viva',
+  },
+  {
+    id: 2,
+    tag: 'FOLIO II · LA PETRIFICACIÓN DEL INSTANTE',
+    title: 'Pompeya y el Vesubio',
+    subtitle: 'La dialéctica de la ceniza y la eternidad',
+    excerpt: 'Bajo el manto piroclástico del 79 d.C., una civilización mercantil quedó congelada en un diálogo suspendido entre la fragilidad humana y la geología.',
+    body: 'El Vesubio no destruyó a Pompeya: la encapsuló en un vacío geológico tridimensional. Los frescos del Cuarto Estilo, los pigmentos de cinabrio oriental y las inscripciones clandestinas del lupanar preservaron la vitalidad romana con más elocuencia que las bibliotecas del Senado.\n\nLa muerte repentina funcionó como una cámara oscura que fijó el latido doméstico de la antigüedad para siempre.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/magazine/pompeya-y-el-vesubio/vesuvius-from-pompeii-hires-version-2png.webp',
+    imageCaption: 'El cono del Vesubio recortado contra el horizonte desde la columnata del Foro de Pompeya.',
+    imageCredit: 'Archivo TGP Vault / Dominio Público',
+    year: '79 d.C.',
+    directorBadge: 'PASOLINI · Cuerpo y catástrofe',
+  },
+  {
+    id: 3,
+    tag: 'FOLIO III · LA VENECIA DE BASALTO',
+    title: 'Nan Madol',
+    subtitle: 'Ciclópeas fortalezas sobre el silencio del arrecife',
+    excerpt: 'En la isla de Pohnpei, noventa islotes artificiales de basalto prismático se elevan sobre lagunas de coral desafiando toda explicación logística razonable.',
+    body: '¿Cómo transportaron miles de toneladas de columnas hexagonales de basalto a través de mar abierto sin bestias de carga ni poleas metálicas?\n\nNan Madol es la refutación oceánica de nuestra cronología lineal. Sus muros ciclópeos permanecen como una partitura hermética devorada por la selva y el ritmo de las mareas micronesias.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792209469017-fe546dfb.webp',
+    imageCaption: 'Canales sumergidos y murallas de basalto en la necrópolis de Nan Douwas.',
+    imageCredit: 'Archivo Arqueológico del Pacífico / TGP',
+    year: 'Cronología Disidente',
+    directorBadge: 'KUBRICK · Orden monumental',
+  },
+  {
+    id: 4,
+    tag: 'FOLIO IV · LA GEOMETRÍA ANDINA',
+    title: 'Ollantaytambo',
+    subtitle: 'La cantera de Kachiqhata y el Templo del Sol',
+    excerpt: 'Monolitos de pórfido rojo pulidos con precisión micrométrica descansan en la cumbre del valle sagrado, interrumpidos por una guerra que detuvo la cantera.',
+    body: 'Las seis colosales piedras de la fortaleza no solo encajan con holgura nula: sus uniones incorporan laminillas de amortiguación sísmica que han resistido medio milenio de temblores.\n\nEl misterio reside en el transporte: las moles fueron extraídas de Kachiqhata, descendidas por laderas imposibles, cruzadas a través del río Vilcanota y elevadas a trescientos metros de altura.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792044304672-7a6c3054.webp',
+    imageCaption: 'El Templo del Sol de Ollantaytambo recortado contra la cordillera de Urubamba.',
+    imageCredit: 'Archivo TGP Bóveda',
+    year: 'Horizonte Tardío',
+    directorBadge: 'LYNCH · El umbral sagrado',
+  }
+];
+
+const DIRECTORES = [
+  { id: 'kubrick', name: 'Stanley Kubrick', tag: 'Simetría & Geometría Fría', color: 'border-cyan-500/40 text-cyan-300 bg-cyan-500/10' },
+  { id: 'tarkovsky', name: 'Andrei Tarkovsky', tag: 'Tiempo Dilatado & Memoria', color: 'border-emerald-500/40 text-emerald-300 bg-emerald-500/10' },
+  { id: 'pasolini', name: 'Pier Paolo Pasolini', tag: 'Materialidad & Luz Dorada', color: 'border-amber-500/40 text-amber-300 bg-amber-500/10' },
+  { id: 'lynch', name: 'David Lynch', tag: 'Atmósfera Onírica & Umbral', color: 'border-purple-500/40 text-purple-300 bg-purple-500/10' },
+];
+---
+
+<Layout title="Atelier de Imprenta & Loops · TGP Labs">
+  <!-- Estilos dedicados para la textura de encuadernación y lectura editorial -->
+  <style>
+    .book-spine-shadow {
+      background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 8%, rgba(0,0,0,0) 25%, rgba(0,0,0,0.05) 92%, rgba(0,0,0,0.6) 100%);
+    }
+    .page-crease {
+      box-shadow: inset 18px 0 35px -15px rgba(0,0,0,0.7), inset -18px 0 35px -15px rgba(0,0,0,0.7);
+    }
+    .paper-texture {
+      background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+    .theme-paper .book-page-right {
+      background-color: #f7f4ed !important;
+      color: #1a1a1a !important;
+    }
+    .theme-paper .book-page-right h2,
+    .theme-paper .book-page-right h3,
+    .theme-paper .book-page-right p {
+      color: #1a1a1a !important;
+    }
+    .theme-paper .book-page-right .folio-tag {
+      color: #7c2d12 !important;
+      background: rgba(124, 45, 18, 0.08) !important;
+    }
+  </style>
+
+  <!-- Barra de Navegación Minimalista Superior -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-neutral-950/80 backdrop-blur-xl border-b border-neutral-800/80 h-16">
+    <div class="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
+      <!-- Breadcrumb de Regreso -->
+      <div class="flex items-center gap-2">
+        <a href="/tgp-app" class="inline-flex items-center gap-2 text-xs font-mono text-neutral-400 hover:text-white transition-colors group">
+          <span class="group-hover:-translate-x-1 transition-transform">←</span>
+          <span>TGP Scriptorium</span>
+          <span class="text-neutral-600">/</span>
+        </a>
+        <h1 class="text-sm md:text-base font-gloock font-extrabold text-amber-300 tracking-wide">
+          Atelier de Imprenta &amp; Loops
+        </h1>
+      </div>
+
+      <!-- Selector de Modo Maestro (Pill Nav) -->
+      <div class="flex items-center p-1 bg-neutral-900 border border-neutral-800 rounded-full shadow-inner">
+        <button
+          id="btn-tab-revistas"
+          class="mode-tab-btn active px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-300 bg-neutral-800 text-white shadow-sm flex items-center gap-1.5 cursor-pointer"
+        >
+          <span>📖</span>
+          <span>Revistas (Flipbooks)</span>
+        </button>
+        <button
+          id="btn-tab-loops"
+          class="mode-tab-btn px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-300 text-neutral-400 hover:text-white flex items-center gap-1.5 cursor-pointer"
+        >
+          <span>🎞️</span>
+          <span>Loops (Remotion)</span>
+        </button>
+      </div>
+
+      <!-- Acciones Rápidas (Tema & Pantalla Completa) -->
+      <div class="flex items-center gap-2">
+        <button
+          id="btn-toggle-theme"
+          class="p-2 rounded-lg border border-neutral-800 bg-neutral-900/60 text-neutral-300 hover:text-white hover:border-neutral-700 text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+          title="Alternar entre Carbón Obsidian y Papel Pergamino"
+        >
+          <span id="theme-icon">📜</span>
+          <span class="hidden sm:inline text-[11px] font-mono" id="theme-label">Pergamino</span>
+        </button>
+        <button
+          id="btn-fullscreen"
+          class="p-2 rounded-lg border border-neutral-800 bg-neutral-900/60 text-neutral-300 hover:text-white hover:border-neutral-700 text-xs transition-colors cursor-pointer"
+          title="Pantalla Completa"
+        >
+          ⛶
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MESA DE TRABAJO PRINCIPAL -->
+  <main class="pt-24 pb-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen flex flex-col justify-between">
+
+    <!-- ================================================================== -->
+    <!-- MÓDULO 1: IMPRENTA DE REVISTAS / FLIPBOOKS                         -->
+    <!-- ================================================================== -->
+    <section id="panel-revistas" class="tab-panel active flex flex-col gap-6">
+
+      <!-- Barra de Forja Rápida -->
+      <div class="p-4 md:p-5 rounded-2xl bg-neutral-900/80 border border-neutral-800/90 backdrop-blur-md shadow-xl flex flex-col lg:flex-row items-center justify-between gap-4">
+        <div class="flex-1 w-full flex items-center gap-3">
+          <span class="text-amber-400 text-lg">⚡</span>
+          <input
+            id="input-tema-revista"
+            type="text"
+            placeholder="Introduce un enigma o sitio (ej: 'Las terrazas megalíticas de Ollantaytambo' o 'Göbekli Tepe')..."
+            class="w-full bg-neutral-950/80 border border-neutral-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400/60 transition-colors font-sans"
+          />
+        </div>
+        <div class="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
+          <div class="flex items-center gap-2 text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg shrink-0">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Gemini 2.5 Flash · PAYG Activo</span>
+          </div>
+          <button
+            id="btn-forjar-revista"
+            class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(245,158,11,0.25)] flex items-center gap-2 cursor-pointer shrink-0"
+          >
+            <span>Forjar Número</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- VISOR DEL LIBRO / SPREAD 60/40 -->
+      <div id="book-container" class="relative w-full rounded-2xl border border-neutral-800/80 bg-neutral-950 shadow-2xl overflow-hidden page-crease paper-texture">
+        <!-- Sombra central del lomo -->
+        <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-16 book-spine-shadow z-20 pointer-events-none hidden md:block"></div>
+
+        <!-- Doble Spread (Página Izquierda 60% Visual | Página Derecha 40% Texto) -->
+        <div class="grid grid-cols-1 md:grid-cols-12 min-h-[580px] lg:min-h-[640px]">
+
+          <!-- PÁGINA IZQUIERDA (60% VISUAL) -->
+          <div class="md:col-span-7 relative bg-neutral-900 overflow-hidden flex flex-col justify-end p-6 md:p-10 group">
+            <img
+              id="spread-image"
+              src={DEMO_SPREADS[0].imageUrl}
+              alt={DEMO_SPREADS[0].title}
+              class="absolute inset-0 w-full h-full object-cover object-center transition-all duration-700 group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10"></div>
+
+            <!-- Epígrafe Iconográfico en esquina inferior -->
+            <div class="relative z-20 bg-neutral-950/80 backdrop-blur-md border border-white/10 rounded-xl p-4 max-w-lg transition-all duration-300">
+              <div class="flex items-center justify-between text-[10px] font-mono text-amber-300 mb-1">
+                <span id="spread-director">{DEMO_SPREADS[0].directorBadge}</span>
+                <span id="spread-year" class="text-neutral-400">{DEMO_SPREADS[0].year}</span>
+              </div>
+              <p id="spread-caption" class="text-xs text-neutral-300 font-light leading-relaxed">
+                {DEMO_SPREADS[0].imageCaption}
+              </p>
+              <p id="spread-credit" class="text-[10px] font-mono text-neutral-500 mt-1">
+                {DEMO_SPREADS[0].imageCredit}
+              </p>
+            </div>
+          </div>
+
+          <!-- PÁGINA DERECHA (40% EPISTÉMICA) -->
+          <div class="book-page-right md:col-span-5 bg-neutral-900/90 p-8 md:p-12 flex flex-col justify-between border-t md:border-t-0 md:border-l border-neutral-800 transition-colors duration-300">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-6">
+                <span id="spread-tag" class="folio-tag inline-block text-[10px] font-mono uppercase tracking-[0.2em] font-semibold text-amber-300/90 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
+                  {DEMO_SPREADS[0].tag}
+                </span>
+                <span id="spread-folio-num" class="text-xs font-mono text-neutral-500">Folio 1 de {DEMO_SPREADS.length}</span>
+              </div>
+
+              <h2 id="spread-title" class="text-3xl lg:text-4xl font-literata font-bold text-white leading-tight tracking-tight mb-2">
+                {DEMO_SPREADS[0].title}
+              </h2>
+              <h3 id="spread-subtitle" class="text-sm font-google-sans font-normal text-neutral-400 italic mb-6">
+                {DEMO_SPREADS[0].subtitle}
+              </h3>
+
+              <div class="w-12 h-px bg-amber-400/40 mb-6"></div>
+
+              <blockquote id="spread-excerpt" class="text-sm font-serif italic text-amber-200/90 border-l-2 border-amber-400/60 pl-4 py-1 mb-6 leading-relaxed">
+                "{DEMO_SPREADS[0].excerpt}"
+              </blockquote>
+
+              <p id="spread-body" class="text-xs lg:text-sm text-neutral-300 font-light leading-relaxed whitespace-pre-line">
+                {DEMO_SPREADS[0].body}
+              </p>
+            </div>
+
+            <!-- Navegación de Folios y Paginador -->
+            <div class="pt-8 border-t border-neutral-800/80 flex items-center justify-between">
+              <button
+                id="btn-folio-prev"
+                class="px-4 py-2 rounded-lg border border-neutral-800 bg-neutral-900 text-neutral-300 hover:text-white hover:border-neutral-600 text-xs font-mono transition-all flex items-center gap-2 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                disabled
+              >
+                <span>←</span>
+                <span>Anterior</span>
+              </button>
+              <div class="flex items-center gap-1.5" id="pills-paginador">
+                {DEMO_SPREADS.map((_, idx) => (
+                  <button
+                    data-folio={idx}
+                    class={`pill-folio w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${
+                      idx === 0 ? 'bg-amber-400 w-6' : 'bg-neutral-700 hover:bg-neutral-500'
+                    }`}
+                    title={`Ir al folio ${idx + 1}`}
+                  ></button>
+                ))}
+              </div>
+              <button
+                id="btn-folio-next"
+                class="px-4 py-2 rounded-lg border border-neutral-800 bg-neutral-900 text-neutral-300 hover:text-white hover:border-neutral-600 text-xs font-mono transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <span>Siguiente</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Barra Inferior de Herramientas del Lector -->
+      <div class="flex flex-wrap items-center justify-between gap-4 px-2 py-1 text-xs text-neutral-400 font-mono">
+        <div class="flex items-center gap-4">
+          <span class="flex items-center gap-1.5">
+            <kbd class="px-1.5 py-0.5 rounded bg-neutral-800 text-[10px] text-neutral-300">←</kbd>
+            <kbd class="px-1.5 py-0.5 rounded bg-neutral-800 text-[10px] text-neutral-300">→</kbd>
+            <span class="text-neutral-500">para pasar de página</span>
+          </span>
+          <span class="hidden md:inline text-neutral-600">|</span>
+          <span class="hidden md:inline text-neutral-400">Atelier Imprenta TGP v1.0</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a
+            href="/magazine/gobekli-tepe"
+            target="_blank"
+            class="text-neutral-300 hover:text-amber-300 transition-colors flex items-center gap-1"
+          >
+            <span>Ver Revista Web Clásica</span>
+            <span>↗</span>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- MÓDULO 2: LABORATORIO DE LOOPS (REMOTION)                          -->
+    <!-- ================================================================== -->
+    <section id="panel-loops" class="tab-panel hidden flex flex-col gap-6">
+
+      <!-- Controles de Dirección Cinemática -->
+      <div class="p-6 rounded-2xl bg-neutral-900/80 border border-neutral-800/90 backdrop-blur-md shadow-xl flex flex-col gap-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-800">
+          <div>
+            <h2 class="text-xl font-literata font-bold text-white mb-1">Director Cinemático &amp; Ritmo</h2>
+            <p class="text-xs text-neutral-400 font-light">Selecciona la rúbrica estilística para el loop de 4 fotogramas.</p>
+          </div>
+
+          <!-- Selector de Relación de Aspecto -->
+          <div class="flex items-center p-1 bg-neutral-950 border border-neutral-800 rounded-xl">
+            <button class="aspect-btn active px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-neutral-800 text-white cursor-pointer" data-aspect="9:16">
+              📱 9:16 (TikTok/Shorts)
+            </button>
+            <button class="aspect-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-neutral-400 hover:text-white cursor-pointer" data-aspect="16:9">
+              🖥️ 16:9 (Cine/Web)
+            </button>
+          </div>
+        </div>
+
+        <!-- Tarjetas de Directores -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {DIRECTORES.map((dir, i) => (
+            <button
+              class={`director-card text-left p-4 rounded-xl border transition-all cursor-pointer ${
+                i === 1 ? 'ring-2 ring-emerald-400/60 bg-emerald-500/10 border-emerald-500/40' : 'bg-neutral-950/60 border-neutral-800 hover:border-neutral-700'
+              }`}
+              data-director={dir.id}
+            >
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-literata font-medium text-white">{dir.name}</span>
+                <span class={`text-[9px] font-mono px-1.5 py-0.5 rounded ${dir.color}`}>PRESET</span>
+              </div>
+              <p class="text-[11px] text-neutral-400 font-light leading-snug">{dir.tag}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Storyboard de 4 Fotogramas Sincronizados -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+        <!-- Visualizador de Fotogramas (Storyboard) -->
+        <div class="md:col-span-8 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-google-sans font-semibold uppercase tracking-widest text-neutral-400">Storyboard (Secuencia de 4 Momentos)</h3>
+            <span class="text-xs font-mono text-amber-300">Tempo: 14.0s (3.5s por cuadro)</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {DEMO_SPREADS.map((frame, idx) => (
+              <div class="relative group rounded-xl overflow-hidden border border-neutral-800 aspect-video md:aspect-[3/4] bg-neutral-900 shadow-lg">
+                <img src={frame.imageUrl} alt={frame.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
+                <div class="absolute top-2 left-2 text-[10px] font-mono px-2 py-0.5 rounded bg-black/60 text-white backdrop-blur-sm">
+                  #{idx + 1}
+                </div>
+                <div class="absolute bottom-2 left-2 right-2">
+                  <p class="text-[11px] font-serif font-medium text-white truncate">{frame.title}</p>
+                  <p class="text-[9px] font-mono text-neutral-400">{idx * 3.5}s - {(idx + 1) * 3.5}s</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Botón de Renderizado de Loop -->
+          <div class="p-4 rounded-xl bg-neutral-900/60 border border-neutral-800 flex items-center justify-between">
+            <div class="text-xs text-neutral-400">
+              <span class="text-white font-medium">Motor Remotion:</span> Pipeline en Cloud Run listo para orquestar.
+            </div>
+            <button
+              id="btn-generar-loop"
+              class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] flex items-center gap-2 cursor-pointer"
+            >
+              <span>🎞️ Compilar Loop Remotion</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Monitor de Previsualización de Video (Simulador de Pantalla) -->
+        <div class="md:col-span-4 rounded-2xl border border-neutral-800 bg-neutral-950 p-6 flex flex-col justify-between shadow-2xl">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-neutral-800 mb-4">
+              <span class="text-xs font-mono text-neutral-400">Monitor de Emisión</span>
+              <span class="flex items-center gap-1.5 text-[10px] font-mono text-amber-300">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                <span>LOOP ACTIVO</span>
+              </span>
+            </div>
+
+            <!-- Canvas de Animación Ken Burns Continua -->
+            <div class="relative w-full aspect-[9/16] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-900 shadow-inner group">
+              <img
+                id="loop-preview-img"
+                src={DEMO_SPREADS[0].imageUrl}
+                alt="Ken Burns Loop Preview"
+                class="w-full h-full object-cover animate-[pulse_8s_ease-in-out_infinite]"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+              <div class="absolute bottom-4 left-4 right-4">
+                <span class="text-[9px] font-mono tracking-widest uppercase text-amber-400 bg-black/60 px-2 py-0.5 rounded">TGP LOOPS</span>
+                <p id="loop-preview-title" class="text-sm font-serif text-white font-medium mt-1">Göbekli Tepe</p>
+                <p class="text-[10px] text-neutral-300 font-light mt-0.5">Fundido encadenado continuo 60 FPS</p>
+              </div>
+            </div>
+          </div>
+
+          <button class="mt-4 w-full py-2.5 rounded-xl border border-neutral-800 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-mono transition-colors flex items-center justify-center gap-2 cursor-pointer">
+            <span>Descargar Video MP4</span>
+            <span>↓</span>
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Script de Interactividad y Estado en Vivo -->
+  <script is:inline define:vars={{ demoSpreads: DEMO_SPREADS }}>
+    // ── 1. Estado Reactivo del Atelier ─────────────────────────────────────────
+    let currentFolioIndex = 0;
+    let isPaperTheme = false;
+
+    // ── 2. Selector de Pestañas (Revistas vs Loops) ───────────────────────────
+    const tabRevistas = document.getElementById('btn-tab-revistas');
+    const tabLoops = document.getElementById('btn-tab-loops');
+    const panelRevistas = document.getElementById('panel-revistas');
+    const panelLoops = document.getElementById('panel-loops');
+
+    function switchTab(target) {
+      if (target === 'revistas') {
+        tabRevistas.classList.add('bg-neutral-800', 'text-white');
+        tabRevistas.classList.remove('text-neutral-400');
+        tabLoops.classList.remove('bg-neutral-800', 'text-white');
+        tabLoops.classList.add('text-neutral-400');
+        panelRevistas.classList.remove('hidden');
+        panelLoops.classList.add('hidden');
+      } else {
+        tabLoops.classList.add('bg-neutral-800', 'text-white');
+        tabLoops.classList.remove('text-neutral-400');
+        tabRevistas.classList.remove('bg-neutral-800', 'text-white');
+        tabRevistas.classList.add('text-neutral-400');
+        panelLoops.classList.remove('hidden');
+        panelRevistas.classList.add('hidden');
+      }
+    }
+
+    tabRevistas?.addEventListener('click', () => switchTab('revistas'));
+    tabLoops?.addEventListener('click', () => switchTab('loops'));
+
+    // ── 3. Navegación del Libro / Flipbook ────────────────────────────────────
+    const spreadImage = document.getElementById('spread-image');
+    const spreadDirector = document.getElementById('spread-director');
+    const spreadYear = document.getElementById('spread-year');
+    const spreadCaption = document.getElementById('spread-caption');
+    const spreadCredit = document.getElementById('spread-credit');
+    const spreadTag = document.getElementById('spread-tag');
+    const spreadFolioNum = document.getElementById('spread-folio-num');
+    const spreadTitle = document.getElementById('spread-title');
+    const spreadSubtitle = document.getElementById('spread-subtitle');
+    const spreadExcerpt = document.getElementById('spread-excerpt');
+    const spreadBody = document.getElementById('spread-body');
+
+    const btnPrev = document.getElementById('btn-folio-prev');
+    const btnNext = document.getElementById('btn-folio-next');
+    const pills = document.querySelectorAll('.pill-folio');
+
+    function renderFolio(index) {
+      if (index < 0 || index >= demoSpreads.length) return;
+      currentFolioIndex = index;
+      const data = demoSpreads[index];
+
+      // Animación de desvanecimiento sutil
+      spreadImage.style.opacity = '0.3';
+      setTimeout(() => {
+        spreadImage.src = data.imageUrl;
+        spreadImage.style.opacity = '1';
+      }, 150);
+
+      spreadDirector.textContent = data.directorBadge;
+      spreadYear.textContent = data.year;
+      spreadCaption.textContent = data.imageCaption;
+      spreadCredit.textContent = data.imageCredit;
+
+      spreadTag.textContent = data.tag;
+      spreadFolioNum.textContent = `Folio ${index + 1} de ${demoSpreads.length}`;
+      spreadTitle.textContent = data.title;
+      spreadSubtitle.textContent = data.subtitle;
+      spreadExcerpt.textContent = `"${data.excerpt}"`;
+      spreadBody.textContent = data.body;
+
+      // Actualizar estado de botones
+      btnPrev.disabled = index === 0;
+      btnNext.disabled = index === demoSpreads.length - 1;
+
+      // Actualizar pills
+      pills.forEach((p, i) => {
+        if (i === index) {
+          p.classList.add('bg-amber-400', 'w-6');
+          p.classList.remove('bg-neutral-700', 'w-2.5');
+        } else {
+          p.classList.remove('bg-amber-400', 'w-6');
+          p.classList.add('bg-neutral-700', 'w-2.5');
+        }
+      });
+    }
+
+    btnPrev?.addEventListener('click', () => renderFolio(currentFolioIndex - 1));
+    btnNext?.addEventListener('click', () => renderFolio(currentFolioIndex + 1));
+
+    pills.forEach((p) => {
+      p.addEventListener('click', () => {
+        const idx = parseInt(p.getAttribute('data-folio') || '0', 10);
+        renderFolio(idx);
+      });
+    });
+
+    // Soporte para teclas flecha
+    window.addEventListener('keydown', (e) => {
+      if (panelRevistas.classList.contains('hidden')) return;
+      if (e.key === 'ArrowLeft') renderFolio(currentFolioIndex - 1);
+      if (e.key === 'ArrowRight') renderFolio(currentFolioIndex + 1);
+    });
+
+    // ── 4. Alternador de Tema (Carbón vs Pergamino) ───────────────────────────
+    const btnToggleTheme = document.getElementById('btn-toggle-theme');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeLabel = document.getElementById('theme-label');
+    const bookContainer = document.getElementById('book-container');
+
+    btnToggleTheme?.addEventListener('click', () => {
+      isPaperTheme = !isPaperTheme;
+      if (isPaperTheme) {
+        bookContainer.classList.add('theme-paper');
+        themeIcon.textContent = '🌑';
+        themeLabel.textContent = 'Carbón';
+      } else {
+        bookContainer.classList.remove('theme-paper');
+        themeIcon.textContent = '📜';
+        themeLabel.textContent = 'Pergamino';
+      }
+    });
+
+    // ── 5. Pantalla Completa ─────────────────────────────────────────────────
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+    btnFullscreen?.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    // ── 6. Selección de Director Cinemático ────────────────────────────────────
+    const directorCards = document.querySelectorAll('.director-card');
+    directorCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        directorCards.forEach((c) => {
+          c.classList.remove('ring-2', 'ring-emerald-400/60', 'bg-emerald-500/10', 'border-emerald-500/40');
+          c.classList.add('bg-neutral-950/60', 'border-neutral-800');
+        });
+        card.classList.add('ring-2', 'ring-emerald-400/60', 'bg-emerald-500/10', 'border-emerald-500/40');
+        card.classList.remove('bg-neutral-950/60', 'border-neutral-800');
+      });
+    });
+
+    // ── 7. Loop Preview Interval (Simulador Cinemático Ken Burns) ─────────────
+    const loopPreviewImg = document.getElementById('loop-preview-img');
+    const loopPreviewTitle = document.getElementById('loop-preview-title');
+    let loopIdx = 0;
+    setInterval(() => {
+      if (!loopPreviewImg || panelLoops.classList.contains('hidden')) return;
+      loopIdx = (loopIdx + 1) % demoSpreads.length;
+      loopPreviewImg.style.opacity = '0.5';
+      setTimeout(() => {
+        loopPreviewImg.src = demoSpreads[loopIdx].imageUrl;
+        loopPreviewTitle.textContent = demoSpreads[loopIdx].title;
+        loopPreviewImg.style.opacity = '1';
+      }, 300);
+    }, 4000);
+  </script>
+</Layout>
