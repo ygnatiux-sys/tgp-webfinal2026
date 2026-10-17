@@ -16,6 +16,7 @@ export function getStaticPaths() {
     { params: { id: 'los-ultimos-tanos' } },
     { params: { id: 'grandes-enigmas' } },
     { params: { id: 'la-curva-moderna' } },
+    { params: { id: 'los-budas-gigantes-de-asia' } },
   ];
 }
 
@@ -215,6 +216,65 @@ const TANOS_PAGES = [
   }
 ];
 
+const BUDAS_PAGES = [
+  {
+    folio: '01',
+    tag: 'FOLIO I · EL COLOSO DEL RÍO MIN',
+    title: 'El Gran Buda de Leshan',
+    subtitle: 'Setenta y un metros tallados en la roca viva de Sichuan',
+    excerpt: 'En la confluencia de tres ríos turbulentos, el monje Hai Tong inició en el 713 d.C. una de las hazañas escultóricas más imponentes de la humanidad: vaciar un acantilado de arenisca roja para apaciguar las aguas.',
+    body: 'Durante noventa años, miles de canteros tallaron la ladera del monte Lingyun. Los escombros extraídos fueron arrojados al cauce del río Min, alterando las corrientes y volviendo navegable un paso fluvial mortal.\n\nEl Gran Buda de Leshan no solo representa a Maitreya con una serenidad monumental de 71 metros: sus orejas de madera de siete metros y un sofisticado sistema de drenaje interno invisible han evacuado las lluvias monzónicas durante más de mil doscientos años.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Leshan_Giant_Buddha_-_Sichuan.jpg/1280px-Leshan_Giant_Buddha_-_Sichuan.jpg',
+    imageCaption: 'El Gran Buda de Leshan tallado en el acantilado frente al río Min, Sichuan, China.',
+    imageCredit: 'Wikimedia Commons · CC BY-SA 4.0',
+    date: 'Octubre 2026',
+    slug: 'los-budas-gigantes-de-asia/leshan',
+    readingTime: '6 min'
+  },
+  {
+    folio: '02',
+    tag: 'FOLIO II · EL VACÍO DE LA MEMORIA',
+    title: 'Los Budas de Bamiyán',
+    subtitle: 'El eco sincretista en la Ruta de la Seda',
+    excerpt: 'Tallados en el siglo VI en las paredes del valle de Bamiyán, estos gigantes representaban la cumbre del arte greco-budista de Gandhara antes de su trágica destrucción en 2001.',
+    body: 'Durante siglos, peregrinos y caravanas de la Ruta de la Seda contemplaron a los dos colosos de 38 y 55 metros recortados contra las montañas del Hindu Kush. Pintados originalmente con pigmentos de cinabrio y lapislázuli, combinaban las túnicas helénicas con el misticismo del canon budista.\n\nHoy, sus nichos vacíos se han convertido en un monumento aún más elocuente: la presencia imborrable de la memoria frente a la furia iconoclasta.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Buddha_of_Bamiyan_1963.jpg/1280px-Buddha_of_Bamiyan_1963.jpg',
+    imageCaption: 'Fotografía histórica de 1963 que documenta el Buda mayor de Bamiyán antes de su demolición.',
+    imageCredit: 'UNESCO Historical Archive / Dominio Público',
+    date: 'Octubre 2026',
+    slug: 'los-budas-gigantes-de-asia/bamiyan',
+    readingTime: '5 min'
+  },
+  {
+    folio: '03',
+    tag: 'FOLIO III · LA ESCALA DEL ABSOLUTO',
+    title: 'El Buda del Templo de la Primavera',
+    subtitle: 'Ciento veintiocho metros de cobre en las colinas de Henan',
+    excerpt: 'Erigido sobre un pedestal de loto de veinte metros, el coloso de Zhaocun personifica a Vairochana en una escala que desafía el horizonte y la percepción humana.',
+    body: 'Con una altura total de 208 metros incluyendo el monasterio base y compuesta por más de mil cien piezas de cobre fundido, esta efigie fue la respuesta del siglo XXI al anhelo milenario de monumentalidad.\n\nEn la tradición mahayana, Vairochana es el Buda cósmico cuya luz penetra todos los reinos de la existencia. La escala no busca abrumar, sino empequeñecer el ego del observador ante la inmensidad del cosmos.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Spring_Temple_Buddha%2C_September_2008.jpg/1280px-Spring_Temple_Buddha%2C_September_2008.jpg',
+    imageCaption: 'El Buda del Templo de la Primavera elevándose sobre el valle de Lushan en Henan.',
+    imageCredit: 'Wikimedia Commons · CC BY-SA 3.0',
+    date: 'Octubre 2026',
+    slug: 'los-budas-gigantes-de-asia/foquan',
+    readingTime: '4 min'
+  },
+  {
+    folio: '04',
+    tag: 'FOLIO IV · EL BRONCE SILENCIOSO',
+    title: 'El Gran Daibutsu de Kamakura',
+    subtitle: 'El templo al aire libre esculpido por el tsunami de 1498',
+    excerpt: 'Fundido en bronce en 1252 dentro de un templo de madera que fue arrasado por olas y tifones, el Daibutsu de Amida permanece impasible a cielo abierto desde hace más de quinientos años.',
+    body: 'Con noventa y tres toneladas de aleación de bronce y trece metros de altura, el Buda de Kamakura encarna la doctrina de la Tierra Pura en el periodo Kamakura.\n\nEl templo original fue destruido por tifones en 1334 y 1369, y definitivamente borrado por el gran tsunami de Meio en 1498. La estatua sobrevivió al agua y al viento, convirtiendo el cielo y las montañas circundantes en su santuario definitivo.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Kotoku-in_Kamakura_Daibutsu.jpg/1280px-Kotoku-in_Kamakura_Daibutsu.jpg',
+    imageCaption: 'El Daibutsu de Kotoku-in en Kamakura, bronce monumental al aire libre.',
+    imageCredit: 'Wikimedia Commons · Dominio Público',
+    date: 'Octubre 2026',
+    slug: 'los-budas-gigantes-de-asia/kamakura',
+    readingTime: '5 min'
+  }
+];
+
 const MAGAZINES_DATABASE: Record<string, typeof GOBEKLI_PAGES> = {
   'gobekli-tepe': GOBEKLI_PAGES,
   'test': GOBEKLI_PAGES,
@@ -225,6 +285,7 @@ const MAGAZINES_DATABASE: Record<string, typeof GOBEKLI_PAGES> = {
   'los-ultimos-tanos': TANOS_PAGES,
   'grandes-enigmas': GOBEKLI_PAGES,
   'la-curva-moderna': POMPEYA_PAGES,
+  'los-budas-gigantes-de-asia': BUDAS_PAGES,
 };
 
 const MOCK_PAGES = MAGAZINES_DATABASE[id as string] || GOBEKLI_PAGES;

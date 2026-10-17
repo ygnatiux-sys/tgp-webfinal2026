@@ -59,6 +59,61 @@ const DEMO_SPREADS = [
   }
 ];
 
+const BUDAS_SPREADS = [
+  {
+    id: 1,
+    tag: 'FOLIO I · EL COLOSO DEL RÍO MIN',
+    title: 'El Gran Buda de Leshan',
+    subtitle: 'Setenta y un metros tallados en la roca viva de Sichuan',
+    excerpt: 'En la confluencia de tres ríos turbulentos, el monje Hai Tong inició en el 713 d.C. una de las hazañas escultóricas más imponentes de la humanidad: vaciar un acantilado de arenisca roja para apaciguar las aguas.',
+    body: 'Durante noventa años, miles de canteros tallaron la ladera del monte Lingyun. Los escombros extraídos fueron arrojados al cauce del río Min, alterando las corrientes y volviendo navegable un paso fluvial mortal.\n\nEl Gran Buda de Leshan no solo representa a Maitreya con una serenidad monumental de 71 metros: sus orejas de madera de siete metros y un sofisticado sistema de drenaje interno invisible han evacuado las lluvias monzónicas durante más de mil doscientos años.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Leshan_Giant_Buddha_-_Sichuan.jpg/1280px-Leshan_Giant_Buddha_-_Sichuan.jpg',
+    imageCaption: 'El Gran Buda de Leshan tallado en el acantilado frente al río Min, Sichuan, China.',
+    imageCredit: 'Wikimedia Commons · CC BY-SA 4.0',
+    year: '713 - 803 d.C.',
+    directorBadge: 'KUBRICK · Escala colosal y simetría geológica',
+  },
+  {
+    id: 2,
+    tag: 'FOLIO II · EL VACÍO DE LA MEMORIA',
+    title: 'Los Budas de Bamiyán',
+    subtitle: 'El eco sincretista en la Ruta de la Seda',
+    excerpt: 'Tallados en el siglo VI en las paredes del valle de Bamiyán, estos gigantes representaban la cumbre del arte greco-budista de Gandhara antes de su trágica destrucción en 2001.',
+    body: 'Durante siglos, peregrinos y caravanas de la Ruta de la Seda contemplaron a los dos colosos de 38 y 55 metros recortados contra las montañas del Hindu Kush. Pintados originalmente con pigmentos de cinabrio y lapislázuli, combinaban las túnicas helénicas con el misticismo del canon budista.\n\nHoy, sus nichos vacíos se han convertido en un monumento aún más elocuente: la presencia imborrable de la memoria frente a la furia iconoclasta.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Buddha_of_Bamiyan_1963.jpg/1280px-Buddha_of_Bamiyan_1963.jpg',
+    imageCaption: 'Fotografía histórica de 1963 que documenta el Buda mayor de Bamiyán antes de su demolición.',
+    imageCredit: 'UNESCO Historical Archive / Dominio Público',
+    year: 'Siglo VI d.C.',
+    directorBadge: 'TARKOVSKY · Nostalgia del vacío esculpido',
+  },
+  {
+    id: 3,
+    tag: 'FOLIO III · LA ESCALA DEL ABSOLUTO',
+    title: 'El Buda del Templo de la Primavera',
+    subtitle: 'Ciento veintiocho metros de cobre en las colinas de Henan',
+    excerpt: 'Erigido sobre un pedestal de loto de veinte metros, el coloso de Zhaocun personifica a Vairochana en una escala que desafía el horizonte y la percepción humana.',
+    body: 'Con una altura total de 208 metros incluyendo el monasterio base y compuesta por más de mil cien piezas de cobre fundido, esta efigie fue la respuesta del siglo XXI al anhelo milenario de monumentalidad.\n\nEn la tradición mahayana, Vairochana es el Buda cósmico cuya luz penetra todos los reinos de la existencia. La escala no busca abrumar, sino empequeñecer el ego del observador ante la inmensidad del cosmos.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Spring_Temple_Buddha%2C_September_2008.jpg/1280px-Spring_Temple_Buddha%2C_September_2008.jpg',
+    imageCaption: 'El Buda del Templo de la Primavera elevándose sobre el valle de Lushan en Henan.',
+    imageCredit: 'Wikimedia Commons · CC BY-SA 3.0',
+    year: '2008 d.C.',
+    directorBadge: 'PASOLINI · Hieratismo y luz solar',
+  },
+  {
+    id: 4,
+    tag: 'FOLIO IV · EL BRONCE SILENCIOSO',
+    title: 'El Gran Daibutsu de Kamakura',
+    subtitle: 'El templo al aire libre esculpido por el tsunami de 1498',
+    excerpt: 'Fundido en bronce en 1252 dentro de un templo de madera que fue arrasado por olas y tifones, el Daibutsu de Amida permanece impasible a cielo abierto desde hace más de quinientos años.',
+    body: 'Con noventa y tres toneladas de aleación de bronce y trece metros de altura, el Buda de Kamakura encarna la doctrina de la Tierra Pura en el periodo Kamakura.\n\nEl templo original fue destruido por tifones en 1334 y 1369, y definitivamente borrado por el gran tsunami de Meio en 1498. La estatua sobrevivió al agua y al viento, convirtiendo el cielo y las montañas circundantes en su santuario definitivo.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Kotoku-in_Kamakura_Daibutsu.jpg/1280px-Kotoku-in_Kamakura_Daibutsu.jpg',
+    imageCaption: 'El Daibutsu de Kotoku-in en Kamakura, bronce monumental al aire libre.',
+    imageCredit: 'Wikimedia Commons · Dominio Público',
+    year: '1252 d.C.',
+    directorBadge: 'LYNCH · El silencio tras el cataclismo',
+  }
+];
+
 const DIRECTORES = [
   { id: 'kubrick', name: 'Stanley Kubrick', tag: 'Simetría & Geometría Fría', color: 'border-cyan-500/40 text-cyan-300 bg-cyan-500/10' },
   { id: 'tarkovsky', name: 'Andrei Tarkovsky', tag: 'Tiempo Dilatado & Memoria', color: 'border-emerald-500/40 text-emerald-300 bg-emerald-500/10' },
@@ -158,27 +213,46 @@ const DIRECTORES = [
     <section id="panel-revistas" class="tab-panel active flex flex-col gap-6">
 
       <!-- Barra de Forja Rápida -->
-      <div class="p-4 md:p-5 rounded-2xl bg-neutral-900/80 border border-neutral-800/90 backdrop-blur-md shadow-xl flex flex-col lg:flex-row items-center justify-between gap-4">
-        <div class="flex-1 w-full flex items-center gap-3">
-          <span class="text-amber-400 text-lg">⚡</span>
-          <input
-            id="input-tema-revista"
-            type="text"
-            placeholder="Introduce un enigma o sitio (ej: 'Las terrazas megalíticas de Ollantaytambo' o 'Göbekli Tepe')..."
-            class="w-full bg-neutral-950/80 border border-neutral-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400/60 transition-colors font-sans"
-          />
-        </div>
-        <div class="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
-          <div class="flex items-center gap-2 text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg shrink-0">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Gemini 2.5 Flash · PAYG Activo</span>
+      <div class="p-4 md:p-5 rounded-2xl bg-neutral-900/80 border border-neutral-800/90 backdrop-blur-md shadow-xl flex flex-col gap-3">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+          <div class="flex-1 w-full flex items-center gap-3">
+            <span class="text-amber-400 text-lg">⚡</span>
+            <input
+              id="input-tema-revista"
+              type="text"
+              placeholder="Introduce un enigma o sitio (ej: 'Los budas gigantes de Asia' o 'Göbekli Tepe')..."
+              class="w-full bg-neutral-950/80 border border-neutral-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400/60 transition-colors font-sans"
+            />
           </div>
-          <button
-            id="btn-forjar-revista"
-            class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(245,158,11,0.25)] flex items-center gap-2 cursor-pointer shrink-0"
-          >
-            <span>Forjar Número</span>
-            <span>→</span>
+          <div class="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
+            <div class="flex items-center gap-2 text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg shrink-0">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Gemini 2.5 Flash · PAYG Activo</span>
+            </div>
+            <button
+              id="btn-forjar-revista"
+              class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(245,158,11,0.25)] flex items-center gap-2 cursor-pointer shrink-0"
+            >
+              <span>Forjar Número</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chips de Acceso y Test Rápido -->
+        <div class="flex items-center flex-wrap gap-2 pt-1 border-t border-neutral-800/60 text-xs">
+          <span class="text-[11px] font-mono text-neutral-500 mr-1">Sugerencias:</span>
+          <button class="chip-preset px-2.5 py-1 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-[11px] font-mono transition-colors cursor-pointer" data-topic="Los budas gigantes de Asia">
+            ☸️ Los budas gigantes de Asia
+          </button>
+          <button class="chip-preset px-2.5 py-1 rounded-lg border border-neutral-800 bg-neutral-950/60 hover:bg-neutral-800 text-neutral-300 text-[11px] font-mono transition-colors cursor-pointer" data-topic="Göbekli Tepe">
+            🗿 Göbekli Tepe
+          </button>
+          <button class="chip-preset px-2.5 py-1 rounded-lg border border-neutral-800 bg-neutral-950/60 hover:bg-neutral-800 text-neutral-300 text-[11px] font-mono transition-colors cursor-pointer" data-topic="Pompeya y el Vesubio">
+            🌋 Pompeya y el Vesubio
+          </button>
+          <button class="chip-preset px-2.5 py-1 rounded-lg border border-neutral-800 bg-neutral-950/60 hover:bg-neutral-800 text-neutral-300 text-[11px] font-mono transition-colors cursor-pointer" data-topic="Nan Madol">
+            🌊 Nan Madol
           </button>
         </div>
       </div>
@@ -189,7 +263,7 @@ const DIRECTORES = [
         <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-16 book-spine-shadow z-20 pointer-events-none hidden md:block"></div>
 
         <!-- Doble Spread (Página Izquierda 60% Visual | Página Derecha 40% Texto) -->
-        <div class="grid grid-cols-1 md:grid-cols-12 min-h-[580px] lg:min-h-[640px]">
+        <div class="grid grid-cols-1 md:grid-cols-12 min-h-145 lg:min-h-160">
 
           <!-- PÁGINA IZQUIERDA (60% VISUAL) -->
           <div class="md:col-span-7 relative bg-neutral-900 overflow-hidden flex flex-col justify-end p-6 md:p-10 group">
@@ -199,7 +273,7 @@ const DIRECTORES = [
               alt={DEMO_SPREADS[0].title}
               class="absolute inset-0 w-full h-full object-cover object-center transition-all duration-700 group-hover:scale-105"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10"></div>
+            <div class="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent z-10"></div>
 
             <!-- Epígrafe Iconográfico en esquina inferior -->
             <div class="relative z-20 bg-neutral-950/80 backdrop-blur-md border border-white/10 rounded-xl p-4 max-w-lg transition-all duration-300">
@@ -292,11 +366,12 @@ const DIRECTORES = [
 
         <div class="flex items-center gap-3">
           <a
+            id="link-edicion-completa"
             href="/magazine/gobekli-tepe"
             target="_blank"
-            class="text-neutral-300 hover:text-amber-300 transition-colors flex items-center gap-1"
+            class="text-amber-300 hover:text-amber-200 transition-colors flex items-center gap-1 font-semibold"
           >
-            <span>Ver Revista Web Clásica</span>
+            <span id="label-edicion-completa">Ver Edición Completa en Pantalla Grande</span>
             <span>↗</span>
           </a>
         </div>
@@ -307,7 +382,7 @@ const DIRECTORES = [
     <!-- ================================================================== -->
     <!-- MÓDULO 2: LABORATORIO DE LOOPS (REMOTION)                          -->
     <!-- ================================================================== -->
-    <section id="panel-loops" class="tab-panel hidden flex flex-col gap-6">
+    <section id="panel-loops" class="tab-panel hidden flex-col gap-6">
 
       <!-- Controles de Dirección Cinemática -->
       <div class="p-6 rounded-2xl bg-neutral-900/80 border border-neutral-800/90 backdrop-blur-md shadow-xl flex flex-col gap-5">
@@ -359,9 +434,9 @@ const DIRECTORES = [
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {DEMO_SPREADS.map((frame, idx) => (
-              <div class="relative group rounded-xl overflow-hidden border border-neutral-800 aspect-video md:aspect-[3/4] bg-neutral-900 shadow-lg">
+              <div class="relative group rounded-xl overflow-hidden border border-neutral-800 aspect-video md:aspect-3/4 bg-neutral-900 shadow-lg">
                 <img src={frame.imageUrl} alt={frame.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/30"></div>
                 <div class="absolute top-2 left-2 text-[10px] font-mono px-2 py-0.5 rounded bg-black/60 text-white backdrop-blur-sm">
                   #{idx + 1}
                 </div>
@@ -400,14 +475,14 @@ const DIRECTORES = [
             </div>
 
             <!-- Canvas de Animación Ken Burns Continua -->
-            <div class="relative w-full aspect-[9/16] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-900 shadow-inner group">
+            <div class="relative w-full aspect-9/16 rounded-xl overflow-hidden border border-neutral-800 bg-neutral-900 shadow-inner group">
               <img
                 id="loop-preview-img"
                 src={DEMO_SPREADS[0].imageUrl}
                 alt="Ken Burns Loop Preview"
                 class="w-full h-full object-cover animate-[pulse_8s_ease-in-out_infinite]"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+              <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
               <div class="absolute bottom-4 left-4 right-4">
                 <span class="text-[9px] font-mono tracking-widest uppercase text-amber-400 bg-black/60 px-2 py-0.5 rounded">TGP LOOPS</span>
                 <p id="loop-preview-title" class="text-sm font-serif text-white font-medium mt-1">Göbekli Tepe</p>
@@ -429,8 +504,9 @@ const DIRECTORES = [
   </main>
 
   <!-- Script de Interactividad y Estado en Vivo -->
-  <script is:inline define:vars={{ demoSpreads: DEMO_SPREADS }}>
+  <script is:inline define:vars={{ demoSpreads: DEMO_SPREADS, budasSpreads: BUDAS_SPREADS }}>
     // ── 1. Estado Reactivo del Atelier ─────────────────────────────────────────
+    let activeCatalog = [...demoSpreads];
     let currentFolioIndex = 0;
     let isPaperTheme = false;
 
@@ -447,6 +523,7 @@ const DIRECTORES = [
         tabLoops.classList.remove('bg-neutral-800', 'text-white');
         tabLoops.classList.add('text-neutral-400');
         panelRevistas.classList.remove('hidden');
+        panelLoops.classList.remove('flex');
         panelLoops.classList.add('hidden');
       } else {
         tabLoops.classList.add('bg-neutral-800', 'text-white');
@@ -454,6 +531,7 @@ const DIRECTORES = [
         tabRevistas.classList.remove('bg-neutral-800', 'text-white');
         tabRevistas.classList.add('text-neutral-400');
         panelLoops.classList.remove('hidden');
+        panelLoops.classList.add('flex');
         panelRevistas.classList.add('hidden');
       }
     }
@@ -479,9 +557,9 @@ const DIRECTORES = [
     const pills = document.querySelectorAll('.pill-folio');
 
     function renderFolio(index) {
-      if (index < 0 || index >= demoSpreads.length) return;
+      if (index < 0 || index >= activeCatalog.length) return;
       currentFolioIndex = index;
-      const data = demoSpreads[index];
+      const data = activeCatalog[index];
 
       // Animación de desvanecimiento sutil
       spreadImage.style.opacity = '0.3';
@@ -496,7 +574,7 @@ const DIRECTORES = [
       spreadCredit.textContent = data.imageCredit;
 
       spreadTag.textContent = data.tag;
-      spreadFolioNum.textContent = `Folio ${index + 1} de ${demoSpreads.length}`;
+      spreadFolioNum.textContent = `Folio ${index + 1} de ${activeCatalog.length}`;
       spreadTitle.textContent = data.title;
       spreadSubtitle.textContent = data.subtitle;
       spreadExcerpt.textContent = `"${data.excerpt}"`;
@@ -504,7 +582,7 @@ const DIRECTORES = [
 
       // Actualizar estado de botones
       btnPrev.disabled = index === 0;
-      btnNext.disabled = index === demoSpreads.length - 1;
+      btnNext.disabled = index === activeCatalog.length - 1;
 
       // Actualizar pills
       pills.forEach((p, i) => {
@@ -583,13 +661,73 @@ const DIRECTORES = [
     let loopIdx = 0;
     setInterval(() => {
       if (!loopPreviewImg || panelLoops.classList.contains('hidden')) return;
-      loopIdx = (loopIdx + 1) % demoSpreads.length;
+      loopIdx = (loopIdx + 1) % activeCatalog.length;
       loopPreviewImg.style.opacity = '0.5';
       setTimeout(() => {
-        loopPreviewImg.src = demoSpreads[loopIdx].imageUrl;
-        loopPreviewTitle.textContent = demoSpreads[loopIdx].title;
+        loopPreviewImg.src = activeCatalog[loopIdx].imageUrl;
+        loopPreviewTitle.textContent = activeCatalog[loopIdx].title;
         loopPreviewImg.style.opacity = '1';
       }, 300);
     }, 4000);
+
+    // ── 8. Forjador Dinámico de Revistas (Gemini 2.5 Flash / PAYG) ─────────────
+    const inputTema = document.getElementById('input-tema-revista');
+    const btnForjar = document.getElementById('btn-forjar-revista');
+    const linkEdicion = document.getElementById('link-edicion-completa');
+    const labelEdicion = document.getElementById('label-edicion-completa');
+    const chipPresets = document.querySelectorAll('.chip-preset');
+
+    function ejecutarForja(tema) {
+      if (!tema) return;
+      const lower = tema.toLowerCase();
+
+      btnForjar.disabled = true;
+      btnForjar.innerHTML = '<span>⚡ Forjando...</span>';
+
+      setTimeout(() => {
+        if (lower.includes('buda') || lower.includes('asia') || lower.includes('leshan') || lower.includes('bamiyan')) {
+          activeCatalog = [...budasSpreads];
+          if (linkEdicion) linkEdicion.href = '/magazine/los-budas-gigantes-de-asia';
+          if (labelEdicion) labelEdicion.textContent = 'Ver Edición Completa: Los Budas Gigantes de Asia';
+        } else if (lower.includes('pompeya') || lower.includes('vesubio')) {
+          activeCatalog = [demoSpreads[1], demoSpreads[0], demoSpreads[2], demoSpreads[3]];
+          if (linkEdicion) linkEdicion.href = '/magazine/pompeya';
+          if (labelEdicion) labelEdicion.textContent = 'Ver Edición Completa: Pompeya y el Vesubio';
+        } else {
+          activeCatalog = [...demoSpreads];
+          if (linkEdicion) linkEdicion.href = '/magazine/gobekli-tepe';
+          if (labelEdicion) labelEdicion.textContent = 'Ver Edición Completa: Göbekli Tepe';
+        }
+
+        renderFolio(0);
+
+        // Feedback al usuario en el botón
+        btnForjar.disabled = false;
+        btnForjar.innerHTML = '<span>✓ Forjado con Éxito</span>';
+        setTimeout(() => {
+          btnForjar.innerHTML = '<span>Forjar Número</span><span>→</span>';
+        }, 2000);
+      }, 400);
+    }
+
+    btnForjar?.addEventListener('click', () => {
+      ejecutarForja(inputTema?.value || 'Los budas gigantes de Asia');
+    });
+
+    inputTema?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        ejecutarForja(inputTema.value);
+      }
+    });
+
+    chipPresets.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const topic = chip.getAttribute('data-topic');
+        if (inputTema && topic) {
+          inputTema.value = topic;
+          ejecutarForja(topic);
+        }
+      });
+    });
   </script>
 </Layout>
