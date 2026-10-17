@@ -1,0 +1,201 @@
+---
+// src/components/CinematicLoop16x9.astro
+// Visor Cinemático de Loops en Proporción 16:9 con Ken Burns dinámico y fallback R2 inmutable
+// Soporta modo 'hero' y modo 'gsap-scrolly'
+
+interface Props {
+  loopId: string;
+  title?: string;
+  subtitle?: string;
+  caption?: string;
+  mode?: 'hero' | 'gsap-scrolly';
+  videoWebmUrl?: string;
+  videoMp4Url?: string;
+  frames: string[]; // URLs inmutables de R2 (.webp)
+  duracionPorFrame?: number; // segundos (default: 1.0s para total 4s)
+  aspectRatioClass?: string;
+}
+
+const {
+  loopId,
+  title = 'Nan Madol · Secuencia Cinemática',
+  subtitle = 'Anomalía Megalítica Marina en 4 Momentos',
+  caption = 'Registro visual 16:9 · Fotogramas sintéticos preservados en Cloudflare R2',
+  mode = 'hero',
+  videoWebmUrl,
+  videoMp4Url,
+  frames = [],
+  duracionPorFrame = 1.0,
+  aspectRatioClass = 'aspect-16/9'
+} = Astro.props;
+
+const posterImage = frames[0] || 'https://storage.thegreatpuzzleproject.com/vault-media/1792217491714-e27fde94.webp';
+---
+
+<div
+  id={loopId}
+  class={`cinematic-loop-container relative w-full rounded-3xl overflow-hidden border border-white/10 bg-black/80 shadow-[0_25px_70px_rgba(0,0,0,0.85)] group ${
+    mode === 'hero' ? 'my-8' : 'my-14'
+  }`}
+  data-mode={mode}
+  data-loop-id={loopId}
+>
+  <!-- STAGE 16:9 -->
+  <div class={`relative w-full ${aspectRatioClass} min-h-75 sm:min-h-110 lg:min-h-145 overflow-hidden bg-neutral-950`}>
+    
+    <!-- MODO A: VIDEO CONTINUO SI EXISTE RENDER REMOTION -->
+    {videoWebmUrl && (
+      <video
+        class="loop-video-player absolute inset-0 w-full h-full object-cover z-10 pointer-events-none"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="metadata"
+        poster={posterImage}
+      >
+        <source src={videoWebmUrl} type="video/webm" />
+        {videoMp4Url && <source src={videoMp4Url} type="video/mp4" />}
+      </video>
+    )}
+
+    <!-- MODO B: SECUENCIA DE 4 FOTOGRAMAS R2 CON CROSSFADE SUAVE Y KEN BURNS (SIEMPRE DISPONIBLE) -->
+    <div class="loop-frames-stack absolute inset-0 w-full h-full z-0">
+      {frames.map((frameUrl, idx) => (
+        <img
+          src={frameUrl}
+          alt={`${title} - Plano ${idx + 1}`}
+          class={`loop-frame absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ease-in-out ${
+            idx === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+          }`}
+          data-frame-idx={idx}
+          loading={idx === 0 ? 'eager' : 'lazy'}
+        />
+      ))}
+    </div>
+
+    <!-- Malla de gradiente oscuro cinematográfico para proteger el contraste -->
+    <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-black/30 pointer-events-none z-20"></div>
+
+    <!-- Indicador de Emisión / Telemetría -->
+    <div class="absolute top-4 left-4 z-30 flex items-center gap-2 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-[10px] font-mono tracking-widest uppercase text-amber-300">
+      <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+      <span>4S LOOP · 16:9</span>
+    </div>
+
+    <!-- Paginador de Cuadros en Tiempo Real -->
+    <div class="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+      {frames.map((_, idx) => (
+        <span
+          class={`loop-pill w-2 h-2 rounded-full transition-all duration-300 ${
+            idx === 0 ? 'bg-amber-400 w-5' : 'bg-white/30'
+          }`}
+          data-pill-idx={idx}
+        />
+      ))}
+    </div>
+
+    <!-- Epígrafe y Metadata Inferior -->
+    <div class="absolute bottom-5 left-5 right-5 z-30 flex flex-col sm:flex-row sm:items-end justify-between gap-3 pointer-events-none">
+      <div class="max-w-xl">
+        <p class="text-[10px] font-mono tracking-widest uppercase text-amber-400/90 mb-1">
+          {subtitle}
+        </p>
+        <h3 class="text-lg sm:text-2xl font-serif font-bold text-white tracking-tight leading-tight">
+          {title}
+        </h3>
+        <p class="text-xs text-neutral-300/90 font-light mt-1 line-clamp-2">
+          {caption}
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2 pointer-events-auto">
+        <button
+          class="btn-toggle-pause p-2 rounded-xl bg-black/60 hover:bg-neutral-800 border border-white/10 text-white text-xs font-mono transition-colors cursor-pointer"
+          title="Pausar / Reanudar bucle"
+        >
+          ⏸
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline define:vars={{ loopId, frameCount: frames.length, duracionSegundos: duracionPorFrame }}>
+  (function initLoop() {
+    const container = document.getElementById(loopId);
+    if (!container) return;
+
+    const frameEls = container.querySelectorAll('.loop-frame');
+    const pillEls = container.querySelectorAll('.loop-pill');
+    const pauseBtn = container.querySelector('.btn-toggle-pause');
+
+    if (frameEls.length === 0) return;
+
+    let currentIdx = 0;
+    let isPaused = false;
+    let timer = null;
+
+    function advanceFrame() {
+      if (isPaused) return;
+
+      const prevIdx = currentIdx;
+      currentIdx = (currentIdx + 1) % frameEls.length;
+
+      // Apagar frame previo
+      frameEls[prevIdx].classList.remove('opacity-100', 'scale-100');
+      frameEls[prevIdx].classList.add('opacity-0', 'scale-105');
+
+      // Encender nuevo frame con efecto de paneo suave
+      frameEls[currentIdx].classList.remove('opacity-0', 'scale-105');
+      frameEls[currentIdx].classList.add('opacity-100', 'scale-100');
+
+      // Actualizar pills
+      pillEls.forEach((p, idx) => {
+        if (idx === currentIdx) {
+          p.classList.add('bg-amber-400', 'w-5');
+          p.classList.remove('bg-white/30', 'w-2');
+        } else {
+          p.classList.remove('bg-amber-400', 'w-5');
+          p.classList.add('bg-white/30', 'w-2');
+        }
+      });
+    }
+
+    function startLoop() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(advanceFrame, duracionSegundos * 1000);
+    }
+
+    // IntersectionObserver para no consumir GPU si el lector no tiene el loop a la vista
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (!isPaused) startLoop();
+          } else {
+            clearInterval(timer);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(container);
+
+    // Botón de Pausa / Play
+    pauseBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isPaused = !isPaused;
+      pauseBtn.textContent = isPaused ? '▶' : '⏸';
+      if (!isPaused) {
+        startLoop();
+      } else {
+        clearInterval(timer);
+      }
+    });
+
+    startLoop();
+  })();
+</script>

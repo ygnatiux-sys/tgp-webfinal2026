@@ -7,6 +7,7 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import ArticleKenBurnsModal from '../../components/ArticleKenBurnsModal';
+import CinematicLoop16x9 from '../../components/CinematicLoop16x9.astro';
 import { detectFocalPoint } from '../../lib/focalPointDetector';
 
 export async function getStaticPaths() {
@@ -92,6 +93,15 @@ const isAlternativeCategory = (data.category || '').toLowerCase().includes('alte
   (data.volanta || '').toLowerCase().includes('catastrofismo');
 const backUrl = isAlternativeCategory ? '/historia-alternativa' : '/archivo';
 const backLabel = isAlternativeCategory ? 'Volver a Historia Alternativa' : 'Volver al Archivo';
+
+// 4. Manifiesto de Loops 16:9 Inmutables en Cloudflare R2
+const isNanMadol = slug === 'nan-madol-el-enigma-megalitico';
+const NAN_MADOL_HERO_FRAMES = [
+  'https://storage.thegreatpuzzleproject.com/vault-media/1792217491714-e27fde94.webp', // Plano 1: Cenital niebla
+  'https://storage.thegreatpuzzleproject.com/vault-media/1792217505902-206dbd92.webp', // Plano 2: Muro Nan Douwas
+  'https://storage.thegreatpuzzleproject.com/vault-media/1792217519518-b5ba057e.webp', // Plano 3: Puerta cripta
+  'https://storage.thegreatpuzzleproject.com/vault-media/1792217532545-045e2f7b.webp', // Plano 4: Océano y arrecife
+];
 ---
 
 <Layout title={`${data.title} | The Great Puzzle Project`}>
@@ -151,7 +161,19 @@ const backLabel = isAlternativeCategory ? 'Volver a Historia Alternativa' : 'Vol
       </div>
     </header>
 
-    {mainImage && (
+    {isNanMadol ? (
+      <div class="max-w-6xl mx-auto mb-16">
+        <CinematicLoop16x9
+          loopId="nan-madol-hero-stage"
+          title="Nan Madol · Registro Atmosférico en 4 Momentos"
+          subtitle="FASE I • ARRECIFE Y CANTERA BASÁLTICA"
+          caption="Loop 16:9 de 4 segundos · Fotogramas sintéticos correlativos blindados en Cloudflare R2 con fundido cruzado continuo."
+          frames={NAN_MADOL_HERO_FRAMES}
+          duracionPorFrame={1.0}
+          mode="hero"
+        />
+      </div>
+    ) : mainImage && (
       <div class="max-w-6xl mx-auto mb-16">
         <div class="flex items-center justify-between mb-4 px-2">
           <div class="text-[10px] font-mono tracking-widest text-vault-accent uppercase flex items-center gap-2">
@@ -230,6 +252,25 @@ const backLabel = isAlternativeCategory ? 'Volver a Historia Alternativa' : 'Vol
 
       <div class="max-w-[66ch] mx-auto text-base md:text-lg text-primary/85 leading-[1.85] font-light space-y-8 tracking-wide font-inter ensayo-prose">
         <Content />
+
+        {isNanMadol && (
+          <div class="my-16 pt-8 border-t border-white/10">
+            <CinematicLoop16x9
+              loopId="nan-madol-climax-stage"
+              title="El Santuario Ciclópeo de Nan Douwas"
+              subtitle="FASE II • EL CLÍMAX MEGALÍTICO & CRIPTA REAL"
+              caption="Perspectiva inmersiva de las cámaras y troncos prismáticos de basalto apilados sin argamasa."
+              frames={[
+                NAN_MADOL_HERO_FRAMES[1],
+                NAN_MADOL_HERO_FRAMES[2],
+                NAN_MADOL_HERO_FRAMES[3],
+                NAN_MADOL_HERO_FRAMES[0],
+              ]}
+              duracionPorFrame={1.0}
+              mode="gsap-scrolly"
+            />
+          </div>
+        )}
       </div>
 
       <div class="max-w-[66ch] mx-auto mt-20 pt-10 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-6 text-xs font-mono tracking-widest text-primary/40 uppercase">

@@ -114,6 +114,61 @@ const BUDAS_SPREADS = [
   }
 ];
 
+const NAN_MADOL_SPREADS = [
+  {
+    id: 1,
+    tag: 'FOLIO I · EL ARRECIFE DE BASALTO',
+    title: 'Nan Madol: La Ciudad Sumergida',
+    subtitle: 'Islotes artificiales en la bruma de Micronesia',
+    excerpt: 'Columnas hexagonales de basalto volcánico erigidas sobre lagunas de coral desafían la logística y la cronología del Pacífico arcaico.',
+    body: 'Nan Madol no fue construida sobre tierra firme, sino forjada directamente sobre el océano mediante noventa islotes de piedra volcánica.\n\nLos cronistas locales afirman que las piedras flotaron por el aire impulsadas por sacerdotes gemelos; la arqueología contemporánea sigue sin descifrar el sistema de transporte que movilizó megatoneladas de basalto.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792217491714-e27fde94.webp',
+    imageCaption: 'Plano general cenital: los islotes y canales basálticos al amanecer.',
+    imageCredit: 'Archivo TGP Vault · Gemini Flash Image R2',
+    year: 'c. 1200 d.C. / Origen Arcaico',
+    directorBadge: 'KUBRICK · Geometría fría oceánica',
+  },
+  {
+    id: 2,
+    tag: 'FOLIO II · LA ARQUITECTURA CICLÓPEA',
+    title: 'El Santuario de Nan Douwas',
+    subtitle: 'Paredes de 15 metros sin argamasa',
+    excerpt: 'Muros de contención megalíticos apilados en cruz que han resistido siete siglos de maremotos e intemperie marina.',
+    body: 'El recinto funerario de Nan Douwas es el epicentro de la arquitectura megalítica del Pacífico. Los troncos de basalto superpuestos forman cámaras cerradas con ventilación natural perfecta.\n\nLa masa de cada columna supera en muchos casos las veinte toneladas, extraídas de canteras situadas en el extremo opuesto de la isla.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792217505902-206dbd92.webp',
+    imageCaption: 'Muro exterior del recinto ceremonial de Nan Douwas.',
+    imageCredit: 'Archivo TGP Vault · Gemini Flash Image R2',
+    year: 'Horizonte Micronesio',
+    directorBadge: 'TARKOVSKY · Piedra viva y selva húmeda',
+  },
+  {
+    id: 3,
+    tag: 'FOLIO III · LA CRIPTA CENITAL',
+    title: 'El Umbral del Silencio',
+    subtitle: 'La cámara de los reyes Saudeleur',
+    excerpt: 'Una tumba central subterránea donde el agua de las mareas penetra al compás de los ciclos lunares.',
+    body: 'En el corazón de Nan Douwas descansa la cripta megalítica. En su interior, la ingeniería hidráulica arcaica permitía que las corrientes oceánicas limpiaran el santuario ceremonial sin debilitar los cimientos de basalto.\n\nEs el vestigio más elocuente de una civilización marítima avanzada hoy olvidada.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792217519518-b5ba057e.webp',
+    imageCaption: 'Entrada a la cripta real protegida por monolitos de basalto.',
+    imageCredit: 'Archivo TGP Vault · Gemini Flash Image R2',
+    year: 'Periodo de los Reyes Saudeleur',
+    directorBadge: 'LYNCH · El umbral en penumbra',
+  },
+  {
+    id: 4,
+    tag: 'FOLIO IV · EL MURO FRENTE AL PACÍFICO',
+    title: 'La Frontera de Piedra y Sal',
+    subtitle: 'La muralla que contiene las mareas oceánicas',
+    excerpt: 'Frente al arrecife exterior, las defensas de basalto se sumergen en las profundidades abisales del mar de Pohnpei.',
+    body: 'La frontera oceánica de Nan Madol revela que la ciudad fue diseñada como un baluarte contra el cataclismo marino.\n\nSus murallas rompeolas combinan masa lítica con flexibilidad dinámica, cerrando un circuito arquitectónico que culmina en el océano infinito.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792217532545-045e2f7b.webp',
+    imageCaption: 'La muralla exterior azotada por las olas del arrecife.',
+    imageCredit: 'Archivo TGP Vault · Gemini Flash Image R2',
+    year: 'Estratigrafía Arcaica',
+    directorBadge: 'PASOLINI · Horizonte solar y salino',
+  }
+];
+
 const DIRECTORES = [
   { id: 'kubrick', name: 'Stanley Kubrick', tag: 'Simetría & Geometría Fría', color: 'border-cyan-500/40 text-cyan-300 bg-cyan-500/10' },
   { id: 'tarkovsky', name: 'Andrei Tarkovsky', tag: 'Tiempo Dilatado & Memoria', color: 'border-emerald-500/40 text-emerald-300 bg-emerald-500/10' },
@@ -504,7 +559,7 @@ const DIRECTORES = [
   </main>
 
   <!-- Script de Interactividad y Estado en Vivo -->
-  <script is:inline define:vars={{ demoSpreads: DEMO_SPREADS, budasSpreads: BUDAS_SPREADS }}>
+  <script is:inline define:vars={{ demoSpreads: DEMO_SPREADS, budasSpreads: BUDAS_SPREADS, nanMadolSpreads: NAN_MADOL_SPREADS }}>
     // ── 1. Estado Reactivo del Atelier ─────────────────────────────────────────
     let activeCatalog = [...demoSpreads];
     let currentFolioIndex = 0;
@@ -685,7 +740,11 @@ const DIRECTORES = [
       btnForjar.innerHTML = '<span>⚡ Forjando...</span>';
 
       setTimeout(() => {
-        if (lower.includes('buda') || lower.includes('asia') || lower.includes('leshan') || lower.includes('bamiyan')) {
+        if (lower.includes('nan') || lower.includes('madol') || lower.includes('pohnpei')) {
+          activeCatalog = [...nanMadolSpreads];
+          if (linkEdicion) linkEdicion.href = '/ensayos/nan-madol-el-enigma-megalitico';
+          if (labelEdicion) labelEdicion.textContent = 'Ver Ensayo Completo: Nan Madol (Con Loops 16:9)';
+        } else if (lower.includes('buda') || lower.includes('asia') || lower.includes('leshan') || lower.includes('bamiyan')) {
           activeCatalog = [...budasSpreads];
           if (linkEdicion) linkEdicion.href = '/magazine/los-budas-gigantes-de-asia';
           if (labelEdicion) labelEdicion.textContent = 'Ver Edición Completa: Los Budas Gigantes de Asia';
