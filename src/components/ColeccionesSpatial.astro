@@ -1,0 +1,260 @@
+---
+// src/components/ColeccionesSpatial.astro
+// Showcase: Spatial Zoom / Fluid Grid usando GSAP Flip.
+// Alterna entre la inmersión IMAX y la cuadrícula panorámica sin perder el estado del DOM.
+
+import { getCollection } from 'astro:content';
+
+interface Props {
+  casos?: any[];
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  casos = [],
+  title = "Colecciones",
+  subtitle = "Archivo Estructural"
+} = Astro.props;
+
+let colecciones = Array.isArray(casos) && casos.length > 0 ? casos : [];
+
+if (colecciones.length === 0) {
+  try {
+    const ensayos = await getCollection('ensayos', ({ data }) => !data.draft);
+    if (Array.isArray(ensayos) && ensayos.length > 0) {
+      colecciones = ensayos.slice(0, 8).map(e => ({
+        id: e.id,
+        title: e.data.title || 'Ensayo Histórico',
+        category: e.data.category || e.data.volanta || 'Colección TGP',
+        abstract: e.data.abstract || 'El análisis de las estructuras materiales y su persistencia en el tiempo.',
+        url: `/ensayos/${e.id}`,
+        imageUrl: e.data.coverImage || e.data.heroUrl || (e.data.gallery && e.data.gallery.length > 0 ? e.data.gallery[0] : null)
+      }));
+    }
+  } catch (err) {
+    console.warn('[ColeccionesSpatial] Error leyendo colección:', err);
+  }
+}
+
+// Fallbacks con la estética Dark Academia / Arqueológica
+const fallbackCards = [
+  { id: '1', title: 'Asado Argentino: Ritual y Persistencia', category: 'Antropología Culinaria', abstract: 'El asado, en su aparente simplicidad, se alza como una de las estructuras rituales más persistentes.', imageUrl: 'https://images.unsplash.com/photo-1544025162-811114215b13?auto=format&fit=crop&w=1200&q=80', url: '#' },
+  { id: '2', title: 'Santuarios de Altura en el Karst', category: 'Arquitectura Sagrada', abstract: 'La relación entre la elevación topográfica y la neurognosis en la construcción del templo.', imageUrl: 'https://images.unsplash.com/photo-1528164344705-475426879c0d?auto=format&fit=crop&w=1200&q=80', url: '#' },
+  { id: '3', title: 'Derinkuyu y la Geometría Ctoniana', category: 'Arqueología Subterránea', abstract: 'Ciudades talladas en la roca oscura, diseñadas para resistir el colapso de la superficie.', imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792137342460-4f977b70.webp', url: '#' },
+  { id: '4', title: 'Nan Madol: La Ciudad de Basalto', category: 'Megalitismo del Pacífico', abstract: 'Bloques magnéticos sobre el arrecife de coral desafiando la ingeniería oceánica.', imageUrl: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=80', url: '#' }
+];
+
+const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).map(c => ({
+  ...c,
+  abstract: c.abstract || c.subtitle || c.excerpt || 'El análisis de las estructuras materiales y su persistencia en el tiempo.'
+}));
+---
+
+<section id="spatial-gallery-section" class="relative w-full min-h-screen bg-[#050508] text-white pt-24 pb-28 px-4 sm:px-8 md:px-12 lg:px-20 overflow-hidden select-none">
+  
+  <!-- Header & Control de Vista -->
+  <div class="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-8 mb-16">
+    <div class="max-w-2xl">
+      <span class="text-purple-400/80 text-xs tracking-[0.4em] uppercase font-mono mb-4 block flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+        {subtitle}
+      </span>
+      <h2 class="text-4xl sm:text-5xl md:text-7xl font-serif font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/60">
+        {title}
+      </h2>
+    </div>
+    
+    <!-- El botón que dispara el Spatial Zoom -->
+    <button id="toggle-view-btn" class="group mt-8 md:mt-0 relative flex items-center gap-3 text-[10px] tracking-[0.3em] uppercase font-mono bg-transparent border border-white/20 px-6 py-3 rounded-full hover:border-purple-400/60 hover:bg-white/5 transition-all duration-300 cursor-pointer">
+      <span class="view-label grid-label">Ver Cuadrícula</span>
+      <span class="view-label imax-label hidden">Ver Formato IMAX</span>
+      <div class="w-4 h-4 grid grid-cols-2 gap-[2px] opacity-70 group-hover:opacity-100 transition-opacity">
+        <div class="bg-current rounded-[1px]"></div><div class="bg-current rounded-[1px]"></div>
+        <div class="bg-current rounded-[1px]"></div><div class="bg-current rounded-[1px]"></div>
+      </div>
+    </button>
+  </div>
+
+  <!-- Contenedor Fluido: Arranca en modo IMAX -->
+  <div id="spatial-container" class="layout-imax w-full mx-auto relative z-10 transition-colors duration-700">
+    {cardsToDisplay.map((post, i) => (
+      <article 
+        class="spatial-card group relative w-full overflow-hidden bg-[#0a0a0e] border border-white/10 cursor-pointer will-change-transform shadow-[0_20px_60px_rgba(0,0,0,0.85)]"
+        data-id={`card-${post.id}`}
+      >
+        <div class="absolute inset-0 z-10 bg-gradient-to-t from-[#050508] via-[#050508]/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-700 pointer-events-none"></div>
+        
+        <!-- Imagen con zoom lento en hover -->
+        <img 
+          src={post.imageUrl} 
+          alt={post.title} 
+          class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105 pointer-events-none"
+          loading={i < 2 ? "eager" : "lazy"}
+        />
+
+        <!-- Contenido Tipográfico -->
+        <div class="card-content absolute bottom-0 left-0 right-0 z-20 p-8 md:p-16 flex flex-col justify-end h-full pointer-events-none">
+          <div class="meta-wrapper overflow-hidden mb-4">
+            <span class="text-purple-300 text-[10px] tracking-[0.3em] uppercase font-mono block transform transition-transform duration-500 origin-left">
+              {post.category}
+            </span>
+          </div>
+          
+          <h3 class="card-title font-serif font-bold text-white leading-[1.08] mb-6 drop-shadow-lg transition-all duration-500">
+            {post.title}
+          </h3>
+          
+          <div class="abstract-wrapper overflow-hidden max-w-2xl">
+            <p class="card-abstract text-white/75 text-sm md:text-base font-sans leading-relaxed tracking-wide transition-all duration-500">
+              {post.abstract}
+            </p>
+          </div>
+
+          <div class="explore-btn mt-10 opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 pointer-events-auto">
+            <a href={post.url} class="inline-flex items-center gap-4 text-xs tracking-[0.2em] uppercase text-white hover:text-purple-300 transition-colors">
+              Explorar Dossier <span class="w-8 h-[1px] bg-current block"></span>
+            </a>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* -----------------------------------------
+     ESTADOS DE ARQUITECTURA ESPACIAL
+     Flip se encargará de interpolar estos cambios 
+  ------------------------------------------ */
+  
+  /* ESTADO 1: Formato IMAX (Vertical, Masivo, Denso) */
+  .layout-imax {
+    display: flex;
+    flex-direction: column;
+    gap: 8vh;
+    max-width: 1400px;
+  }
+  
+  .layout-imax .spatial-card {
+    height: 82vh;
+    min-height: 520px;
+    border-radius: 28px;
+  }
+
+  .layout-imax .card-title {
+    font-size: clamp(2.4rem, 5.5vw, 5.5rem);
+  }
+
+  /* ESTADO 2: Formato Cuadrícula (Bento/Masonry) */
+  .layout-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+    max-width: 1750px;
+  }
+
+  .layout-grid .spatial-card {
+    height: 440px;
+    border-radius: 14px;
+  }
+
+  .layout-grid .card-title {
+    font-size: 1.65rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Ocultamos el abstract y el botón explorar en la cuadrícula para limpiarla */
+  .layout-grid .card-abstract,
+  .layout-grid .explore-btn {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    visibility: hidden;
+  }
+
+  .layout-grid .card-content {
+    padding: 2rem;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { Flip } from "gsap/Flip";
+
+  gsap.registerPlugin(Flip);
+
+  function initSpatialZoom() {
+    const section = document.getElementById('spatial-gallery-section');
+    if (!section) return;
+
+    const btn = document.getElementById('toggle-view-btn');
+    const container = document.getElementById('spatial-container');
+    
+    if (!btn || !container) return;
+
+    let isGrid = false;
+
+    // Clonamos botón para remover listeners previos en astro:page-load
+    const newBtn = btn.cloneNode(true) as HTMLElement;
+    btn.parentNode?.replaceChild(newBtn, btn);
+    const gridLabel = newBtn.querySelector('.grid-label');
+    const imaxLabel = newBtn.querySelector('.imax-label');
+
+    newBtn.addEventListener('click', () => {
+      // 1. Flip State Capture: Registramos cómo están las tarjetas y sus textos
+      const cards = gsap.utils.toArray('.spatial-card', container);
+      const state = Flip.getState(cards, { props: "borderRadius,fontSize" });
+
+      // 2. Intercambio de clases CSS puro
+      if (isGrid) {
+        container.classList.remove('layout-grid');
+        container.classList.add('layout-imax');
+        gridLabel?.classList.remove('hidden');
+        imaxLabel?.classList.add('hidden');
+      } else {
+        container.classList.remove('layout-imax');
+        container.classList.add('layout-grid');
+        gridLabel?.classList.add('hidden');
+        imaxLabel?.classList.remove('hidden');
+      }
+
+      isGrid = !isGrid;
+
+      // 3. Ejecución de la Física de Resorte (Flip)
+      Flip.from(state, {
+        duration: 1.2,
+        ease: "expo.inOut",
+        absolute: true, // Crucial para que no colisionen durante la transición
+        stagger: 0.04,  // Ligero efecto cascada al reacomodarse
+        onStart: () => {
+          container.style.pointerEvents = 'none';
+        },
+        onComplete: () => {
+          container.style.pointerEvents = 'all';
+        }
+      });
+    });
+
+    // Pequeño extra: Clic inverso en tarjeta cuando está en modo grid
+    const cardElements = container.querySelectorAll('.spatial-card');
+    cardElements.forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (isGrid) {
+          const target = e.target as HTMLElement;
+          if (!target.closest('a')) {
+            e.preventDefault();
+            newBtn.click();
+            
+            setTimeout(() => {
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 1250); 
+          }
+        }
+      });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", initSpatialZoom);
+  document.addEventListener("astro:page-load", initSpatialZoom);
+</script>
