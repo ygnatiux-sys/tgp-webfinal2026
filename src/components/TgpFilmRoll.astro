@@ -1,7 +1,7 @@
 ---
 // src/components/TgpFilmRoll.astro
-// Showcase IMAX: Rodillo de película vertical cinemático con viento de arena sinusoidal.
-// Muestra las últimas 10 publicaciones de TGP Alternative en un loop infinito continuo.
+// Showcase IMAX: Cilindro 3D de celuloide rotativo con topología cilíndrica,
+// perforaciones de 35mm/70mm hiperrealistas y coreografía tipográfica "Star Wars".
 
 import { getCollection } from 'astro:content';
 
@@ -50,36 +50,40 @@ const fallbackCards = [
   { title: 'Yangshan: La Estela Monumental', category: 'Megalitismo Asiático', url: '/ensayos/yangshan', imageUrl: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800&q=80' },
   { title: 'Longyou: Grutas Talladas', category: 'Hipogeos', url: '/ensayos/longyou', imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80' },
   { title: 'Nasca & María Reiche: El Vuelo del Colibrí', category: 'Geoglifos Sagrados', url: '/ensayos/nasca-maria-reiche', imageUrl: 'https://images.unsplash.com/photo-1589802829985-817e51171b92?auto=format&fit=crop&w=800&q=80' },
-  { title: 'Pumapunku: Precisión en Andesitas', category: 'Arquitectura Sagrada', url: '/ensayos/pumapunku', imageUrl: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=80' }
+  { title: 'Pumapunku: Precisión en Andesitas', category: 'Arquitectura Sagrada', url: '/ensayos/pumapunku', imageUrl: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=80' },
+  { title: 'Gunung Padang: La Pirámide Sumergida', category: 'Megalitismo', url: '/ensayos/gunung-padang', imageUrl: 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=80' },
+  { title: 'Teotihuacan: Calzada de los Muertos', category: 'Cosmogonía', url: '/ensayos/teotihuacan', imageUrl: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?auto=format&fit=crop&w=800&q=80' }
 ];
 
-// Completar hasta 'limit' (10) combinando con fallbacks si la colección tiene menos
-let candidatePosts = archivePosts.slice(0, limit);
-if (candidatePosts.length < limit) {
-  const missingCount = limit - candidatePosts.length;
+// Para el cilindro regular 3D se necesitan al menos 10 caras para un arco cerrado continuo
+const targetCount = Math.max(limit, 10);
+let candidatePosts = archivePosts.slice(0, targetCount);
+if (candidatePosts.length < targetCount) {
+  const missingCount = targetCount - candidatePosts.length;
   candidatePosts = [...candidatePosts, ...fallbackCards.slice(0, missingCount)];
 }
-const itemsToScroll = candidatePosts.slice(0, limit);
-
-// Duplicamos el array para lograr el loop infinito de scroll sin cortes
-const doubledItems = [...itemsToScroll, ...itemsToScroll];
+const doubledItems = candidatePosts.slice(0, targetCount);
 ---
 
 <section 
   id="tgp-filmroll-section" 
-  class="relative w-full min-h-screen lg:h-screen bg-[#140e0b] overflow-hidden flex flex-col lg:flex-row items-center border-y border-[#3a281e]/30 select-none py-16 lg:py-0"
+  class="relative w-full min-h-screen lg:h-screen bg-[#140e0b] overflow-hidden flex flex-col lg:flex-row items-center justify-between border-y border-[#3a281e]/30 select-none py-16 lg:py-0"
 >
   <!-- Atmósfera Base: Lienzo Marrón Masked con viñeta -->
   <div class="absolute inset-0 z-0 pointer-events-none bg-radial from-transparent via-[#140e0b]/80 to-[#0a0705]"></div>
   
-  <!-- Contenedor para el viento de arena (Inyectado por GSAP) -->
+  <!-- Contenedor para el viento de arena sinusoidal (Inyectado por GSAP) -->
   <div id="sand-wind-container" class="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-60 mix-blend-screen"></div>
+
+  <!-- Máscaras sutiles superior e inferior para suavizar los límites del viewport -->
+  <div class="pointer-events-none absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-[#140e0b] to-transparent z-30"></div>
+  <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#140e0b] to-transparent z-30"></div>
 
   <!-- Sector Izquierdo: Tipografía Monumental "Star Wars / TGP Epic IMAX" -->
   <div class="relative z-10 w-full lg:w-3/5 h-full flex flex-col justify-center px-8 sm:px-16 md:px-24">
     
-    <div class="relative max-w-4xl">
-      <!-- Filtro SVG para textura polvorienta sobre el relieve mineral -->
+    <div class="relative max-w-4xl text-3d-container transform-style-preserve-3d">
+      <!-- Filtro SVG para textura mineral desgastada -->
       <svg class="hidden" aria-hidden="true">
         <defs>
           <filter id="dust-text">
@@ -91,96 +95,130 @@ const doubledItems = [...itemsToScroll, ...itemsToScroll];
         </defs>
       </svg>
 
-      <span class="text-[#d4a373] text-sm md:text-base tracking-[0.4em] uppercase font-mono mb-6 flex items-center gap-3 opacity-80">
+      <!-- Subtítulo Épico ("Star Wars" Prelude) -->
+      <span class="epic-subtitle text-[#d4a373] text-sm md:text-base tracking-[0.4em] uppercase font-mono mb-6 flex items-center gap-3 opacity-0">
         <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#dda15e] animate-pulse"></span>
         {subtitle}
       </span>
       
-      <!-- Título Gigante con estilo Monumental Épico IMAX -->
-      <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-[8.5rem] xl:text-[9.5rem] font-serif font-black leading-[0.85] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-[#fefae0] via-[#dda15e] to-[#bc6c25] drop-shadow-[0_10px_35px_rgba(188,108,37,0.25)]" style="filter: url(#dust-text);">
-        {title.split(' ').map(word => (
-          <span class="block">{word}</span>
+      <!-- Título Gigante con Animación 3D Star Wars Crawler -->
+      <h1 
+        class="text-5xl sm:text-7xl md:text-8xl lg:text-[7.5rem] xl:text-[8.5rem] font-serif font-black leading-[0.88] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-[#fefae0] via-[#dda15e] to-[#bc6c25] drop-shadow-[0_15px_45px_rgba(188,108,37,0.35)] transform-style-preserve-3d" 
+        style="filter: url(#dust-text);"
+      >
+        {title.trim().split(/\s+/).map(word => (
+          <span class="epic-text-line block transform-style-preserve-3d opacity-0">{word}</span>
         ))}
       </h1>
       
       <div class="mt-10 flex items-center gap-6">
         <div class="w-24 h-1 bg-gradient-to-r from-[#bc6c25] to-transparent"></div>
         <span class="text-[#d4a373]/60 text-xs font-mono uppercase tracking-[0.3em]">
-          Showcase · {itemsToScroll.length} Capítulos en Archivo Vivo
+          Showcase · {doubledItems.length} Capítulos en Archivo Vivo
         </span>
       </div>
     </div>
   </div>
 
-  <!-- Sector Derecho: Rodillo de Cine IMAX (Film Strip) -->
-  <div class="relative z-10 w-full lg:w-2/5 h-full flex items-center justify-center lg:justify-end pr-0 md:pr-12 lg:pr-24 mt-12 lg:mt-0">
+  <!-- Sector Derecho: Escena 3D Cilíndrica Asimétrica (El Carrete de Cine 70mm) -->
+  <div class="relative z-10 w-full lg:w-2/5 h-full flex items-center justify-center lg:justify-end pr-0 md:pr-12 lg:pr-20 perspective-[1200px] mt-12 lg:mt-0">
     
-    <!-- Máscara con degradados superior e inferior para el efecto cilíndrico de "entrada y salida" -->
+    <!-- Contenedor del Carrete Inclinado -->
     <div 
-      class="relative w-full max-w-[380px] sm:max-w-[420px] h-[580px] lg:h-[120%] lg:-my-[10%] overflow-hidden flex justify-center py-20 film-viewport-mask"
-      style="mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);"
+      class="film-cylinder-carrier relative w-[360px] sm:w-[420px] md:w-[450px] h-[580px] lg:h-screen transform-style-preserve-3d flex items-center justify-center cursor-grab active:cursor-grabbing" 
+      style="transform: rotateY(-18deg) rotateZ(-3deg);"
     >
       
-      <!-- La Cinta Perforada de Celuloide 35mm -->
-      <div class="film-strip relative w-[320px] sm:w-[340px] bg-[#050302]/95 border-x-2 border-[#2a1d15] flex flex-col shadow-[0_0_60px_rgba(0,0,0,0.85)] backdrop-blur-sm">
+      <!-- El Cilindro que girará infinitamente -->
+      <div id="film-cylinder" class="absolute top-1/2 left-0 w-full transform-style-preserve-3d -translate-y-1/2">
         
-        <!-- Perforaciones Izquierdas -->
-        <div class="absolute left-1.5 top-0 bottom-0 w-3.5 sprocket-holes z-20"></div>
-        <!-- Perforaciones Derechas -->
-        <div class="absolute right-1.5 top-0 bottom-0 w-3.5 sprocket-holes z-20"></div>
-
-        <!-- Contenedor animado por GSAP (El Rollo de Celuloide) -->
-        <div id="film-roll-track" class="w-full flex flex-col items-center pt-4">
-          {doubledItems.map((post, i) => (
-            <div class="film-frame relative w-[250px] sm:w-[270px] h-[180px] mb-6 rounded-xs overflow-hidden border-2 border-[#1a1412] bg-black group shrink-0">
-              <a href={post.url} class="block w-full h-full relative cursor-pointer">
-                <!-- Efecto Sepia / Desgastado con revelado en hover -->
+        {doubledItems.map((post, i) => {
+          // Cálculo matemático del prisma cilíndrico
+          const total = doubledItems.length;
+          const angle = i * (360 / total);
+          // Radio = (Alto de tarjeta / 2) / tan(PI / cantidad)
+          const radius = Math.max(500, Math.round(150 / Math.tan(Math.PI / total)));
+          
+          return (
+            <div 
+              class="film-frame absolute left-0 w-full h-[300px] bg-[#050302] border-y-[4px] border-black flex items-center justify-center transform-style-preserve-3d backface-hidden shadow-[0_0_50px_rgba(0,0,0,0.85)]"
+              style={`transform: rotateX(${angle}deg) translateZ(${radius}px);`}
+            >
+              <!-- Cinta Perforada (Generada por CSS) -->
+              <div class="absolute left-1.5 top-0 bottom-0 w-4 sprocket-holes z-20 pointer-events-none"></div>
+              <div class="absolute right-1.5 top-0 bottom-0 w-4 sprocket-holes z-20 pointer-events-none"></div>
+              
+              <!-- Contenido del Frame -->
+              <a href={post.url} class="relative w-[85%] h-full block bg-black overflow-hidden group">
                 <img 
                   src={post.imageUrl} 
                   alt={post.title} 
-                  class="w-full h-full object-cover opacity-80 sepia-[0.35] contrast-125 transition-all duration-700 group-hover:scale-105 group-hover:sepia-0 group-hover:opacity-100"
+                  class="w-full h-full object-cover opacity-75 sepia-[0.4] contrast-125 transition-all duration-700 group-hover:scale-105 group-hover:sepia-0 group-hover:opacity-100" 
                   loading="lazy"
                 />
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0705] via-[#0a0705]/20 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-75"></div>
                 
-                <!-- Etiqueta de celuloide -->
-                <div class="absolute top-2.5 right-3 text-[9px] font-mono text-[#d4a373]/60 tracking-widest">
-                  #{String((i % itemsToScroll.length) + 1).padStart(2, '0')}
+                <!-- Degradado cinemático sobre el frame -->
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0705] via-[#0a0705]/25 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-60"></div>
+                
+                <!-- Cabecera de celuloide 70mm -->
+                <div class="absolute top-3 left-4 right-4 flex items-center justify-between text-[9px] font-mono text-[#d4a373]/70 tracking-widest z-10">
+                  <span class="flex items-center gap-1.5">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
+                    <span>TGP 70MM</span>
+                  </span>
+                  <span>FRAME #{String(i + 1).padStart(2, '0')}</span>
                 </div>
 
-                <div class="absolute bottom-3 left-3.5 right-3.5 z-10">
-                  <span class="text-[#dda15e] text-[9px] tracking-[0.3em] uppercase font-mono block mb-1">
+                <!-- Textos del frame -->
+                <div class="absolute bottom-3.5 left-4 right-4 z-10">
+                  <span class="text-[#dda15e] text-[9px] md:text-[10px] tracking-[0.3em] uppercase font-mono block mb-1">
                     {post.category}
                   </span>
-                  <h3 class="text-[#fefae0] font-serif text-sm font-semibold leading-tight line-clamp-2 drop-shadow-sm group-hover:text-white transition-colors">
+                  <h3 class="text-[#fefae0] font-serif text-sm sm:text-base font-bold leading-tight line-clamp-2 drop-shadow-sm group-hover:text-white transition-colors">
                     {post.title}
                   </h3>
+                  <div class="mt-2 flex items-center gap-2 text-[10px] font-mono text-[#d4a373] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span>EXPLORAR ENSAYO</span>
+                    <span class="text-xs">→</span>
+                  </div>
                 </div>
               </a>
             </div>
-          ))}
-        </div>
-
+          )
+        })}
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* Perforaciones de película de 35mm con CSS puro */
+  .perspective-\[1200px\] {
+    perspective: 1200px;
+    -webkit-perspective: 1200px;
+  }
+  .transform-style-preserve-3d {
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Perforaciones de película gigantes y realistas */
   .sprocket-holes {
-    background-image: linear-gradient(
-      to bottom,
-      transparent 3px,
-      rgba(0, 0, 0, 0.95) 3px,
-      rgba(0, 0, 0, 0.95) 13px,
-      transparent 13px
+    /* El truco: dibujar "huecos" usando el color del fondo (#140e0b) sobre la tira negra (#050302) */
+    background-image: repeating-linear-gradient(
+      to bottom, 
+      transparent, 
+      transparent 8px, 
+      #140e0b 8px, /* El hueco que deja ver el lienzo marrón de atrás */
+      #140e0b 24px
     );
-    background-size: 100% 17px;
-    box-shadow: inset 1px 0 2px rgba(255, 255, 255, 0.08), inset -1px 0 2px rgba(0, 0, 0, 0.9);
+    box-shadow: inset 2px 0 5px rgba(0,0,0,0.9);
   }
 
-  .film-strip {
+  .film-frame {
     will-change: transform;
   }
 </style>
@@ -192,52 +230,82 @@ const doubledItems = [...itemsToScroll, ...itemsToScroll];
     const section = document.getElementById('tgp-filmroll-section');
     if (!section) return;
 
-    // 1. SISTEMA DE SCROLL INFINITO MILIMÉTRICO (Rodillo continuo de Arriba hacia Abajo)
-    const track = document.getElementById('film-roll-track');
-    const frames = track?.querySelectorAll('.film-frame');
-    
-    if (track && frames && frames.length > 0) {
-      // Cada frame mide 180px + 24px de margin-bottom (mb-6) = 204px
-      const frameHeight = 204; 
-      const halfTotalHeight = (frames.length / 2) * frameHeight;
+    // 1. Coreografía del Texto (Estilo Star Wars Epic)
+    const titleLines = section.querySelectorAll('.epic-text-line');
+    const subtitle = section.querySelector('.epic-subtitle');
 
-      // Configuramos el contenedor inicial en la mitad negativa para scroll hacia 0
-      gsap.set(track, { y: -halfTotalHeight });
+    if (titleLines.length > 0) {
+      gsap.killTweensOf(titleLines);
+      if (subtitle) gsap.killTweensOf(subtitle);
 
-      // Animación continua y suave hacia ABAJO (hacia 0)
-      const rollAnim = gsap.to(track, {
-        y: 0,
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      // Configuración inicial de perspectiva
+      gsap.set('.text-3d-container', { perspective: 800 });
+      gsap.set(titleLines, { transformOrigin: "50% 100%" });
+
+      if (subtitle) {
+        tl.fromTo(subtitle, 
+          { opacity: 0, y: -20, filter: "blur(10px)" }, 
+          { opacity: 0.8, y: 0, filter: "blur(0px)", duration: 2 }
+        );
+      }
+
+      tl.fromTo(titleLines, 
+        { 
+          opacity: 0, 
+          rotationX: 60, // Inclinado hacia atrás
+          z: -600,       // Profundo en el lienzo
+          y: 100, 
+          scale: 0.8,
+          filter: "blur(20px)"
+        },
+        { 
+          opacity: 1, 
+          rotationX: 0,  // Se yergue majestuosamente
+          z: 0, 
+          y: 0, 
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 3.5, 
+          stagger: 0.3 // Las palabras caen una tras otra
+        }, 
+        subtitle ? "-=1.5" : 0
+      );
+    }
+
+    // 2. Rotación del Carrete de Cine Cilíndrico
+    const cylinder = document.getElementById('film-cylinder');
+    if (cylinder) {
+      gsap.killTweensOf(cylinder);
+
+      // Ajusta la duración (40) para controlar la velocidad del rodillo
+      const rollAnim = gsap.to(cylinder, {
+        rotationX: -360, // Gira hacia abajo (como cayendo)
+        duration: 40,
         ease: "none",
-        duration: (frames.length / 2) * 4.2, // ~42s para los 10 items (ritmo contemplativo)
-        repeat: -1,
-        modifiers: {
-          y: gsap.utils.unitize(y => {
-            const val = parseFloat(y);
-            // Módulo preciso para evitar saltos o desincronización
-            return -((Math.abs(val) % halfTotalHeight));
-          })
-        }
+        repeat: -1
       });
 
-      // Interacción: Ralentizar suavemente al posar el cursor sobre la tira
-      const filmStrip = section.querySelector('.film-strip');
-      if (filmStrip) {
-        filmStrip.addEventListener('mouseenter', () => gsap.to(rollAnim, { timeScale: 0.15, duration: 0.8 }));
-        filmStrip.addEventListener('mouseleave', () => gsap.to(rollAnim, { timeScale: 1, duration: 0.8 }));
+      // Ralentizar suavemente en hover para explorar o clicar el ensayo
+      const carrier = section.querySelector('.film-cylinder-carrier');
+      if (carrier) {
+        carrier.addEventListener('mouseenter', () => gsap.to(rollAnim, { timeScale: 0.15, duration: 0.7 }));
+        carrier.addEventListener('mouseleave', () => gsap.to(rollAnim, { timeScale: 1, duration: 0.7 }));
       }
     }
 
-    // 2. VIENTO DE ARENA SINUSOIDAL (Partículas de polvo del desierto)
+    // 3. Viento de Arena Sinusoidal (Partículas de polvo del desierto)
     const sandContainer = document.getElementById('sand-wind-container');
     if (sandContainer) {
-      sandContainer.innerHTML = ''; // Limpiar si hubo re-renderizado
-      const particleCount = 65;
+      sandContainer.innerHTML = '';
+      const particleCount = 55;
       
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         
         const size = Math.random() * 3 + 1; // 1px a 4px
-        const opacity = Math.random() * 0.5 + 0.15;
+        const opacity = Math.random() * 0.45 + 0.15;
         
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
@@ -251,9 +319,8 @@ const doubledItems = [...itemsToScroll, ...itemsToScroll];
         
         sandContainer.appendChild(particle);
 
-        // Viento horizontal (de derecha a izquierda)
-        const duration = Math.random() * 4 + 4; // 4s a 8s
-        const delay = Math.random() * -8; // Desfase inicial para ocupar pantalla de inmediato
+        const duration = Math.random() * 4 + 4;
+        const delay = Math.random() * -8;
 
         gsap.to(particle, {
           x: "-125vw",
@@ -263,7 +330,6 @@ const doubledItems = [...itemsToScroll, ...itemsToScroll];
           delay: delay
         });
 
-        // Flote vertical sinusoidal
         gsap.to(particle, {
           y: `+=${Math.random() * 100 - 50}`,
           duration: Math.random() * 2 + 1.2,
