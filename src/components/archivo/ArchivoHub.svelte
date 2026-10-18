@@ -908,8 +908,25 @@
               </div>
 
               <!-- 3. Contenido Inferior Anclado: empujado a la base -->
-              <div class="cinemascope-content z-10 max-w-4xl flex flex-col items-start gap-4">
+              <div class="cinemascope-content z-10 max-w-4xl flex flex-col items-start gap-4 transition-all duration-500 ease-out {idx === 1 ? 'group-hover/cinemascope:opacity-35' : 'group-hover/cinemascope:-translate-y-28 md:group-hover/cinemascope:-translate-y-36'}">
                 
+                <!-- Badge de versión para test visual A/B -->
+                <div class="inline-flex items-center gap-2">
+                  {#if idx === 0}
+                    <span class="px-2.5 py-1 rounded-full text-[9px] font-mono tracking-widest uppercase bg-[#dda15e]/20 text-[#fefae0] border border-[#dda15e]/40 shadow-sm">
+                      VERSIÓN A · MUBI PRO (ELEVATOR EFFECT)
+                    </span>
+                  {:else if idx === 1}
+                    <span class="px-2.5 py-1 rounded-full text-[9px] font-mono tracking-widest uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm">
+                      VERSIÓN B · BENTO OVERLAY (CSS 25%)
+                    </span>
+                  {:else}
+                    <span class="px-2.5 py-1 rounded-full text-[9px] font-mono tracking-widest uppercase bg-white/10 text-white/80 border border-white/20 shadow-sm">
+                      MUBI CINEMASCOPE PRO
+                    </span>
+                  {/if}
+                </div>
+
                 <!-- TÍTULO EN EXTRA BOLD MONUMENTAL -->
                 <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-vault-success transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
                   {item.title}
@@ -933,6 +950,80 @@
                 </div>
 
               </div>
+
+              <!-- ═══════════════════════════════════════════════════════════════════ -->
+              <!-- 4. SEMI-TARJETA HOVER A 1/4 DE ALTURA: COMPARATIVA DE VERSIONES    -->
+              <!-- ═══════════════════════════════════════════════════════════════════ -->
+              {#if idx !== 1}
+                <!-- ── VERSIÓN A: MUBI PRO (ELEVATOR EFFECT + VIDRIO AHUMADO FLUIDO) ── -->
+                <div class="mubi-metadata-tray absolute bottom-0 left-0 right-0 z-20 min-h-[26%] max-h-[34%] p-6 sm:p-8 md:p-10 bg-[#080504]/92 backdrop-blur-xl border-t border-[#dda15e]/35 flex flex-col justify-center translate-y-full opacity-0 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover/cinemascope:translate-y-0 group-hover/cinemascope:opacity-100 shadow-[0_-20px_50px_rgba(0,0,0,0.95)]">
+                  <!-- Hilo de luz superior rasante -->
+                  <div class="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#dda15e]/70 to-transparent"></div>
+
+                  <div class="flex items-center justify-between text-[10px] font-mono tracking-widest text-[#dda15e] uppercase mb-2">
+                    <div class="flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded bg-[#dda15e]/25 text-[#fefae0] font-bold">PREHISTORIA</span>
+                      <span class="text-neutral-500">·</span>
+                      <span class="text-neutral-300">ESTRATIGRAFÍA III</span>
+                      <span class="text-neutral-500">·</span>
+                      <span class="text-emerald-400">PILAR T ANTROPOMORFO</span>
+                    </div>
+                    <span class="text-amber-200/90 font-bold tracking-widest">~9500 a.C.</span>
+                  </div>
+
+                  <p class="font-sans text-xs sm:text-sm text-neutral-200 leading-relaxed line-clamp-2 max-w-4xl">
+                    Cinco metros de caliza mirando al vacío. Esculpido doce milenios antes de nuestra era, este pilar monolítico quiebra la tesis ortodoxa: el templo, el culto y la arquitectura monumental precedieron a la domesticación del trigo.
+                  </p>
+
+                  <div class="flex flex-wrap items-center gap-4 sm:gap-6 mt-3 pt-2.5 border-t border-white/10 text-[10px] font-mono text-[#d4a373]/75">
+                    <span>YACIMIENTO: <strong class="text-white/90 font-sans">ŞANLIURFA, ANATOLIA</strong></span>
+                    <span>•</span>
+                    <span>ESTADO: <strong class="text-emerald-400">ACTIVO EN BÓVEDA D1</strong></span>
+                    <span>•</span>
+                    <span>RESOLUCIÓN: <strong class="text-white/90">8K MASTER WEBP</strong></span>
+                    <button 
+                      type="button" 
+                      class="ml-auto hidden sm:inline-block text-[#dda15e] hover:text-white transition-colors cursor-pointer text-[10px] font-mono uppercase tracking-wider" 
+                      on:click|stopPropagation={() => selectedArtifact = item}
+                    >
+                      ABRIR REGISTRO ↗
+                    </button>
+                  </div>
+                </div>
+
+              {:else}
+                <!-- ── VERSIÓN B: BENTO BRAND CLASSIC OVERLAY (25% FIJO CSS CUBIC-BEZIER) ── -->
+                <div class="bento-metadata-tray absolute bottom-0 left-0 right-0 z-20 h-[25%] p-6 sm:p-8 bg-[#100d14]/88 backdrop-blur-md border-t border-white/15 flex flex-col justify-center translate-y-6 opacity-0 transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover/cinemascope:translate-y-0 group-hover/cinemascope:opacity-100 shadow-[0_-15px_35px_rgba(0,0,0,0.85)]">
+                  
+                  <div class="flex items-center justify-between text-[10px] font-mono tracking-widest uppercase mb-1.5">
+                    <div class="flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded bg-emerald-500/25 text-emerald-300 font-bold">CATASTROFISMO</span>
+                      <span class="text-white/40">·</span>
+                      <span class="text-white/70">VULCANOLOGÍA & MEMORIA</span>
+                    </div>
+                    <span class="text-emerald-300/80 font-bold">79 d.C.</span>
+                  </div>
+
+                  <p class="font-sans text-xs sm:text-sm text-white/90 leading-relaxed line-clamp-2 max-w-3xl">
+                    Bajo el manto piroclástico del Vesubio, la civilización romana quedó congelada en un diálogo suspendido entre la fragilidad humana y la fuerza geológica del tiempo profundo.
+                  </p>
+
+                  <div class="flex items-center gap-6 mt-2 pt-2 border-t border-white/10 text-[10px] font-mono text-white/50">
+                    <span>UBICACIÓN: <strong class="text-white/80">CAMPANIA, ITALIA</strong></span>
+                    <span>•</span>
+                    <span>ESTADO: <strong class="text-emerald-400">PRESERVADO EN R2</strong></span>
+                    <span>•</span>
+                    <span>FORMATO: <strong class="text-white/80">ESTRATIGRAFÍA D1</strong></span>
+                    <button 
+                      type="button" 
+                      class="ml-auto hidden sm:inline-block text-emerald-300 hover:text-white transition-colors cursor-pointer text-[10px] font-mono uppercase tracking-wider" 
+                      on:click|stopPropagation={() => selectedArtifact = item}
+                    >
+                      ABRIR REGISTRO ↗
+                    </button>
+                  </div>
+                </div>
+              {/if}
             </article>
           {/each}
         </div>
