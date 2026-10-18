@@ -76,32 +76,36 @@ async function forjarYSubirPlano(plano) {
   console.log(`📸 [Plano ${plano.num}/4] ${plano.plano} (${plano.tiempo})`);
   console.log(`   Prompt: "${plano.desc.slice(0, 100)}..."`);
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${GEMINI_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${GEMINI_KEY}`;
   const promptFinal = `Cinematic documentary 16:9 widescreen frame. ${plano.desc} Shot on 35mm film, master cinematography, natural atmospheric lighting, rich stone texture, dark academia aesthetic, photorealistic, 8k resolution, no text, no modern elements.`;
 
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: promptFinal }] }]
+      instances: [{ prompt: promptFinal }],
+      parameters: {
+        sampleCount: 1,
+        aspectRatio: '16:9',
+        outputMimeType: 'image/jpeg'
+      }
     })
   });
 
   if (!res.ok) {
     const errorText = await res.text();
-    throw new Error(`Fallo en Gemini Image API (Plano ${plano.num}, Status ${res.status}): ${errorText.slice(0, 250)}`);
+    throw new Error(`Fallo en Imagen 3 API (Plano ${plano.num}, Status ${res.status}): ${errorText.slice(0, 250)}`);
   }
 
   const data = await res.json();
-  const parts = data.candidates?.[0]?.content?.parts || [];
-  const imagePart = parts.find(p => p.inlineData);
+  const b64 = data.predictions?.[0]?.bytesBase64Encoded;
 
-  if (!imagePart?.inlineData?.data) {
-    throw new Error(`La respuesta de Gemini no incluye inlineData para el plano ${plano.num}.`);
+  if (!b64) {
+    throw new Error(`La respuesta de Imagen 3 no incluye bytesBase64Encoded para el plano ${plano.num}.`);
   }
 
-  console.log(`   ✓ Imagen sintética recibida (${imagePart.inlineData.mimeType}, ${imagePart.inlineData.data.length} bytes base64)`);
-  const imageBuffer = Buffer.from(imagePart.inlineData.data, 'base64');
+  console.log(`   ✓ Imagen sintética recibida (${b64.length} bytes base64)`);
+  const imageBuffer = Buffer.from(b64, 'base64');
 
   // Guardar localmente en scratch como resguardo adicional
   const localFilePath = path.join(OUTPUT_DIR, `${plano.id}.jpg`);

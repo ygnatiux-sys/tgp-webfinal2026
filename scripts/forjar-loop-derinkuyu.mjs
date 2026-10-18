@@ -67,29 +67,35 @@ async function forjarYSubirPlano(plano) {
   console.log(`\n──────────────────────────────────────────────────────────────────────`);
   console.log(`📸 [Plano ${plano.num}/4] ${plano.titulo}`);
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${GEMINI_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${GEMINI_KEY}`;
   const promptFinal = `Cinematic documentary 16:9 widescreen frame. ${plano.desc} Shot on 35mm film, master cinematography, natural atmospheric lighting, rich stone texture, dark academia aesthetic, photorealistic, 8k resolution, no text, no modern elements.`;
 
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: [{ parts: [{ text: promptFinal }] }] })
+    body: JSON.stringify({
+      instances: [{ prompt: promptFinal }],
+      parameters: {
+        sampleCount: 1,
+        aspectRatio: '16:9',
+        outputMimeType: 'image/jpeg'
+      }
+    })
   });
 
   if (!res.ok) {
     const errorText = await res.text();
-    throw new Error(`Fallo en Gemini Image API (${res.status}): ${errorText.slice(0, 200)}`);
+    throw new Error(`Fallo en Imagen 3 API (${res.status}): ${errorText.slice(0, 200)}`);
   }
 
   const data = await res.json();
-  const parts = data.candidates?.[0]?.content?.parts || [];
-  const imagePart = parts.find(p => p.inlineData);
+  const b64 = data.predictions?.[0]?.bytesBase64Encoded;
 
-  if (!imagePart?.inlineData?.data) {
-    throw new Error(`Respuesta sin inlineData para plano ${plano.num}`);
+  if (!b64) {
+    throw new Error(`Respuesta sin bytesBase64Encoded para plano ${plano.num}`);
   }
 
-  const imageBuffer = Buffer.from(imagePart.inlineData.data, 'base64');
+  const imageBuffer = Buffer.from(b64, 'base64');
   const localFilePath = path.join(OUTPUT_DIR, `${plano.id}.jpg`);
   fs.writeFileSync(localFilePath, imageBuffer);
 

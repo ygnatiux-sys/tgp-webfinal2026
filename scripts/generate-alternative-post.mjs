@@ -69,31 +69,35 @@ export async function generarImagenSintetica(promptTema) {
   }
 
   const imagePrompt = `Hyper-detailed panoramic documentary photograph of ${promptTema}. Ultra-realistic carved granite texture, mystical lighting filtering through Japanese ancient forest, 8k resolution, cinematic composition, dark academia aesthetic, no modern elements, authentic archaeological detail.`;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${GEMINI_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${GEMINI_KEY}`;
 
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: imagePrompt }] }]
+      instances: [{ prompt: imagePrompt }],
+      parameters: {
+        sampleCount: 1,
+        aspectRatio: '16:9',
+        outputMimeType: 'image/jpeg'
+      }
     })
   });
 
   if (!res.ok) {
     const errorText = await res.text();
-    throw new Error(`Fallo en Gemini Image API (Status ${res.status}): ${errorText.slice(0, 200)}`);
+    throw new Error(`Fallo en Imagen 3 API (Status ${res.status}): ${errorText.slice(0, 200)}`);
   }
 
   const data = await res.json();
-  const parts = data.candidates?.[0]?.content?.parts || [];
-  const imagePart = parts.find(p => p.inlineData);
+  const b64 = data.predictions?.[0]?.bytesBase64Encoded;
 
-  if (!imagePart?.inlineData?.data) {
-    throw new Error('La respuesta de Gemini no contiene datos binarios de imagen (inlineData).');
+  if (!b64) {
+    throw new Error('La respuesta de Imagen 3 no contiene datos binarios de imagen (bytesBase64Encoded).');
   }
 
-  console.log(`   ✓ Fotografía sintética generada con éxito (${imagePart.inlineData.mimeType}, ${imagePart.inlineData.data.length} bytes base64).`);
-  const imageBuffer = Buffer.from(imagePart.inlineData.data, 'base64');
+  console.log(`   ✓ Fotografía sintética generada con éxito (${b64.length} bytes base64).`);
+  const imageBuffer = Buffer.from(b64, 'base64');
 
   // Subir directamente a Cloudflare R2 vía tgp-vault-run/vault-ingest
   console.log(`   ⚡ Transmitiendo buffer a Cloudflare R2 y D1 vía tgp-vault-run...`);
