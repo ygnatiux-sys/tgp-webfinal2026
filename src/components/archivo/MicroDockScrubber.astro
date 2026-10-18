@@ -1,0 +1,296 @@
+---
+// src/components/archivo/MicroDockScrubber.astro
+// MODO 03: El "Micro-Dock" Cinemático (Film Scrubber & Timeline).
+// Línea de tiempo horizontal de micro-tarjetas tipo sala de montaje cinematográfico (DaVinci / 70mm).
+// Permite al usuario ver el mapa completo del archivo y saltar de un ensayo a otro sin romper la inmersión.
+
+import { getCollection } from 'astro:content';
+
+interface Props {
+  items?: any[];
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  items = [],
+  title = "Timeline Editorial",
+  subtitle = "Modo 03 · Micro-Dock Cinemático (Scrubber)"
+} = Astro.props;
+
+let archiveItems = Array.isArray(items) && items.length > 0 ? items : [];
+
+if (archiveItems.length === 0) {
+  try {
+    const ensayos = await getCollection('ensayos', ({ data }) => !data.draft);
+    if (Array.isArray(ensayos) && ensayos.length > 0) {
+      archiveItems = ensayos.map((e, idx) => ({
+        id: e.id,
+        folio: `FOLIO-${String(idx + 1).padStart(3, '0')}`,
+        title: e.data.title || 'Ensayo Histórico',
+        category: e.data.category || e.data.volanta || 'Investigación',
+        volanta: e.data.volanta || 'TGP Archivo',
+        abstract: e.data.abstract || 'Exploración y cartografía de anomalías históricas.',
+        url: `/ensayos/${e.id}`,
+        imageUrl: e.data.coverImage || e.data.heroUrl || (e.data.gallery && e.data.gallery.length > 0 ? e.data.gallery[0] : 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp'),
+        timecode: `00:${String(Math.floor(idx * 2.5)).padStart(2, '0')}:${String((idx * 17) % 60).padStart(2, '0')}`
+      }));
+    }
+  } catch (err) {
+    console.warn('[MicroDockScrubber] Error cargando ensayos:', err);
+  }
+}
+---
+
+<section id="micro-dock-section" class="relative w-full py-24 bg-[#060403] text-white border-t border-[#3a281e]/50 select-none overflow-hidden">
+  
+  <!-- Resplandor ambiental de sala de edición -->
+  <div class="absolute inset-0 pointer-events-none z-0">
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80vw] h-48 bg-[#bc6c25]/10 blur-[130px] rounded-full"></div>
+    <div class="absolute inset-0 bg-radial from-transparent via-[#060403]/80 to-[#060403]"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 md:px-12">
+    
+    <!-- CABECERA DE LA SALA DE MONTAJE (HUD INSPECTOR) -->
+    <div class="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 pb-8 border-b border-white/10">
+      <div>
+        <span class="text-[#dda15e] text-xs font-mono uppercase tracking-[0.4em] mb-3 flex items-center gap-3">
+          <span class="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+          {subtitle}
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-serif font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-[#fefae0] via-[#dda15e] to-[#bc6c25]">
+          {title}
+        </h2>
+        <p class="text-[#d4a373]/70 font-mono text-xs tracking-wider mt-2">
+          Carrete secuencial continuo de {archiveItems.length} registros estratigráficos. Deslizá lateralmente con rueda o arrastre.
+        </p>
+      </div>
+
+      <!-- HUD Activo: Inspector del fotograma seleccionado -->
+      <div id="scrubber-active-hud" class="w-full lg:w-auto min-w-[340px] bg-[#120d0a] border border-[#dda15e]/30 rounded-lg p-4 flex items-center justify-between gap-4 shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
+        <div class="overflow-hidden">
+          <div class="flex items-center gap-2 text-[10px] font-mono text-[#dda15e] uppercase tracking-widest">
+            <span id="hud-folio">FOLIO-001</span>
+            <span>·</span>
+            <span id="hud-tc" class="text-neutral-400">TC 00:00:00</span>
+          </div>
+          <h4 id="hud-title" class="text-sm font-serif font-bold text-[#fefae0] truncate max-w-[240px] mt-0.5">
+            {archiveItems[0]?.title || 'Seleccionar Ensayo'}
+          </h4>
+        </div>
+        <a 
+          id="hud-action-btn" 
+          href={archiveItems[0]?.url || '#'} 
+          class="shrink-0 px-3.5 py-2 rounded bg-[#dda15e] hover:bg-[#fefae0] text-black font-mono text-[10px] font-bold uppercase tracking-wider transition-colors"
+        >
+          Explorar ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- REGLA MILIMÉTRICA Y TIMECODES DEL SCRUBBER -->
+    <div class="relative mt-8 mb-4 flex items-center justify-between text-[9px] font-mono text-[#d4a373]/50 tracking-widest px-2">
+      <div class="flex items-center gap-2">
+        <button id="scrub-prev-btn" class="w-7 h-7 rounded border border-white/10 bg-white/5 hover:bg-white/15 flex items-center justify-center text-xs text-neutral-300 hover:text-white transition-all cursor-pointer">
+          ←
+        </button>
+        <button id="scrub-next-btn" class="w-7 h-7 rounded border border-white/10 bg-white/5 hover:bg-white/15 flex items-center justify-center text-xs text-neutral-300 hover:text-white transition-all cursor-pointer">
+          →
+        </button>
+        <span class="ml-2">TIMELINE START · 00:00:00</span>
+      </div>
+
+      <!-- Barra de progreso / Aguja del Scrubber -->
+      <div class="hidden sm:flex items-center gap-3 flex-1 max-w-xs mx-8">
+        <div class="relative w-full h-1 bg-[#1a120c] rounded-full overflow-hidden">
+          <div id="scrub-progress-fill" class="absolute top-0 bottom-0 left-0 w-1/4 bg-gradient-to-r from-[#bc6c25] to-[#dda15e] transition-all duration-150"></div>
+        </div>
+        <span id="scrub-percentage-label">25%</span>
+      </div>
+
+      <span>TIMELINE END · TC {archiveItems[archiveItems.length - 1]?.timecode || '00:45:00'}</span>
+    </div>
+
+    <!-- EL CARRETE DE MICRO-TARJETAS (SCRUBBER TRACK HORIZONTAL) -->
+    <div 
+      id="micro-dock-track" 
+      class="relative w-full overflow-x-auto flex items-center gap-4 py-8 px-2 scrollbar-none cursor-grab active:cursor-grabbing scroll-smooth"
+      style="scroll-snap-type: x mandatory;"
+    >
+      {archiveItems.map((post, i) => (
+        <article 
+          class="micro-card group relative shrink-0 w-[190px] sm:w-[220px] h-[140px] bg-[#0c0806] border border-[#3a281e]/60 rounded-md overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 hover:-translate-y-2 hover:border-[#dda15e] hover:shadow-[0_15px_35px_rgba(0,0,0,0.9)]"
+          data-index={i}
+          data-id={post.id}
+          data-title={post.title}
+          data-category={post.category}
+          data-folio={post.folio}
+          data-tc={post.timecode}
+          data-url={post.url}
+          style="scroll-snap-align: start;"
+        >
+          <!-- Perforaciones de película superior e inferior -->
+          <div class="absolute top-0 left-0 right-0 h-2 bg-[#050302] border-b border-black flex justify-between px-1.5 z-20">
+            <span class="w-1.5 h-1 bg-black rounded-xs"></span>
+            <span class="w-1.5 h-1 bg-black rounded-xs"></span>
+            <span class="w-1.5 h-1 bg-black rounded-xs"></span>
+            <span class="w-1.5 h-1 bg-black rounded-xs"></span>
+            <span class="w-1.5 h-1 bg-black rounded-xs"></span>
+          </div>
+
+          <!-- Imagen del Micro-Frame -->
+          <img 
+            src={post.imageUrl} 
+            alt={post.title} 
+            class="w-full h-full object-cover opacity-75 sepia-[0.35] contrast-125 transition-all duration-500 group-hover:scale-110 group-hover:sepia-0 group-hover:opacity-100"
+            loading="lazy" 
+          />
+
+          <!-- Degradado de lectura -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90 transition-opacity group-hover:opacity-60"></div>
+
+          <!-- Metadatos de Cabecera -->
+          <div class="absolute top-3 left-2.5 right-2.5 flex items-center justify-between text-[9px] font-mono text-[#d4a373]/80 z-10">
+            <span class="text-[#dda15e] font-semibold">{post.folio || `#${String(i+1).padStart(2,'0')}`}</span>
+            <span>{post.timecode}</span>
+          </div>
+
+          <!-- Título y Categoría al pie -->
+          <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10">
+            <span class="text-[#dda15e] text-[8px] font-mono uppercase tracking-widest block truncate">
+              {post.category}
+            </span>
+            <h5 class="text-xs font-serif font-bold text-[#fefae0] leading-tight truncate group-hover:text-white transition-colors">
+              {post.title}
+            </h5>
+          </div>
+
+          <!-- Perforaciones inferiores -->
+          <div class="absolute bottom-0 left-0 right-0 h-2 bg-[#050302] border-t border-black flex justify-between px-1.5 z-20">
+            <span class="w-1.5 h-1 bg-black rounded-xs"></span>
+            <span class="w-1.5 h-1 bg-black rounded-xs"></span>
+            <span class="w-1.5 h-1 bg-black rounded-xs"></span>
+            <span class="w-1.5 h-1 bg-black rounded-xs"></span>
+            <span class="w-1.5 h-1 bg-black rounded-xs"></span>
+          </div>
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+
+  function initMicroDockScrubber() {
+    const track = document.getElementById('micro-dock-track');
+    const cards = document.querySelectorAll('.micro-card');
+    const prevBtn = document.getElementById('scrub-prev-btn');
+    const nextBtn = document.getElementById('scrub-next-btn');
+    const progressFill = document.getElementById('scrub-progress-fill');
+    const percentLabel = document.getElementById('scrub-percentage-label');
+
+    // Elementos del HUD Inspector
+    const hudFolio = document.getElementById('hud-folio');
+    const hudTc = document.getElementById('hud-tc');
+    const hudTitle = document.getElementById('hud-title');
+    const hudBtn = document.getElementById('hud-action-btn') as HTMLAnchorElement;
+
+    if (!track) return;
+
+    // 1. Actualización de progreso de la barra scrubber
+    function updateProgress() {
+      if (!track) return;
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      const currentScroll = track.scrollLeft;
+      const progress = maxScroll > 0 ? (currentScroll / maxScroll) * 100 : 0;
+
+      if (progressFill) progressFill.style.width = `${Math.min(100, Math.max(5, progress))}%`;
+      if (percentLabel) percentLabel.textContent = `${Math.round(progress)}%`;
+    }
+
+    track.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // 2. Pan horizontal con botones de navegación
+    const scrollStep = 240;
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        track.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        track.scrollBy({ left: scrollStep, behavior: 'smooth' });
+      });
+    }
+
+    // 3. Scrub con la rueda del ratón (Wheel horizontal mapping)
+    track.addEventListener('wheel', (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        track.scrollLeft += e.deltaY * 0.9;
+      }
+    }, { passive: false });
+
+    // 4. Interacción con Micro-Cards (Hover e Inspector HUD)
+    cards.forEach((card) => {
+      card.addEventListener('mouseenter', () => {
+        const title = card.getAttribute('data-title') || '';
+        const folio = card.getAttribute('data-folio') || '';
+        const tc = card.getAttribute('data-tc') || '';
+        const url = card.getAttribute('data-url') || '#';
+
+        if (hudTitle) hudTitle.textContent = title;
+        if (hudFolio) hudFolio.textContent = folio;
+        if (hudTc) hudTc.textContent = `TC ${tc}`;
+        if (hudBtn) hudBtn.href = url;
+
+        // Marcado de tarjeta activa
+        cards.forEach(c => c.classList.remove('border-[#dda15e]', 'ring-1', 'ring-[#dda15e]'));
+        card.classList.add('border-[#dda15e]', 'ring-1', 'ring-[#dda15e]');
+      });
+
+      card.addEventListener('click', () => {
+        const url = card.getAttribute('data-url');
+        if (url && url !== '#') {
+          window.location.href = url;
+        }
+      });
+    });
+
+    // 5. Drag-to-scroll con ratón
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    track.addEventListener('mousedown', (e) => {
+      isDown = true;
+      track.classList.add('active:cursor-grabbing');
+      startX = e.pageX - track.offsetLeft;
+      scrollLeft = track.scrollLeft;
+    });
+
+    track.addEventListener('mouseleave', () => {
+      isDown = false;
+    });
+
+    track.addEventListener('mouseup', () => {
+      isDown = false;
+    });
+
+    track.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - track.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      track.scrollLeft = scrollLeft - walk;
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", initMicroDockScrubber);
+  document.addEventListener("astro:page-load", initMicroDockScrubber);
+</script>

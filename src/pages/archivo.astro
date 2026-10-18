@@ -1,13 +1,20 @@
 ---
 // src/pages/archivo.astro
 // Hemeroteca & Archivo Vivo — The Great Puzzle Project
-// Integra Ediciones Magazine (Revistas Inmersivas 60/40 en su propio HTML) y Bóveda Cloudflare D1 / R2
+// Integra los 3 modelos de navegación espacial de 2026:
+// 1. Spatial Zoom (Fluid Grid con GSAP Flip)
+// 2. Editorial Command Drawer (Índice Tipográfico Noir con Hover Preview)
+// 3. Micro-Dock Cinemático (Timeline Scrubber de 70mm)
+// Junto con Ediciones Magazine y Bóveda Cloudflare D1 / R2.
 
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import PageHeader from '../components/PageHeader.astro';
 import ArchivoHub from '../components/archivo/ArchivoHub.svelte';
+import ColeccionesSpatial from '../components/ColeccionesSpatial.astro';
+import EditorialCommandDrawer from '../components/archivo/EditorialCommandDrawer.astro';
+import MicroDockScrubber from '../components/archivo/MicroDockScrubber.astro';
 import { getCollection } from 'astro:content';
 
 let initialEnsayos: any[] = [];
@@ -18,20 +25,23 @@ try {
     return !data.draft;
   });
   if (Array.isArray(ensayos)) {
-    initialEnsayos = ensayos.map((ensayo) => {
+    initialEnsayos = ensayos.map((ensayo, idx) => {
       const data = ensayo.data;
       const cover = data.coverImage || data.heroUrl || (data.gallery && data.gallery.length > 0 ? data.gallery[0] : undefined);
       const snippet = data.abstract || (ensayo.body ? ensayo.body.slice(0, 180).replace(/<[^>]*>?/gm, '').replace(/^[#\s*]+/gm, '') + '...' : '');
 
       return {
         id: ensayo.id,
+        folio: `FOLIO-${String(idx + 1).padStart(3, '0')}`,
         url: `/ensayos/${ensayo.id}`,
         title: data.title || 'Ensayo Histórico',
         volanta: data.volanta || data.powertype || 'Ensayo Editorial',
         description: snippet,
-        category: data.category || 'Ensayo Editorial',
+        abstract: snippet,
+        category: data.category || 'Historia Profunda',
         imageUrl: cover || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
-        date: data.date ? new Date(data.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Fecha no registrada',
+        date: data.date ? new Date(data.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : '2026',
+        readingTime: data.readingTime || '12 min',
         tags: [data.category || 'ensayo', data.powertype || 'historia'].filter(Boolean),
         source: 'ensayo'
       };
@@ -56,20 +66,57 @@ try {
       kicker="THE GREAT PUZZLE PROJECT · HEMEROTECA & ARCHIVO VIVO"
       title="Archivo &"
       accent="Magazines"
-      logline="Ediciones inmersivas en pantalla completa, ensayos editoriales y artefactos de la Bóveda D1."
+      logline="Navegación espacial fluida entre formatos IMAX, índices tipográficos Noir y scrubbers de montaje."
       primaryAction={{
-        href: "/kenburns",
-        label: "Probar Visor Ken Burns (100dvh)",
-        icon: "→"
+        href: "#spatial-gallery-section",
+        label: "Exploración Espacial 3D",
+        icon: "↓"
       }}
     />
 
-    <section class="relative px-2 sm:px-4 md:px-8 w-[96%] max-w-385 mx-auto pb-32">
+    <!-- ========================================================================= -->
+    <!-- MODO 01: SPATIAL ZOOM / FLUID GRID (IMAX A BENTO GRID CON GSAP FLIP)     -->
+    <!-- ========================================================================= -->
+    <ColeccionesSpatial 
+      casos={initialEnsayos.slice(0, 8)}
+      title="Exploración Espacial"
+      subtitle="Modo 01 · Spatial Zoom & Fluid Grid"
+    />
 
-      <!-- COMPONENTE SVELTE: ARCHIVO HUB (MAGAZINES + ENSAYOS + D1) -->
+    <!-- ========================================================================= -->
+    <!-- HUB CENTRAL DEL ARCHIVO (MAGAZINES + ENSAYOS + BÓVEDA D1)                -->
+    <!-- ========================================================================= -->
+    <section class="relative px-2 sm:px-4 md:px-8 w-[96%] max-w-385 mx-auto py-24">
+      <div class="mb-12 border-b border-white/10 pb-6 flex items-center justify-between">
+        <div>
+          <span class="text-[#dda15e] text-xs font-mono uppercase tracking-[0.35em] block mb-2">Hemeroteca Digital</span>
+          <h3 class="text-3xl sm:text-4xl font-serif font-bold text-[#fefae0]">Bóveda de Revistas y Ensayos</h3>
+        </div>
+        <span class="text-xs font-mono text-neutral-400">Total: {initialEnsayos.length} Folios</span>
+      </div>
+
       <ArchivoHub client:load initialEnsayos={initialEnsayos} initialD1Items={initialD1Items} />
     </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODO 02: EDITORIAL COMMAND DRAWER (ÍNDICE TIPOGRÁFICO NOIR CON PREVIEW)   -->
+    <!-- ========================================================================= -->
+    <EditorialCommandDrawer 
+      items={initialEnsayos}
+      title="Índice Tipográfico Noir"
+      subtitle="Modo 02 · Editorial Command Drawer"
+    />
+
+    <!-- ========================================================================= -->
+    <!-- MODO 03: MICRO-DOCK CINEMÁTICO (TIMELINE SCRUBBER 70MM)                  -->
+    <!-- ========================================================================= -->
+    <MicroDockScrubber 
+      items={initialEnsayos}
+      title="Timeline Editorial"
+      subtitle="Modo 03 · Micro-Dock Cinemático (70mm Scrubber)"
+    />
   </main>
 
   <Footer />
 </Layout>
+

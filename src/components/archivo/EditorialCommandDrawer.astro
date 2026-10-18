@@ -1,0 +1,420 @@
+---
+// src/components/archivo/EditorialCommandDrawer.astro
+// MODO 02: El "Editorial Command Drawer" (Índice Tipográfico Noir con Hover Preview).
+// Prioriza la soberanía del lenguaje: índice denso, sobrio y de alta velocidad,
+// donde la fotografía se revela únicamente como eco visual al posar el cursor.
+
+import { getCollection } from 'astro:content';
+
+interface Props {
+  items?: any[];
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  items = [],
+  title = "Índice Tipográfico",
+  subtitle = "Modo 02 · Editorial Command Drawer"
+} = Astro.props;
+
+let archiveItems = Array.isArray(items) && items.length > 0 ? items : [];
+
+if (archiveItems.length === 0) {
+  try {
+    const ensayos = await getCollection('ensayos', ({ data }) => !data.draft);
+    if (Array.isArray(ensayos) && ensayos.length > 0) {
+      archiveItems = ensayos.map((e, idx) => ({
+        id: e.id,
+        folio: `FOLIO-${String(idx + 1).padStart(3, '0')}`,
+        title: e.data.title || 'Ensayo Histórico',
+        category: e.data.category || e.data.volanta || 'Historia Profunda',
+        volanta: e.data.volanta || 'Investigación de Campo',
+        abstract: e.data.abstract || 'Estratigrafía conceptual y persistencia de las estructuras líticas ante el olvido.',
+        date: e.data.date ? new Date(e.data.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'short' }) : '2026',
+        url: `/ensayos/${e.id}`,
+        imageUrl: e.data.coverImage || e.data.heroUrl || (e.data.gallery && e.data.gallery.length > 0 ? e.data.gallery[0] : 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp'),
+        readingTime: e.data.readingTime || '12 min'
+      }));
+    }
+  } catch (err) {
+    console.warn('[EditorialCommandDrawer] Error cargando ensayos:', err);
+  }
+}
+
+// Categorías únicas para filtro rápido
+const categories = ['Todos', ...Array.from(new Set(archiveItems.map(item => item.category).filter(Boolean)))].slice(0, 7);
+---
+
+<!-- SECCIÓN EN PÁGINA: ÍNDICE TIPOGRÁFICO NOIR (MODO COMMANDER INTEGRADO) -->
+<section id="editorial-commander-section" class="relative w-full min-h-screen bg-[#070504] text-[#f4ede4] py-28 px-4 sm:px-8 md:px-14 lg:px-20 overflow-hidden border-t border-[#3a281e]/40 select-none">
+  
+  <!-- Canvas de fondo para el revelado fotográfico por proximidad (Hover Preview) -->
+  <div id="commander-backdrop-canvas" class="absolute inset-0 pointer-events-none z-0 transition-opacity duration-700 opacity-0 overflow-hidden">
+    <img id="commander-backdrop-img" src="" alt="Vista previa de archivo" class="w-full h-full object-cover filter blur-[3px] scale-105 brightness-[0.28] contrast-125 transition-all duration-700" />
+    <div class="absolute inset-0 bg-radial from-transparent via-[#070504]/75 to-[#070504]"></div>
+  </div>
+
+  <!-- Gradiente atmosférico fijo -->
+  <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-b from-[#070504] via-transparent to-[#070504]/90"></div>
+
+  <!-- ENCABEZADO EDITORIAL -->
+  <div class="relative z-10 max-w-6xl mx-auto mb-16">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8">
+      <div>
+        <span class="text-[#dda15e] text-xs font-mono uppercase tracking-[0.4em] mb-4 flex items-center gap-3">
+          <span class="inline-block w-2 h-2 rounded-full bg-[#dda15e] animate-pulse"></span>
+          {subtitle}
+        </span>
+        <h2 class="text-4xl sm:text-6xl md:text-7xl font-serif font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-[#fefae0] via-[#dda15e] to-[#bc6c25]">
+          {title}
+        </h2>
+        <p class="text-[#d4a373]/70 font-mono text-xs sm:text-sm tracking-wide mt-3 max-w-2xl leading-relaxed">
+          La soberanía del lenguaje: ausencia de ruido visual hasta el instante de la fijación visual. Deslizá sobre cualquier título para proyectar su fósil fotográfico.
+        </p>
+      </div>
+
+      <!-- Trigger para abrir el Drawer flotante -->
+      <button 
+        id="trigger-open-drawer-btn" 
+        class="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-[#dda15e]/30 bg-[#140e0b]/80 hover:bg-[#dda15e]/15 hover:border-[#dda15e] text-[#fefae0] font-mono text-xs tracking-[0.25em] uppercase transition-all duration-300 cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.5)] group"
+      >
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>Abrir Drawer Off-Canvas</span>
+        <kbd class="px-2 py-0.5 text-[10px] bg-black/60 border border-white/10 rounded font-sans text-neutral-400 group-hover:text-white">⌘K</kbd>
+      </button>
+    </div>
+
+    <!-- Barra de búsqueda instantánea y filtros temáticos -->
+    <div class="mt-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+      <div class="relative flex-1 max-w-md">
+        <input 
+          type="text" 
+          id="commander-search-input" 
+          placeholder="Buscar por tesis, yacimiento o folio..." 
+          class="w-full bg-[#120c09] border border-[#3a281e]/60 rounded-lg px-4 py-3 pl-10 text-xs font-mono text-[#fefae0] placeholder-[#d4a373]/40 focus:outline-none focus:border-[#dda15e] focus:ring-1 focus:ring-[#dda15e] transition-all"
+        />
+        <span class="absolute left-3.5 top-3.5 text-xs text-[#d4a373]/50">🔍</span>
+      </div>
+
+      <!-- Chips de categoría -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
+        {categories.map((cat, i) => (
+          <button 
+            class={`category-filter-chip px-3.5 py-1.5 rounded-full text-[10px] font-mono tracking-widest uppercase transition-all whitespace-nowrap cursor-pointer ${i === 0 ? 'bg-[#dda15e] text-[#070504] font-semibold' : 'bg-[#140e0b] text-[#d4a373]/70 border border-[#3a281e]/40 hover:border-[#dda15e]/60 hover:text-white'}`}
+            data-category={cat}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA / ÍNDICE TIPOGRÁFICO DENSO -->
+  <div class="relative z-10 max-w-6xl mx-auto">
+    <div class="divide-y divide-[#3a281e]/30" id="commander-items-container">
+      {archiveItems.map((post, idx) => (
+        <a 
+          href={post.url} 
+          class="commander-row group block py-6 sm:py-7 transition-all duration-300 relative cursor-pointer"
+          data-title={post.title.toLowerCase()}
+          data-category={post.category.toLowerCase()}
+          data-folio={post.folio.toLowerCase()}
+          data-image={post.imageUrl}
+          data-abstract={post.abstract}
+        >
+          <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-2 md:gap-8">
+            
+            <!-- Folio + Categoría + Volanta -->
+            <div class="flex items-center gap-4 text-[11px] font-mono tracking-widest text-[#d4a373]/60 group-hover:text-[#dda15e] transition-colors shrink-0 md:w-64">
+              <span class="font-bold text-[#dda15e]/80">{post.folio || `FOLIO-${String(idx + 1).padStart(3, '0')}`}</span>
+              <span class="w-1 h-1 rounded-full bg-[#dda15e]/40"></span>
+              <span class="uppercase truncate">{post.category}</span>
+            </div>
+
+            <!-- Título Monumental Noir -->
+            <div class="flex-1">
+              <h3 class="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-[#f4ede4] group-hover:text-[#fefae0] group-hover:translate-x-2 transition-all duration-300 leading-snug">
+                {post.title}
+              </h3>
+              <p class="text-xs text-[#d4a373]/65 font-sans mt-2 line-clamp-1 max-w-3xl opacity-80 group-hover:opacity-100 transition-opacity">
+                {post.abstract}
+              </p>
+            </div>
+
+            <!-- Metadatos de fecha y flecha de acceso -->
+            <div class="flex items-center gap-6 text-xs font-mono text-[#d4a373]/50 shrink-0 mt-2 md:mt-0">
+              <span>{post.date}</span>
+              <span class="text-[#dda15e] transform group-hover:translate-x-1.5 transition-transform duration-300 font-serif text-lg">→</span>
+            </div>
+
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Estado vacío de búsqueda -->
+    <div id="commander-empty-state" class="hidden text-center py-20 font-mono text-sm text-[#d4a373]/60">
+      <p>Ningún registro estratigráfico coincide con el término de búsqueda.</p>
+    </div>
+  </div>
+
+  <!-- TOOLTIP / LENTE FOTOGRÁFICO FLOTANTE QUE SIGUE AL CURSOR -->
+  <div 
+    id="floating-preview-card" 
+    class="pointer-events-none fixed z-50 w-72 h-44 rounded-lg overflow-hidden border border-[#dda15e]/50 shadow-[0_25px_60px_rgba(0,0,0,0.95)] opacity-0 transition-opacity duration-300 bg-black hidden md:block"
+    style="top: 0; left: 0; transform: translate(-50%, -50%);"
+  >
+    <img id="floating-preview-img" src="" alt="Previsualización" class="w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+    <div class="absolute bottom-3 left-3 right-3 text-[10px] font-mono text-[#dda15e] truncate" id="floating-preview-title">
+      Título del Ensayo
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- OFF-CANVAS COMMAND DRAWER (PANEL LATERAL TIPO COMMAND CENTER NOIR)       -->
+<!-- ========================================================================= -->
+<div id="command-drawer-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-500"></div>
+
+<aside 
+  id="command-drawer-aside" 
+  class="fixed top-0 right-0 bottom-0 w-full sm:w-[500px] md:w-[560px] bg-[#0c0907] border-l border-[#3a281e]/60 z-50 translate-x-full transition-transform duration-500 ease-out flex flex-col shadow-[-20px_0_60px_rgba(0,0,0,0.95)] select-none"
+  aria-label="Editorial Command Drawer"
+>
+  <!-- Cabecera del Drawer -->
+  <div class="p-6 md:p-8 border-b border-white/10 flex items-center justify-between bg-[#120d0a]">
+    <div>
+      <span class="text-[#dda15e] text-[10px] font-mono tracking-[0.35em] uppercase block mb-1">TGP Hemeroteca · Off-Canvas</span>
+      <h3 class="text-xl font-serif font-bold text-[#fefae0]">Índice General de Registros</h3>
+    </div>
+    <button id="close-drawer-btn" class="w-9 h-9 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 flex items-center justify-center text-white/70 hover:text-white transition-all text-sm cursor-pointer" aria-label="Cerrar Drawer">
+      ✕
+    </button>
+  </div>
+
+  <!-- Buscador rápido dentro del Drawer -->
+  <div class="p-6 border-b border-[#3a281e]/30 bg-[#0e0a08]">
+    <input 
+      type="text" 
+      id="drawer-search-input" 
+      placeholder="Filtrar por título o categoría..." 
+      class="w-full bg-[#18110d] border border-[#3a281e]/60 rounded-md px-3.5 py-2.5 text-xs font-mono text-[#fefae0] placeholder-[#d4a373]/40 focus:outline-none focus:border-[#dda15e] transition-all"
+    />
+  </div>
+
+  <!-- Lista scrolleable densa -->
+  <div class="flex-1 overflow-y-auto p-6 md:p-8 space-y-4 divide-y divide-[#3a281e]/20" id="drawer-items-list">
+    {archiveItems.map((post, idx) => (
+      <a 
+        href={post.url} 
+        class="drawer-list-item block pt-4 group transition-opacity"
+        data-title={post.title.toLowerCase()}
+        data-category={post.category.toLowerCase()}
+        data-image={post.imageUrl}
+      >
+        <div class="flex items-center justify-between text-[10px] font-mono text-[#d4a373]/60 mb-1">
+          <span class="text-[#dda15e]">{post.folio || `#${String(idx + 1).padStart(3, '0')}`}</span>
+          <span class="uppercase tracking-widest">{post.category}</span>
+        </div>
+        <h4 class="text-lg font-serif font-semibold text-[#f4ede4] group-hover:text-[#dda15e] transition-colors leading-snug">
+          {post.title}
+        </h4>
+        <span class="text-[11px] font-sans text-neutral-400 line-clamp-1 mt-1 block">
+          {post.abstract}
+        </span>
+      </a>
+    ))}
+  </div>
+
+  <!-- Pie del Drawer -->
+  <div class="p-4 border-t border-white/10 bg-[#0a0705] flex items-center justify-between text-[11px] font-mono text-[#d4a373]/60">
+    <span>{archiveItems.length} Ensayos Catalogados</span>
+    <span>Presiona <kbd class="px-1.5 py-0.5 bg-black/60 rounded border border-white/10 text-white">ESC</kbd> para salir</span>
+  </div>
+</aside>
+
+<!-- BOTÓN FLOTANTE GLOBAL (ACCESO RÁPIDO DISCRETO) -->
+<button 
+  id="floating-drawer-toggle" 
+  class="fixed bottom-8 right-8 z-40 flex items-center gap-3 px-5 py-3 rounded-full bg-[#140e0b]/90 border border-[#dda15e]/40 hover:border-[#dda15e] text-[#fefae0] font-mono text-xs tracking-widest uppercase backdrop-blur-md shadow-[0_10px_35px_rgba(0,0,0,0.85)] hover:scale-105 transition-all duration-300 cursor-pointer group"
+  aria-label="Abrir Índice Tipográfico"
+>
+  <span class="w-2 h-2 rounded-full bg-[#dda15e] animate-ping"></span>
+  <span class="hidden sm:inline font-semibold">Índice Editorial</span>
+  <span class="px-1.5 py-0.5 rounded bg-black/50 text-[10px] border border-white/15 text-neutral-300">⌘K</span>
+</button>
+
+<script>
+  import { gsap } from "gsap";
+
+  function initEditorialCommandDrawer() {
+    // 1. Manejo del Hover Preview en la sección principal
+    const rows = document.querySelectorAll('.commander-row');
+    const backdropCanvas = document.getElementById('commander-backdrop-canvas');
+    const backdropImg = document.getElementById('commander-backdrop-img') as HTMLImageElement;
+    const floatingCard = document.getElementById('floating-preview-card');
+    const floatingImg = document.getElementById('floating-preview-img') as HTMLImageElement;
+    const floatingTitle = document.getElementById('floating-preview-title');
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    // Seguimiento suave del ratón para la tarjeta flotante
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (floatingCard && !floatingCard.classList.contains('hidden')) {
+        gsap.to(floatingCard, {
+          x: mouseX + 25,
+          y: mouseY + 25,
+          duration: 0.35,
+          ease: "power2.out"
+        });
+      }
+    });
+
+    rows.forEach(row => {
+      row.addEventListener('mouseenter', () => {
+        const imgUrl = row.getAttribute('data-image');
+        const title = row.getAttribute('data-title');
+
+        // Atenuar filas hermanas para enfocar la seleccionada
+        rows.forEach(r => {
+          if (r !== row) r.classList.add('opacity-30');
+          else r.classList.remove('opacity-30');
+        });
+
+        // Cambiar imagen de fondo con disolución suave
+        if (backdropCanvas && backdropImg && imgUrl) {
+          backdropImg.src = imgUrl;
+          gsap.to(backdropCanvas, { opacity: 0.45, duration: 0.6, ease: "power2.out" });
+        }
+
+        // Activar lente flotante
+        if (floatingCard && floatingImg && imgUrl) {
+          floatingImg.src = imgUrl;
+          if (floatingTitle) floatingTitle.textContent = row.querySelector('h3')?.textContent || title || '';
+          gsap.to(floatingCard, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" });
+        }
+      });
+
+      row.addEventListener('mouseleave', () => {
+        rows.forEach(r => r.classList.remove('opacity-30'));
+        if (backdropCanvas) {
+          gsap.to(backdropCanvas, { opacity: 0, duration: 0.6, ease: "power2.out" });
+        }
+        if (floatingCard) {
+          gsap.to(floatingCard, { opacity: 0, scale: 0.95, duration: 0.3, ease: "power2.out" });
+        }
+      });
+    });
+
+    // 2. Filtrado interactivo en la sección
+    const searchInput = document.getElementById('commander-search-input') as HTMLInputElement;
+    const categoryChips = document.querySelectorAll('.category-filter-chip');
+    const emptyState = document.getElementById('commander-empty-state');
+    let currentCategory = 'Todos';
+
+    function filterRows() {
+      const query = (searchInput?.value || '').trim().toLowerCase();
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const title = (row.getAttribute('data-title') || '').toLowerCase();
+        const category = (row.getAttribute('data-category') || '').toLowerCase();
+        const folio = (row.getAttribute('data-folio') || '').toLowerCase();
+
+        const matchesQuery = !query || title.includes(query) || category.includes(query) || folio.includes(query);
+        const matchesCategory = currentCategory === 'Todos' || category.includes(currentCategory.toLowerCase());
+
+        if (matchesQuery && matchesCategory) {
+          (row as HTMLElement).style.display = 'block';
+          visibleCount++;
+        } else {
+          (row as HTMLElement).style.display = 'none';
+        }
+      });
+
+      if (emptyState) {
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+    }
+
+    if (searchInput) searchInput.addEventListener('input', filterRows);
+
+    categoryChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        categoryChips.forEach(c => {
+          c.classList.remove('bg-[#dda15e]', 'text-[#070504]', 'font-semibold');
+          c.classList.add('bg-[#140e0b]', 'text-[#d4a373]/70', 'border', 'border-[#3a281e]/40');
+        });
+        chip.classList.add('bg-[#dda15e]', 'text-[#070504]', 'font-semibold');
+        chip.classList.remove('bg-[#140e0b]', 'text-[#d4a373]/70', 'border');
+
+        currentCategory = chip.getAttribute('data-category') || 'Todos';
+        filterRows();
+      });
+    });
+
+    // 3. Off-Canvas Command Drawer (Apertura, Cierre y Atajos)
+    const aside = document.getElementById('command-drawer-aside');
+    const backdrop = document.getElementById('command-drawer-backdrop');
+    const openBtn = document.getElementById('trigger-open-drawer-btn');
+    const floatToggle = document.getElementById('floating-drawer-toggle');
+    const closeBtn = document.getElementById('close-drawer-btn');
+    const drawerSearch = document.getElementById('drawer-search-input') as HTMLInputElement;
+    const drawerItems = document.querySelectorAll('.drawer-list-item');
+
+    function openDrawer() {
+      if (!aside || !backdrop) return;
+      backdrop.classList.remove('pointer-events-none');
+      gsap.to(backdrop, { opacity: 1, duration: 0.4 });
+      gsap.to(aside, { x: 0, duration: 0.5, ease: "power3.out" });
+      setTimeout(() => drawerSearch?.focus(), 300);
+    }
+
+    function closeDrawer() {
+      if (!aside || !backdrop) return;
+      gsap.to(backdrop, { opacity: 0, duration: 0.3, onComplete: () => backdrop.classList.add('pointer-events-none') });
+      gsap.to(aside, { x: "100%", duration: 0.4, ease: "power3.in" });
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openDrawer);
+    if (floatToggle) floatToggle.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeDrawer);
+
+    // Atajos de Teclado (Cmd+K / Ctrl+K y Escape)
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        openDrawer();
+      }
+      if (e.key === 'Escape') {
+        closeDrawer();
+      }
+    });
+
+    // Búsqueda en el drawer
+    if (drawerSearch) {
+      drawerSearch.addEventListener('input', () => {
+        const query = drawerSearch.value.trim().toLowerCase();
+        drawerItems.forEach(item => {
+          const title = (item.getAttribute('data-title') || '').toLowerCase();
+          const category = (item.getAttribute('data-category') || '').toLowerCase();
+          if (!query || title.includes(query) || category.includes(query)) {
+            (item as HTMLElement).style.display = 'block';
+          } else {
+            (item as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", initEditorialCommandDrawer);
+  document.addEventListener("astro:page-load", initEditorialCommandDrawer);
+</script>
