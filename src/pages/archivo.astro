@@ -22,10 +22,29 @@ let initialD1Items: any[] = [];
 
 try {
   const ensayos = await getCollection('ensayos', ({ data }) => {
-    return !data.draft;
+    return !data.draft && data.title && data.title !== 'asado argentino';
   });
   if (Array.isArray(ensayos)) {
-    initialEnsayos = ensayos.map((ensayo, idx) => {
+    // Ordenar ensayos para priorizar piezas maestras con portada e información completa
+    const sorted = [...ensayos].sort((a, b) => {
+      const hasCoverA = Boolean(a.data.coverImage || a.data.heroUrl) ? 1 : 0;
+      const hasCoverB = Boolean(b.data.coverImage || b.data.heroUrl) ? 1 : 0;
+      if (hasCoverA !== hasCoverB) return hasCoverB - hasCoverA;
+      const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+      const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+      return dateB - dateA;
+    });
+
+    const fallbackCovers = [
+      'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
+      'https://storage.thegreatpuzzleproject.com/vault-media/magazine/pompeya-y-el-vesubio/vesuvius-from-pompeii-hires-version-2png.webp',
+      'https://storage.thegreatpuzzleproject.com/vault-media/1792044852021-861c97cb.webp',
+      'https://storage.thegreatpuzzleproject.com/vault-media/1792137342460-4f977b70.webp',
+      'https://storage.thegreatpuzzleproject.com/vault-media/1792133914689-44dd5943.webp',
+      'https://storage.thegreatpuzzleproject.com/vault-media/1792137345528-f304bb0d.webp'
+    ];
+
+    initialEnsayos = sorted.map((ensayo, idx) => {
       const data = ensayo.data;
       const cover = data.coverImage || data.heroUrl || (data.gallery && data.gallery.length > 0 ? data.gallery[0] : undefined);
       const snippet = data.abstract || (ensayo.body ? ensayo.body.slice(0, 180).replace(/<[^>]*>?/gm, '').replace(/^[#\s*]+/gm, '') + '...' : '');
@@ -39,7 +58,7 @@ try {
         description: snippet,
         abstract: snippet,
         category: data.category || 'Historia Profunda',
-        imageUrl: cover || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
+        imageUrl: cover || fallbackCovers[idx % fallbackCovers.length],
         date: data.date ? new Date(data.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : '2026',
         readingTime: data.readingTime || '12 min',
         tags: [data.category || 'ensayo', data.powertype || 'historia'].filter(Boolean),

@@ -39,7 +39,7 @@ if (colecciones.length === 0) {
 
 // Fallbacks con la estética Dark Academia / Arqueológica
 const fallbackCards = [
-  { id: '1', title: 'Asado Argentino: Ritual y Persistencia', category: 'Antropología Culinaria', abstract: 'El asado, en su aparente simplicidad, se alza como una de las estructuras rituales más persistentes.', imageUrl: 'https://images.unsplash.com/photo-1544025162-811114215b13?auto=format&fit=crop&w=1200&q=80', url: '#' },
+  { id: '1', title: 'Göbekli Tepe: El Santuario Antes del Tiempo', category: 'Arqueología Cognitiva', abstract: 'Pilares calizos de seis toneladas esculpidos doce mil años atrás, antes de la agricultura.', imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp', url: '/magazine/gobekli-tepe' },
   { id: '2', title: 'Santuarios de Altura en el Karst', category: 'Arquitectura Sagrada', abstract: 'La relación entre la elevación topográfica y la neurognosis en la construcción del templo.', imageUrl: 'https://images.unsplash.com/photo-1528164344705-475426879c0d?auto=format&fit=crop&w=1200&q=80', url: '#' },
   { id: '3', title: 'Derinkuyu y la Geometría Ctoniana', category: 'Arqueología Subterránea', abstract: 'Ciudades talladas en la roca oscura, diseñadas para resistir el colapso de la superficie.', imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792137342460-4f977b70.webp', url: '#' },
   { id: '4', title: 'Nan Madol: La Ciudad de Basalto', category: 'Megalitismo del Pacífico', abstract: 'Bloques magnéticos sobre el arrecife de coral desafiando la ingeniería oceánica.', imageUrl: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=80', url: '#' }
@@ -78,9 +78,11 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
 
   <!-- Contenedor Fluido: Arranca en modo IMAX -->
   <div id="spatial-container" class="layout-imax w-full mx-auto relative z-10 transition-colors duration-700">
-    {cardsToDisplay.map((post, i) => (
+    {cardsToDisplay.map((post, i) => {
+      const isVersionB = (i === 1);
+      return (
       <article 
-        class="spatial-card group relative w-full overflow-hidden bg-[#0a0a0e] border border-white/10 cursor-pointer will-change-transform shadow-[0_20px_60px_rgba(0,0,0,0.85)]"
+        class={`spatial-card group relative w-full overflow-hidden bg-[#0a0a0e] border border-white/10 cursor-pointer will-change-transform shadow-[0_20px_60px_rgba(0,0,0,0.85)] ${isVersionB ? 'is-version-b' : 'is-version-a'}`}
         data-id={`card-${post.id}`}
       >
         <div class="absolute inset-0 z-10 bg-gradient-to-t from-[#050508] via-[#050508]/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-700 pointer-events-none"></div>
@@ -93,15 +95,29 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
           loading={i < 2 ? "eager" : "lazy"}
         />
 
-        <!-- Contenido Tipográfico -->
-        <div class="card-content absolute bottom-0 left-0 right-0 z-20 p-8 md:p-16 flex flex-col justify-end h-full pointer-events-none">
-          <div class="meta-wrapper overflow-hidden mb-4">
+        <!-- Contenido Tipográfico Base -->
+        <div class={`card-content absolute bottom-0 left-0 right-0 z-20 p-8 md:p-14 flex flex-col justify-end h-full pointer-events-none ${isVersionB ? 'spatial-dim-content' : 'spatial-elevator-content'}`}>
+          
+          <!-- Badge de Versión de Prueba A/B -->
+          <div class="mb-3 inline-flex items-center">
+            {isVersionB ? (
+              <span class="px-2.5 py-0.5 rounded-full text-[9px] font-mono tracking-widest uppercase bg-emerald-500/25 text-emerald-300 border border-emerald-500/50 shadow-md">
+                VERSIÓN B · BENTO OVERLAY (25% FIJO)
+              </span>
+            ) : (
+              <span class="px-2.5 py-0.5 rounded-full text-[9px] font-mono tracking-widest uppercase bg-[#dda15e]/25 text-[#fefae0] border border-[#dda15e]/50 shadow-md">
+                VERSIÓN A · MUBI PRO (ELEVATOR EFFECT)
+              </span>
+            )}
+          </div>
+
+          <div class="meta-wrapper overflow-hidden mb-3">
             <span class="text-purple-300 text-[10px] tracking-[0.3em] uppercase font-mono block transform transition-transform duration-500 origin-left">
               {post.category}
             </span>
           </div>
           
-          <h3 class="card-title font-serif font-bold text-white leading-[1.08] mb-6 drop-shadow-lg transition-all duration-500">
+          <h3 class="card-title font-serif font-bold text-white leading-[1.08] mb-4 drop-shadow-lg transition-all duration-500">
             {post.title}
           </h3>
           
@@ -111,14 +127,63 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
             </p>
           </div>
 
-          <div class="explore-btn mt-10 opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 pointer-events-auto">
+          <div class="explore-btn mt-6 opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 pointer-events-auto">
             <a href={post.url} class="inline-flex items-center gap-4 text-xs tracking-[0.2em] uppercase text-white hover:text-purple-300 transition-colors">
               Explorar Dossier <span class="w-8 h-[1px] bg-current block"></span>
             </a>
           </div>
         </div>
+
+        <!-- ── SEMI-TARJETA HOVER A 1/4 DE ALTURA ── -->
+        {isVersionB ? (
+          <!-- VERSIÓN B: Bento Overlay 25% Fijo -->
+          <div class="spatial-bento-tray absolute bottom-0 left-0 right-0 z-30 h-[26%] p-6 sm:p-8 bg-[#100d14]/94 backdrop-blur-md border-t border-emerald-500/40 flex flex-col justify-center shadow-[0_-15px_40px_rgba(0,0,0,0.95)]">
+            <div class="flex items-center justify-between text-[10px] font-mono tracking-widest uppercase mb-1.5 text-emerald-300">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-emerald-500/25 font-bold">BENTO OVERLAY</span>
+                <span class="text-white/40">·</span>
+                <span class="text-white/80">{post.category}</span>
+              </div>
+              <span class="text-white/60">ANÁLISIS ESTRUCTURAL</span>
+            </div>
+            <p class="font-sans text-xs sm:text-sm text-neutral-200 leading-relaxed line-clamp-2 max-w-3xl">
+              {post.abstract}
+            </p>
+            <div class="flex items-center gap-4 mt-2 pt-2 border-t border-white/10 text-[10px] font-mono text-white/60">
+              <span>FORMATO: <strong class="text-emerald-400">CUADRÍCULA PANORÁMICA</strong></span>
+              <a href={post.url} class="ml-auto text-emerald-300 hover:text-white transition-colors cursor-pointer tracking-wider">
+                EXPLORAR DOSSIER ↗
+              </a>
+            </div>
+          </div>
+        ) : (
+          <!-- VERSIÓN A: MUBI Pro Cinematic Elevator -->
+          <div class="spatial-mubi-tray absolute bottom-0 left-0 right-0 z-30 min-h-[26%] max-h-[34%] p-6 sm:p-8 md:p-10 bg-[#080504]/94 backdrop-blur-xl border-t border-[#dda15e]/50 flex flex-col justify-center shadow-[0_-20px_50px_rgba(0,0,0,0.98)]">
+            <div class="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#dda15e]/80 to-transparent"></div>
+            <div class="flex items-center justify-between text-[10px] font-mono tracking-widest text-[#dda15e] uppercase mb-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-[#dda15e]/25 text-[#fefae0] font-bold">MUBI CINEMATIC PRO</span>
+                <span class="text-neutral-500">·</span>
+                <span class="text-neutral-300">{post.category}</span>
+              </div>
+              <span class="text-amber-200/90 font-bold tracking-widest">DEEP TIME</span>
+            </div>
+            <p class="font-sans text-xs sm:text-sm text-neutral-200 leading-relaxed line-clamp-2 max-w-4xl">
+              {post.abstract}
+            </p>
+            <div class="flex items-center gap-4 sm:gap-6 mt-3 pt-2.5 border-t border-white/10 text-[10px] font-mono text-[#d4a373]/80">
+              <span>EFECTO: <strong class="text-white/90">ELEVATOR (SUBIDA COMPLETA)</strong></span>
+              <span>•</span>
+              <span>TELEMETRÍA: <strong class="text-[#dda15e]">4K FLUID</strong></span>
+              <a href={post.url} class="ml-auto text-[#dda15e] hover:text-white transition-colors cursor-pointer tracking-wider uppercase">
+                ABRIR DOSSIER ↗
+              </a>
+            </div>
+          </div>
+        )}
       </article>
-    ))}
+      );
+    })}
   </div>
 </section>
 
@@ -164,8 +229,7 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
     margin-bottom: 0.5rem;
   }
 
-  /* Ocultamos el abstract y el botón explorar en la cuadrícula para limpiarla */
-  .layout-grid .card-abstract,
+  /* En la cuadrícula Bento, ocultamos el botón estándar para que la semi-tarjeta sea el foco */
   .layout-grid .explore-btn {
     opacity: 0;
     height: 0;
@@ -175,6 +239,56 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
 
   .layout-grid .card-content {
     padding: 2rem;
+  }
+
+  /* -------------------------------------------------------------------------
+     COMPARATIVA HOVER: VERSIÓN A (MUBI PRO) vs VERSIÓN B (BENTO OVERLAY)
+  -------------------------------------------------------------------------- */
+
+  /* VERSIÓN A: MUBI CINEMATIC ELEVATOR (PRO) */
+  .spatial-card.is-version-a .spatial-elevator-content {
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+  }
+  .layout-imax .spatial-card.is-version-a:hover .spatial-elevator-content {
+    transform: translateY(-110px);
+  }
+  .layout-grid .spatial-card.is-version-a:hover .spatial-elevator-content {
+    transform: translateY(-75px);
+  }
+
+  .spatial-card.is-version-a .spatial-mubi-tray {
+    transform: translateY(105%);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+    will-change: transform, opacity;
+    pointer-events: none;
+  }
+  .spatial-card.is-version-a:hover .spatial-mubi-tray {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* VERSIÓN B: BENTO BRAND CLASSIC OVERLAY (25% FIJO) */
+  .spatial-card.is-version-b .spatial-dim-content {
+    transition: opacity 0.35s ease;
+  }
+  .spatial-card.is-version-b:hover .spatial-dim-content {
+    opacity: 0.25;
+  }
+
+  .spatial-card.is-version-b .spatial-bento-tray {
+    transform: translateY(30px);
+    opacity: 0;
+    transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+    will-change: transform, opacity;
+    pointer-events: none;
+  }
+  .spatial-card.is-version-b:hover .spatial-bento-tray {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
   }
 </style>
 
