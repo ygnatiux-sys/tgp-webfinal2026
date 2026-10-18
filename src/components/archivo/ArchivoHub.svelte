@@ -708,8 +708,25 @@
               </div>
 
               <!-- 3. Contenido Inferior Anclado: empujado a la base -->
-              <div class="cinemascope-content z-10 max-w-4xl flex flex-col items-start gap-4">
+              <div class="cinemascope-content z-10 max-w-4xl flex flex-col items-start gap-4 transition-all duration-500 ease-out {idx === 1 ? 'bento-dim-content' : 'mubi-elevator-content'}">
                 
+                <!-- Badge de versión para test visual A/B -->
+                <div class="inline-flex items-center gap-2">
+                  {#if idx === 0}
+                    <span class="px-2.5 py-1 rounded-full text-[9px] font-mono tracking-widest uppercase bg-[#dda15e]/25 text-[#fefae0] border border-[#dda15e]/50 shadow-md">
+                      VERSIÓN A · MUBI PRO (ELEVATOR EFFECT)
+                    </span>
+                  {:else if idx === 1}
+                    <span class="px-2.5 py-1 rounded-full text-[9px] font-mono tracking-widest uppercase bg-emerald-500/25 text-emerald-300 border border-emerald-500/50 shadow-md">
+                      VERSIÓN B · BENTO OVERLAY (CSS 25%)
+                    </span>
+                  {:else}
+                    <span class="px-2.5 py-1 rounded-full text-[9px] font-mono tracking-widest uppercase bg-[#dda15e]/25 text-[#fefae0] border border-[#dda15e]/50 shadow-md">
+                      VERSIÓN A · MUBI PRO (ELEVATOR EFFECT)
+                    </span>
+                  {/if}
+                </div>
+
                 <!-- TÍTULO EN EXTRA BOLD MONUMENTAL -->
                 <h3 class="cinemascope-title font-bodoni font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.98] tracking-tight group-hover/cinemascope:text-white/90 transition-colors [text-shadow:0_4px_24px_rgba(0,0,0,0.98)]">
                   {mag.title}
@@ -734,6 +751,80 @@
                 </div>
 
               </div>
+
+              <!-- 4. SEMI-TARJETA HOVER A 1/4 DE ALTURA -->
+              {#if idx !== 1}
+                <!-- ── VERSIÓN A: MUBI PRO (ELEVATOR EFFECT + VIDRIO AHUMADO) ── -->
+                <div class="mubi-metadata-tray absolute bottom-0 left-0 right-0 z-30 min-h-[26%] max-h-[34%] p-6 sm:p-8 md:p-10 bg-[#080504]/94 backdrop-blur-xl border-t border-[#dda15e]/40 flex flex-col justify-center shadow-[0_-20px_50px_rgba(0,0,0,0.95)]">
+                  <!-- Hilo de luz superior rasante -->
+                  <div class="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#dda15e]/70 to-transparent"></div>
+
+                  <div class="flex items-center justify-between text-[10px] font-mono tracking-widest text-[#dda15e] uppercase mb-2">
+                    <div class="flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded bg-[#dda15e]/25 text-[#fefae0] font-bold">REVISTA INMERSIVA</span>
+                      <span class="text-neutral-500">·</span>
+                      <span class="text-neutral-300">{mag.category}</span>
+                      {#if mag.folios}
+                        <span class="text-neutral-500">·</span>
+                        <span class="text-emerald-400">{mag.folios} FOLIOS</span>
+                      {/if}
+                    </div>
+                    <span class="text-amber-200/90 font-bold tracking-widest">{mag.date}</span>
+                  </div>
+
+                  <p class="font-sans text-xs sm:text-sm text-neutral-200 leading-relaxed line-clamp-2 max-w-4xl">
+                    {mag.excerpt || hook.phrase}
+                  </p>
+
+                  <div class="flex flex-wrap items-center gap-4 sm:gap-6 mt-3 pt-2.5 border-t border-white/10 text-[10px] font-mono text-[#d4a373]/75">
+                    <span>FORMATO: <strong class="text-white/90 font-sans">STANDALONE 60/40</strong></span>
+                    <span>•</span>
+                    <span>ESTADO: <strong class="text-emerald-400">LECTURA DISPONIBLE</strong></span>
+                    <span>•</span>
+                    <span>PERSPECTIVA: <strong class="text-white/90">DEEP TIME</strong></span>
+                    <a 
+                      href={mag.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      class="ml-auto hidden sm:inline-block text-[#dda15e] hover:text-white transition-colors cursor-pointer text-[10px] font-mono uppercase tracking-wider" 
+                    >
+                      INGRESAR A MAGAZINE ↗
+                    </a>
+                  </div>
+                </div>
+
+              {:else}
+                <!-- ── VERSIÓN B: BENTO BRAND CLASSIC OVERLAY (25% FIJO CSS) ── -->
+                <div class="bento-metadata-tray absolute bottom-0 left-0 right-0 z-30 h-[25%] p-6 sm:p-8 bg-[#100d14]/90 backdrop-blur-md border-t border-white/20 flex flex-col justify-center shadow-[0_-15px_35px_rgba(0,0,0,0.85)]">
+                  
+                  <div class="flex items-center justify-between text-[10px] font-mono tracking-widest uppercase mb-1.5">
+                    <div class="flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded bg-emerald-500/25 text-emerald-300 font-bold">CATASTROFE & MEMORIA</span>
+                      <span class="text-white/40">·</span>
+                      <span class="text-white/70">79 d.C.</span>
+                    </div>
+                    <span class="text-emerald-300/80 font-bold">EDICIÓN 02</span>
+                  </div>
+
+                  <p class="font-sans text-xs sm:text-sm text-white/90 leading-relaxed line-clamp-2 max-w-3xl">
+                    {mag.excerpt || hook.phrase}
+                  </p>
+
+                  <div class="flex items-center gap-6 mt-2 pt-2 border-t border-white/10 text-[10px] font-mono text-white/50">
+                    <span>UBICACIÓN: <strong class="text-white/80">VESUBIO, ITALIA</strong></span>
+                    <span>•</span>
+                    <span>ESTADO: <strong class="text-emerald-400">PRESERVADO EN R2</strong></span>
+                    <a 
+                      href={mag.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      class="ml-auto hidden sm:inline-block text-emerald-300 hover:text-white transition-colors cursor-pointer text-[10px] font-mono uppercase tracking-wider" 
+                    >
+                      ABRIR MAGAZINE ↗
+                    </a>
+                  </div>
+                </div>
+              {/if}
             </article>
           {/each}
         </div>
@@ -1141,5 +1232,58 @@
   :global(.cinemascope-card) {
     opacity: 1 !important;
     visibility: visible !important;
+  }
+
+  /* -------------------------------------------------------------------------
+     ESTILOS DIRECTOS PARA COMPARATIVA HOVER: VERSIÓN A vs VERSIÓN B
+     Inmunes a fallos de sintaxis en Tailwind v4 o interpolación Svelte
+  -------------------------------------------------------------------------- */
+
+  /* VERSIÓN A: MUBI CINEMATIC ELEVATOR (PRO) */
+  :global(.cinemascope-card .mubi-elevator-content) {
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    will-change: transform;
+  }
+  :global(.cinemascope-card:hover .mubi-elevator-content) {
+    transform: translateY(-115px) !important;
+  }
+  @media (max-width: 640px) {
+    :global(.cinemascope-card:hover .mubi-elevator-content) {
+      transform: translateY(-90px) !important;
+    }
+  }
+
+  :global(.cinemascope-card .mubi-metadata-tray) {
+    transform: translateY(105%) !important;
+    opacity: 0 !important;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease !important;
+    will-change: transform, opacity;
+    pointer-events: none;
+  }
+  :global(.cinemascope-card:hover .mubi-metadata-tray) {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* VERSIÓN B: BENTO BRAND CLASSIC OVERLAY (25% FIJO) */
+  :global(.cinemascope-card .bento-dim-content) {
+    transition: opacity 0.35s ease !important;
+  }
+  :global(.cinemascope-card:hover .bento-dim-content) {
+    opacity: 0.3 !important;
+  }
+
+  :global(.cinemascope-card .bento-metadata-tray) {
+    transform: translateY(30px) !important;
+    opacity: 0 !important;
+    transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease !important;
+    will-change: transform, opacity;
+    pointer-events: none;
+  }
+  :global(.cinemascope-card:hover .bento-metadata-tray) {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
   }
 </style>
