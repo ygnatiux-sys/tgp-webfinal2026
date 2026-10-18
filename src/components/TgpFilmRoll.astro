@@ -83,31 +83,18 @@ const doubledItems = candidatePosts.slice(0, targetCount);
   <div class="relative z-10 w-full lg:w-3/5 h-full flex flex-col justify-center px-8 sm:px-16 md:px-24">
     
     <div class="relative max-w-4xl text-3d-container transform-style-preserve-3d">
-      <!-- Filtro SVG para textura mineral desgastada -->
-      <svg class="hidden" aria-hidden="true">
-        <defs>
-          <filter id="dust-text">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
-            <feColorMatrix type="matrix" values="1 0 0 0 0  0 0.9 0 0 0  0 0.7 0 0 0  0 0 0 0.5 0" in="noise" result="coloredNoise" />
-            <feComposite operator="in" in="SourceGraphic" in2="coloredNoise" result="composite" />
-            <feBlend mode="multiply" in="composite" in2="SourceGraphic" />
-          </filter>
-        </defs>
-      </svg>
-
       <!-- Subtítulo Épico ("Star Wars" Prelude) -->
-      <span class="epic-subtitle text-[#d4a373] text-sm md:text-base tracking-[0.4em] uppercase font-mono mb-6 flex items-center gap-3 opacity-0">
+      <span class="epic-subtitle text-[#d4a373] text-sm md:text-base tracking-[0.4em] uppercase font-mono mb-6 flex items-center gap-3">
         <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#dda15e] animate-pulse"></span>
         {subtitle}
       </span>
       
-      <!-- Título Gigante con Animación 3D Star Wars Crawler -->
-      <h1 
-        class="text-5xl sm:text-7xl md:text-8xl lg:text-[7.5rem] xl:text-[8.5rem] font-serif font-black leading-[0.88] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-[#fefae0] via-[#dda15e] to-[#bc6c25] drop-shadow-[0_15px_45px_rgba(188,108,37,0.35)] transform-style-preserve-3d" 
-        style="filter: url(#dust-text);"
-      >
+      <!-- Título Monumental 3D Star Wars Crawler con gradiente por línea para preservar el espacio 3D -->
+      <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-[7.5rem] xl:text-[8.5rem] font-serif font-black leading-[0.88] tracking-tighter transform-style-preserve-3d">
         {title.trim().split(/\s+/).map(word => (
-          <span class="epic-text-line block transform-style-preserve-3d opacity-0">{word}</span>
+          <span class="epic-text-line block transform-style-preserve-3d text-transparent bg-clip-text bg-gradient-to-b from-[#fefae0] via-[#dda15e] to-[#bc6c25] drop-shadow-[0_15px_35px_rgba(188,108,37,0.35)] py-0.5">
+            {word}
+          </span>
         ))}
       </h1>
       
@@ -205,6 +192,19 @@ const doubledItems = candidatePosts.slice(0, targetCount);
     -webkit-backface-visibility: hidden;
   }
   
+  .text-3d-container {
+    perspective: 900px;
+    -webkit-perspective: 900px;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+  }
+
+  .epic-text-line {
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    will-change: transform, opacity, filter;
+  }
+
   /* Perforaciones de película gigantes y realistas */
   .sprocket-holes {
     /* El truco: dibujar "huecos" usando el color del fondo (#140e0b) sobre la tira negra (#050302) */
@@ -234,24 +234,31 @@ const doubledItems = candidatePosts.slice(0, targetCount);
     const titleLines = section.querySelectorAll('.epic-text-line');
     const subtitle = section.querySelector('.epic-subtitle');
 
-    if (titleLines.length > 0) {
+    let textTl: gsap.core.Timeline | null = null;
+    let waveTween: gsap.core.Tween | null = null;
+
+    function playTextChoreography() {
+      if (titleLines.length === 0) return;
+
+      if (textTl) textTl.kill();
+      if (waveTween) waveTween.kill();
       gsap.killTweensOf(titleLines);
       if (subtitle) gsap.killTweensOf(subtitle);
 
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      // Configuración inicial de perspectiva
-      gsap.set('.text-3d-container', { perspective: 800 });
+      // Configuración inicial de perspectiva 3D
+      gsap.set('.text-3d-container', { perspective: 900 });
       gsap.set(titleLines, { transformOrigin: "50% 100%" });
 
+      textTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
       if (subtitle) {
-        tl.fromTo(subtitle, 
+        textTl.fromTo(subtitle, 
           { opacity: 0, y: -20, filter: "blur(10px)" }, 
-          { opacity: 0.8, y: 0, filter: "blur(0px)", duration: 2 }
+          { opacity: 0.85, y: 0, filter: "blur(0px)", duration: 2 }
         );
       }
 
-      tl.fromTo(titleLines, 
+      textTl.fromTo(titleLines, 
         { 
           opacity: 0, 
           rotationX: 60, // Inclinado hacia atrás
@@ -267,12 +274,45 @@ const doubledItems = candidatePosts.slice(0, targetCount);
           y: 0, 
           scale: 1,
           filter: "blur(0px)",
-          duration: 3.5, 
-          stagger: 0.3 // Las palabras caen una tras otra
+          duration: 3.2, 
+          stagger: 0.35 // Las palabras caen una tras otra con cadencia solemne
         }, 
-        subtitle ? "-=1.5" : 0
-      );
+        subtitle ? "-=1.4" : 0
+      )
+      // Dinamismo Perpetuo: Ondulación cinemática 3D continua para que el H1 jamás quede estático
+      .add(() => {
+        waveTween = gsap.to(titleLines, {
+          y: "-=10",
+          rotationX: 8,
+          z: 30,
+          duration: 2.8,
+          stagger: {
+            each: 0.25,
+            repeat: -1,
+            yoyo: true
+          },
+          ease: "sine.inOut"
+        });
+      });
     }
+
+    // IntersectionObserver: Activa la apertura épica apenas el usuario visualiza la sección
+    let hasPlayed = false;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          playTextChoreography();
+          hasPlayed = true;
+        } else if (hasPlayed) {
+          // Si el usuario sube y vuelve a bajar, se re-arma el dinamismo
+          gsap.set(titleLines, { opacity: 0 });
+          if (subtitle) gsap.set(subtitle, { opacity: 0 });
+          hasPlayed = false;
+        }
+      });
+    }, { threshold: 0.2 });
+
+    observer.observe(section);
 
     // 2. Rotación del Carrete de Cine Cilíndrico
     const cylinder = document.getElementById('film-cylinder');
