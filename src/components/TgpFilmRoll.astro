@@ -1,0 +1,282 @@
+---
+// src/components/TgpFilmRoll.astro
+// Showcase IMAX: Rodillo de película vertical cinemático con viento de arena sinusoidal.
+// Muestra las últimas 10 publicaciones de TGP Alternative en un loop infinito continuo.
+
+import { getCollection } from 'astro:content';
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  limit?: number;
+}
+
+const {
+  title = "THE GREAT PUZZLE PROJECT",
+  subtitle = "Una Nueva Historia se está gestando",
+  limit = 10
+} = Astro.props;
+
+// Extracción de ensayos o fallbacks de TGP
+let archivePosts: any[] = [];
+try {
+  const ensayos = await getCollection('ensayos', ({ data }) => !data.draft);
+  if (Array.isArray(ensayos) && ensayos.length > 0) {
+    const sortedEnsayos = [...ensayos].sort((a, b) => {
+      const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+      const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+      return dateB - dateA;
+    });
+
+    archivePosts = sortedEnsayos.map(e => ({
+      id: e.id,
+      title: e.data.title || 'Ensayo TGP',
+      category: e.data.category || e.data.volanta || 'TGP Alternative',
+      url: `/ensayos/${e.id}`,
+      imageUrl: e.data.coverImage || e.data.heroUrl || (e.data.gallery && e.data.gallery.length > 0 ? e.data.gallery[0] : null)
+    })).filter(item => Boolean(item.imageUrl));
+  }
+} catch (err) {
+  console.warn('[TgpFilmRoll] Error leyendo colección:', err);
+}
+
+const fallbackCards = [
+  { title: 'Göbekli Tepe: El Despertar', category: 'Líticos', url: '/ensayos/gobekli-tepe', imageUrl: 'https://images.unsplash.com/photo-1528164344705-475426879c0d?auto=format&fit=crop&w=800&q=80' },
+  { title: 'Nan Madol: La Ciudad de Basalto', category: 'Megalitismo', url: '/ensayos/nan-madol-el-enigma-megalitico', imageUrl: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80' },
+  { title: 'Tassili n\'Ajjer y los Dioses', category: 'Rupestre', url: '/ensayos/tassili-najjer', imageUrl: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80' },
+  { title: 'Derinkuyu: El Refugio Ctoniano', category: 'Subterráneo', url: '/ensayos/derinkuyu', imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792137342460-4f977b70.webp' },
+  { title: 'Masuda no Iwafune: La Nave de Roca', category: 'Anomalías Líticas', url: '/ensayos/masuda-no-iwafune', imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792133914689-44dd5943.webp' },
+  { title: 'Baalbek: Trilitones de la Discordia', category: 'Canteras Imposibles', url: '/ensayos/baalbek', imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80' },
+  { title: 'Yangshan: La Estela Monumental', category: 'Megalitismo Asiático', url: '/ensayos/yangshan', imageUrl: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800&q=80' },
+  { title: 'Longyou: Grutas Talladas', category: 'Hipogeos', url: '/ensayos/longyou', imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80' },
+  { title: 'Nasca & María Reiche: El Vuelo del Colibrí', category: 'Geoglifos Sagrados', url: '/ensayos/nasca-maria-reiche', imageUrl: 'https://images.unsplash.com/photo-1589802829985-817e51171b92?auto=format&fit=crop&w=800&q=80' },
+  { title: 'Pumapunku: Precisión en Andesitas', category: 'Arquitectura Sagrada', url: '/ensayos/pumapunku', imageUrl: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=80' }
+];
+
+// Completar hasta 'limit' (10) combinando con fallbacks si la colección tiene menos
+let candidatePosts = archivePosts.slice(0, limit);
+if (candidatePosts.length < limit) {
+  const missingCount = limit - candidatePosts.length;
+  candidatePosts = [...candidatePosts, ...fallbackCards.slice(0, missingCount)];
+}
+const itemsToScroll = candidatePosts.slice(0, limit);
+
+// Duplicamos el array para lograr el loop infinito de scroll sin cortes
+const doubledItems = [...itemsToScroll, ...itemsToScroll];
+---
+
+<section 
+  id="tgp-filmroll-section" 
+  class="relative w-full min-h-screen lg:h-screen bg-[#140e0b] overflow-hidden flex flex-col lg:flex-row items-center border-y border-[#3a281e]/30 select-none py-16 lg:py-0"
+>
+  <!-- Atmósfera Base: Lienzo Marrón Masked con viñeta -->
+  <div class="absolute inset-0 z-0 pointer-events-none bg-radial from-transparent via-[#140e0b]/80 to-[#0a0705]"></div>
+  
+  <!-- Contenedor para el viento de arena (Inyectado por GSAP) -->
+  <div id="sand-wind-container" class="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-60 mix-blend-screen"></div>
+
+  <!-- Sector Izquierdo: Tipografía Monumental "Star Wars / TGP Epic IMAX" -->
+  <div class="relative z-10 w-full lg:w-3/5 h-full flex flex-col justify-center px-8 sm:px-16 md:px-24">
+    
+    <div class="relative max-w-4xl">
+      <!-- Filtro SVG para textura polvorienta sobre el relieve mineral -->
+      <svg class="hidden" aria-hidden="true">
+        <defs>
+          <filter id="dust-text">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0  0 0.9 0 0 0  0 0.7 0 0 0  0 0 0 0.5 0" in="noise" result="coloredNoise" />
+            <feComposite operator="in" in="SourceGraphic" in2="coloredNoise" result="composite" />
+            <feBlend mode="multiply" in="composite" in2="SourceGraphic" />
+          </filter>
+        </defs>
+      </svg>
+
+      <span class="text-[#d4a373] text-sm md:text-base tracking-[0.4em] uppercase font-mono mb-6 flex items-center gap-3 opacity-80">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#dda15e] animate-pulse"></span>
+        {subtitle}
+      </span>
+      
+      <!-- Título Gigante con estilo Monumental Épico IMAX -->
+      <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-[8.5rem] xl:text-[9.5rem] font-serif font-black leading-[0.85] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-[#fefae0] via-[#dda15e] to-[#bc6c25] drop-shadow-[0_10px_35px_rgba(188,108,37,0.25)]" style="filter: url(#dust-text);">
+        {title.split(' ').map(word => (
+          <span class="block">{word}</span>
+        ))}
+      </h1>
+      
+      <div class="mt-10 flex items-center gap-6">
+        <div class="w-24 h-1 bg-gradient-to-r from-[#bc6c25] to-transparent"></div>
+        <span class="text-[#d4a373]/60 text-xs font-mono uppercase tracking-[0.3em]">
+          Showcase · {itemsToScroll.length} Capítulos en Archivo Vivo
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sector Derecho: Rodillo de Cine IMAX (Film Strip) -->
+  <div class="relative z-10 w-full lg:w-2/5 h-full flex items-center justify-center lg:justify-end pr-0 md:pr-12 lg:pr-24 mt-12 lg:mt-0">
+    
+    <!-- Máscara con degradados superior e inferior para el efecto cilíndrico de "entrada y salida" -->
+    <div 
+      class="relative w-full max-w-[380px] sm:max-w-[420px] h-[580px] lg:h-[120%] lg:-my-[10%] overflow-hidden flex justify-center py-20 film-viewport-mask"
+      style="mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);"
+    >
+      
+      <!-- La Cinta Perforada de Celuloide 35mm -->
+      <div class="film-strip relative w-[320px] sm:w-[340px] bg-[#050302]/95 border-x-2 border-[#2a1d15] flex flex-col shadow-[0_0_60px_rgba(0,0,0,0.85)] backdrop-blur-sm">
+        
+        <!-- Perforaciones Izquierdas -->
+        <div class="absolute left-1.5 top-0 bottom-0 w-3.5 sprocket-holes z-20"></div>
+        <!-- Perforaciones Derechas -->
+        <div class="absolute right-1.5 top-0 bottom-0 w-3.5 sprocket-holes z-20"></div>
+
+        <!-- Contenedor animado por GSAP (El Rollo de Celuloide) -->
+        <div id="film-roll-track" class="w-full flex flex-col items-center pt-4">
+          {doubledItems.map((post, i) => (
+            <div class="film-frame relative w-[250px] sm:w-[270px] h-[180px] mb-6 rounded-xs overflow-hidden border-2 border-[#1a1412] bg-black group shrink-0">
+              <a href={post.url} class="block w-full h-full relative cursor-pointer">
+                <!-- Efecto Sepia / Desgastado con revelado en hover -->
+                <img 
+                  src={post.imageUrl} 
+                  alt={post.title} 
+                  class="w-full h-full object-cover opacity-80 sepia-[0.35] contrast-125 transition-all duration-700 group-hover:scale-105 group-hover:sepia-0 group-hover:opacity-100"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0705] via-[#0a0705]/20 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-75"></div>
+                
+                <!-- Etiqueta de celuloide -->
+                <div class="absolute top-2.5 right-3 text-[9px] font-mono text-[#d4a373]/60 tracking-widest">
+                  #{String((i % itemsToScroll.length) + 1).padStart(2, '0')}
+                </div>
+
+                <div class="absolute bottom-3 left-3.5 right-3.5 z-10">
+                  <span class="text-[#dda15e] text-[9px] tracking-[0.3em] uppercase font-mono block mb-1">
+                    {post.category}
+                  </span>
+                  <h3 class="text-[#fefae0] font-serif text-sm font-semibold leading-tight line-clamp-2 drop-shadow-sm group-hover:text-white transition-colors">
+                    {post.title}
+                  </h3>
+                </div>
+              </a>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Perforaciones de película de 35mm con CSS puro */
+  .sprocket-holes {
+    background-image: linear-gradient(
+      to bottom,
+      transparent 3px,
+      rgba(0, 0, 0, 0.95) 3px,
+      rgba(0, 0, 0, 0.95) 13px,
+      transparent 13px
+    );
+    background-size: 100% 17px;
+    box-shadow: inset 1px 0 2px rgba(255, 255, 255, 0.08), inset -1px 0 2px rgba(0, 0, 0, 0.9);
+  }
+
+  .film-strip {
+    will-change: transform;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  function initFilmRollScene() {
+    const section = document.getElementById('tgp-filmroll-section');
+    if (!section) return;
+
+    // 1. SISTEMA DE SCROLL INFINITO MILIMÉTRICO (Rodillo continuo de Arriba hacia Abajo)
+    const track = document.getElementById('film-roll-track');
+    const frames = track?.querySelectorAll('.film-frame');
+    
+    if (track && frames && frames.length > 0) {
+      // Cada frame mide 180px + 24px de margin-bottom (mb-6) = 204px
+      const frameHeight = 204; 
+      const halfTotalHeight = (frames.length / 2) * frameHeight;
+
+      // Configuramos el contenedor inicial en la mitad negativa para scroll hacia 0
+      gsap.set(track, { y: -halfTotalHeight });
+
+      // Animación continua y suave hacia ABAJO (hacia 0)
+      const rollAnim = gsap.to(track, {
+        y: 0,
+        ease: "none",
+        duration: (frames.length / 2) * 4.2, // ~42s para los 10 items (ritmo contemplativo)
+        repeat: -1,
+        modifiers: {
+          y: gsap.utils.unitize(y => {
+            const val = parseFloat(y);
+            // Módulo preciso para evitar saltos o desincronización
+            return -((Math.abs(val) % halfTotalHeight));
+          })
+        }
+      });
+
+      // Interacción: Ralentizar suavemente al posar el cursor sobre la tira
+      const filmStrip = section.querySelector('.film-strip');
+      if (filmStrip) {
+        filmStrip.addEventListener('mouseenter', () => gsap.to(rollAnim, { timeScale: 0.15, duration: 0.8 }));
+        filmStrip.addEventListener('mouseleave', () => gsap.to(rollAnim, { timeScale: 1, duration: 0.8 }));
+      }
+    }
+
+    // 2. VIENTO DE ARENA SINUSOIDAL (Partículas de polvo del desierto)
+    const sandContainer = document.getElementById('sand-wind-container');
+    if (sandContainer) {
+      sandContainer.innerHTML = ''; // Limpiar si hubo re-renderizado
+      const particleCount = 65;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        
+        const size = Math.random() * 3 + 1; // 1px a 4px
+        const opacity = Math.random() * 0.5 + 0.15;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.backgroundColor = '#dda15e';
+        particle.style.borderRadius = '50%';
+        particle.style.position = 'absolute';
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.left = `110%`; 
+        particle.style.opacity = opacity.toString();
+        particle.style.filter = `blur(${Math.random() * 1.2}px)`;
+        
+        sandContainer.appendChild(particle);
+
+        // Viento horizontal (de derecha a izquierda)
+        const duration = Math.random() * 4 + 4; // 4s a 8s
+        const delay = Math.random() * -8; // Desfase inicial para ocupar pantalla de inmediato
+
+        gsap.to(particle, {
+          x: "-125vw",
+          duration: duration,
+          ease: "none",
+          repeat: -1,
+          delay: delay
+        });
+
+        // Flote vertical sinusoidal
+        gsap.to(particle, {
+          y: `+=${Math.random() * 100 - 50}`,
+          duration: Math.random() * 2 + 1.2,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          delay: delay
+        });
+      }
+    }
+  }
+
+  // Inicialización compatible con Astro View Transitions
+  document.addEventListener("DOMContentLoaded", initFilmRollScene);
+  document.addEventListener("astro:page-load", initFilmRollScene);
+</script>
