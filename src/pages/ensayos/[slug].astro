@@ -8,6 +8,7 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import ArticleKenBurnsModal from '../../components/ArticleKenBurnsModal';
 import CinematicLoop16x9 from '../../components/CinematicLoop16x9.astro';
+import CinematicTimelineHero from '../../components/CinematicTimelineHero.astro';
 import { detectFocalPoint } from '../../lib/focalPointDetector';
 
 export async function getStaticPaths() {
@@ -28,7 +29,15 @@ if (!entry || entry.data.draft) {
   return Astro.redirect('/archivo');
 }
 
-const { Content } = await render(entry);
+let Content: any = null;
+let renderError = null;
+try {
+  const rendered = await render(entry);
+  Content = rendered.Content;
+} catch (e: any) {
+  renderError = e.message;
+  console.error('>>> [RENDER ERROR IN SLUG]:', e);
+}
 const data = entry.data;
 
 // Formateador de fecha
@@ -144,40 +153,54 @@ const NAN_MADOL_HERO_VIDEO_MP4 = 'https://storage.thegreatpuzzleproject.com/vaul
       </div>
     </div>
 
-    <header class="max-w-4xl mx-auto text-center mb-16 space-y-6">
-      {data.volanta && (
-        <p class="t-telemetry text-vault-accent font-medium">
-          {data.volanta}
-        </p>
-      )}
-
-      <h1 class="t-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.05]">
-        {data.title}
-      </h1>
-
-      <div class="flex items-center justify-center gap-6 pt-4 text-xs font-mono tracking-widest text-primary/50 uppercase">
-        <span>{formattedDate}</span>
-        <span class="opacity-30">•</span>
-        <span class="text-vault-accent/80">The Great Puzzle Project</span>
-      </div>
-    </header>
-
-    {isNanMadol ? (
+    {data.heroVideo ? (
       <div class="max-w-6xl mx-auto mb-16">
-        <CinematicLoop16x9
-          loopId="nan-madol-hero-stage"
-          title="Nan Madol · Registro Atmosférico en 4 Momentos"
-          subtitle="FASE I • ARRECIFE Y CANTERA BASÁLTICA"
-          caption="Loop 16:9 de 10 segundos · Master Dark Academia con Ken Burns orgánico, viñeta cinematográfica y grano de 35mm sobre Cloudflare R2."
-          videoMp4Url={NAN_MADOL_HERO_VIDEO_MP4}
-          frames={NAN_MADOL_HERO_FRAMES}
-          duracionPorFrame={2.5}
-          mode="hero"
+        <CinematicTimelineHero
+          title={data.title}
+          subtitle={data.abstract}
+          tagline={data.volanta}
+          videoMp4Url={data.heroVideo}
+          coverImageUrl={data.coverImage}
+          category={data.category}
+          date={formattedDate}
         />
       </div>
-    ) : mainImage && (
-      <div class="max-w-6xl mx-auto mb-16">
-        <div class="flex items-center justify-between mb-4 px-2">
+    ) : (
+      <>
+        <header class="max-w-4xl mx-auto text-center mb-16 space-y-6">
+          {data.volanta && (
+            <p class="t-telemetry text-vault-accent font-medium">
+              {data.volanta}
+            </p>
+          )}
+
+          <h1 class="t-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.05]">
+            {data.title}
+          </h1>
+
+          <div class="flex items-center justify-center gap-6 pt-4 text-xs font-mono tracking-widest text-primary/50 uppercase">
+            <span>{formattedDate}</span>
+            <span class="opacity-30">•</span>
+            <span class="text-vault-accent/80">The Great Puzzle Project</span>
+          </div>
+        </header>
+
+        {isNanMadol ? (
+          <div class="max-w-6xl mx-auto mb-16">
+            <CinematicLoop16x9
+              loopId="nan-madol-hero-stage"
+              title="Nan Madol · Registro Atmosférico en 4 Momentos"
+              subtitle="FASE I • ARRECIFE Y CANTERA BASÁLTICA"
+              caption="Loop 16:9 de 10 segundos · Master Dark Academia con Ken Burns orgánico, viñeta cinematográfica y grano de 35mm sobre Cloudflare R2."
+              videoMp4Url={NAN_MADOL_HERO_VIDEO_MP4}
+              frames={NAN_MADOL_HERO_FRAMES}
+              duracionPorFrame={2.5}
+              mode="hero"
+            />
+          </div>
+        ) : mainImage && (
+          <div class="max-w-6xl mx-auto mb-16">
+            <div class="flex items-center justify-between mb-4 px-2">
           <div class="text-[10px] font-mono tracking-widest text-vault-accent uppercase flex items-center gap-2">
             <span class="w-1.5 h-1.5 rounded-full bg-vault-accent animate-pulse"></span>
             <span>Registro Visual Arqueológico · Escala IMAX 16:10</span>
@@ -242,6 +265,8 @@ const NAN_MADOL_HERO_VIDEO_MP4 = 'https://storage.thegreatpuzzleproject.com/vaul
         )}
       </div>
     )}
+  </>
+)}
 
     <article class="max-w-4xl mx-auto">
       {data.abstract && (
@@ -253,7 +278,7 @@ const NAN_MADOL_HERO_VIDEO_MP4 = 'https://storage.thegreatpuzzleproject.com/vaul
       )}
 
       <div class="max-w-[66ch] mx-auto text-base md:text-lg text-primary/85 leading-[1.85] font-light space-y-8 tracking-wide font-inter ensayo-prose">
-        <Content />
+        {Content ? <Content /> : renderError && <p class="text-red-400 font-mono p-4 bg-red-950/40 rounded-xl border border-red-500/30">Error al compilar MDX: {renderError}</p>}
 
         {isNanMadol && (
           <div class="my-16 pt-8 border-t border-white/10">

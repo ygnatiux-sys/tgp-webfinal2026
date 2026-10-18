@@ -1,0 +1,228 @@
+---
+// src/components/CinematicTimelineHero.astro
+// Integración Cinemática en Timeline GSAP: Hero GSAP Fade -> Loop MP4 -> Título Gloock -> Tagline "WOU" -> CTA con FX
+interface Props {
+  title?: string;
+  subtitle?: string;
+  tagline?: string;
+  videoMp4Url: string;
+  coverImageUrl?: string;
+  category?: string;
+  date?: string;
+  readTime?: string;
+  aspectRatioClass?: string;
+}
+
+const {
+  title = "Las Líneas de Nasca y María Reiche: un Homenaje",
+  subtitle = "Cuarenta años barriendo la pampa con una escoba de mano para preservar un templo sin techo. La geometría sagrada de Jumana y la mirada que sólo los dioses o el vuelo podían descifrar.",
+  tagline = "El Códice de la Pampa · Registro Aéreo en Golden Hour",
+  videoMp4Url,
+  coverImageUrl = "https://storage.thegreatpuzzleproject.com/vault-media/nasca/nasca-colibri-hero-sky.png",
+  category = "Arqueología Anómala",
+  date = "18 de Octubre, 2026",
+  readTime = "12 min de lectura",
+  aspectRatioClass = "aspect-16/9"
+} = Astro.props;
+
+const uniqueId = "hero-timeline-" + Math.random().toString(36).substring(2, 9);
+---
+
+<section id={uniqueId} class="relative w-full overflow-hidden bg-[#040306] text-white pt-20 pb-16 px-4 sm:px-6 lg:px-12 border-b border-white/5">
+  
+  <!-- Glow Ambiental Cálido / Golden Hour Nasca -->
+  <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[85vw] h-[65vh] bg-gradient-to-b from-amber-600/15 via-orange-900/10 to-transparent blur-[140px] rounded-full"></div>
+    <div class="absolute top-1/3 -left-20 w-[45vw] h-[50vh] bg-orange-700/10 blur-[130px] rounded-full"></div>
+    <div class="absolute bottom-10 -right-20 w-[40vw] h-[45vh] bg-amber-500/10 blur-[120px] rounded-full"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto flex flex-col items-center">
+    
+    <!-- FASE 1: METADATOS Y VOLANTA CON ANIMACIÓN GSAP -->
+    <div class="hero-fade-item opacity-0 flex flex-wrap items-center justify-center gap-3 mb-6">
+      <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.2em] bg-amber-500/10 text-amber-300 border border-amber-500/25 backdrop-blur-md">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+        {category}
+      </span>
+      <span class="text-white/40 text-xs tracking-wider uppercase">{tagline}</span>
+      <span class="text-white/20">•</span>
+      <span class="text-white/40 text-xs">{date}</span>
+    </div>
+
+    <!-- FASE 3: TÍTULO H1 EN TIPOGRAFÍA GLOOCK -->
+    <div class="hero-fade-item opacity-0 text-center max-w-5xl mx-auto mb-6">
+      <h1 class="font-gloock text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] text-transparent bg-clip-text bg-gradient-to-b from-amber-100 via-stone-200 to-stone-500 drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]">
+        {title}
+      </h1>
+    </div>
+
+    <!-- FASE 4: FRASE 2 BRIEF / TAGLINE INMERSIVO "WOU" -->
+    <div class="hero-fade-item opacity-0 text-center max-w-3xl mx-auto mb-10">
+      <p class="text-base sm:text-lg md:text-xl text-stone-300/90 font-light leading-relaxed tracking-wide">
+        {subtitle}
+      </p>
+    </div>
+
+    <!-- FASE 2: LOOP MP4 CINEMÁTICO 16:9 CON METRICAS Y CONTROLES -->
+    <div class="hero-fade-item opacity-0 w-full max-w-5xl mx-auto mb-10">
+      <div class="relative rounded-3xl overflow-hidden border border-white/10 bg-black/90 shadow-[0_30px_90px_rgba(0,0,0,0.95)] group">
+        
+        <!-- Video Player 16:9 con loop permanente y muted autoplay -->
+        <div class={`relative w-full ${aspectRatioClass} min-h-[300px] sm:min-h-[460px] lg:min-h-[580px] bg-neutral-950`}>
+          <video
+            id={`${uniqueId}-video`}
+            class="w-full h-full object-cover object-center"
+            autoplay
+            loop
+            muted
+            playsinline
+            preload="auto"
+            poster={coverImageUrl}
+          >
+            <source src={videoMp4Url} type="video/mp4" />
+          </video>
+
+          <!-- Overlay Gradiente Superior e Inferior -->
+          <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-black/40"></div>
+
+          <!-- Badges Superiores Flotantes -->
+          <div class="absolute top-5 left-5 right-5 flex items-center justify-between pointer-events-none">
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/60 border border-white/15 backdrop-blur-md">
+              <span class="inline-block w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+              <span class="text-[11px] font-mono tracking-widest text-white/90 uppercase font-semibold">10.0s Loop · Remotion v2</span>
+            </div>
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/60 border border-white/15 backdrop-blur-md text-[11px] font-mono text-amber-300">
+              <span>H.264 · 30fps · R2 Vault Master</span>
+            </div>
+          </div>
+
+          <!-- Barra de Progreso del Loop 10s -->
+          <div class="absolute bottom-0 left-0 right-0 h-1 bg-white/10 overflow-hidden">
+            <div id={`${uniqueId}-progress`} class="h-full bg-gradient-to-r from-amber-500 to-orange-400 w-0 transition-all duration-100 ease-linear"></div>
+          </div>
+
+          <!-- Controles de Video Flotantes Inferiores -->
+          <div class="absolute bottom-5 left-5 right-5 flex items-center justify-between z-20">
+            <div class="flex items-center gap-2">
+              <button
+                id={`${uniqueId}-audio-toggle`}
+                class="px-3.5 py-2 rounded-xl bg-black/70 hover:bg-black/90 border border-white/20 text-xs font-mono text-stone-200 transition-all duration-300 hover:scale-105 flex items-center gap-2 backdrop-blur-md cursor-pointer"
+                aria-label="Alternar Audio"
+              >
+                <span id={`${uniqueId}-audio-icon`}>🔇</span>
+                <span id={`${uniqueId}-audio-label`}>MUTED</span>
+              </button>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <button
+                id={`${uniqueId}-fs-toggle`}
+                class="px-3 py-2 rounded-xl bg-black/70 hover:bg-black/90 border border-white/20 text-xs text-stone-200 transition-all duration-300 hover:scale-105 flex items-center gap-1.5 backdrop-blur-md cursor-pointer"
+                aria-label="Pantalla Completa"
+              >
+                <span>⛶</span>
+                <span class="hidden sm:inline text-[11px] font-mono">16:9 MAX</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FASE 5: CTA DESTACADA CON FX (GLOW, PULSO Y SCROLL SUAVE) -->
+    <div class="hero-fade-item opacity-0 flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+      <a
+        href="#ensayo-contenido"
+        class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 text-black font-semibold text-sm sm:text-base tracking-wide shadow-[0_0_35px_rgba(245,158,11,0.35)] hover:shadow-[0_0_55px_rgba(245,158,11,0.6)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] overflow-hidden"
+      >
+        <span class="relative z-10 font-bold tracking-wider uppercase">Explorar Ensayo & Lector de Revista</span>
+        <span class="relative z-10 transition-transform duration-300 group-hover:translate-x-1">↓</span>
+        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+      </a>
+
+      <a
+        href={videoMp4Url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2.5 px-6 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 text-stone-300 hover:text-white text-sm sm:text-base font-mono transition-all duration-300 hover:scale-[1.02] backdrop-blur-md"
+      >
+        <span>▶ Descargar Master MP4 (R2)</span>
+        <span class="text-xs text-amber-400">↗</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- SCRIPT GSAP TIMELINE DE ENTRADA Y CONTROLES INTERACTIVOS -->
+<script is:inline define:vars={{ uniqueId }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. ANIMACIÓN TIMELINE GSAP
+    if (window.gsap) {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      const items = document.querySelectorAll(`#${uniqueId} .hero-fade-item`);
+      
+      tl.to(items, {
+        opacity: 1,
+        y: 0,
+        duration: 1.1,
+        stagger: 0.22,
+        delay: 0.15
+      });
+    } else {
+      // Fallback si GSAP aún no cargó
+      const items = document.querySelectorAll(`#${uniqueId} .hero-fade-item`);
+      items.forEach((item, idx) => {
+        setTimeout(() => {
+          item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+          item.style.opacity = '1';
+          item.style.transform = 'translateY(0)';
+        }, idx * 200);
+      });
+    }
+
+    // 2. CONTROLES DEL REPRODUCTOR
+    const video = document.getElementById(`${uniqueId}-video`);
+    const audioBtn = document.getElementById(`${uniqueId}-audio-toggle`);
+    const audioIcon = document.getElementById(`${uniqueId}-audio-icon`);
+    const audioLabel = document.getElementById(`${uniqueId}-audio-label`);
+    const fsBtn = document.getElementById(`${uniqueId}-fs-toggle`);
+    const progress = document.getElementById(`${uniqueId}-progress`);
+
+    if (video) {
+      // Barra de progreso sincronizada con el loop
+      video.addEventListener('timeupdate', () => {
+        if (video.duration) {
+          const pct = (video.currentTime / video.duration) * 100;
+          if (progress) progress.style.width = pct + '%';
+        }
+      });
+
+      // Alternar Audio
+      if (audioBtn) {
+        audioBtn.addEventListener('click', () => {
+          video.muted = !video.muted;
+          if (video.muted) {
+            audioIcon.textContent = '🔇';
+            audioLabel.textContent = 'MUTED';
+          } else {
+            audioIcon.textContent = '🔊';
+            audioLabel.textContent = 'SOUND ON';
+          }
+        });
+      }
+
+      // Alternar Pantalla Completa
+      if (fsBtn) {
+        fsBtn.addEventListener('click', () => {
+          if (!document.fullscreenElement) {
+            video.requestFullscreen().catch(err => console.warn(err));
+          } else {
+            document.exitFullscreen().catch(err => console.warn(err));
+          }
+        });
+      }
+    }
+  });
+</script>

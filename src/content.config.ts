@@ -16,7 +16,7 @@ const ensayosCollection = defineCollection({
     category: z.string().optional(),
     themeColor: z.string().optional(),
     draft: z.boolean().default(false).optional()
-  })
+  }).passthrough()
 });
 
 const seriesHemerotecaCollection = defineCollection({
