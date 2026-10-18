@@ -136,7 +136,6 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
 
         <!-- ── SEMI-TARJETA HOVER A 1/4 DE ALTURA ── -->
         {isVersionB ? (
-          <!-- VERSIÓN B: Bento Overlay 25% Fijo -->
           <div class="spatial-bento-tray absolute bottom-0 left-0 right-0 z-30 h-[26%] p-6 sm:p-8 bg-[#100d14]/94 backdrop-blur-md border-t border-emerald-500/40 flex flex-col justify-center shadow-[0_-15px_40px_rgba(0,0,0,0.95)]">
             <div class="flex items-center justify-between text-[10px] font-mono tracking-widest uppercase mb-1.5 text-emerald-300">
               <div class="flex items-center gap-2">
@@ -157,7 +156,6 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
             </div>
           </div>
         ) : (
-          <!-- VERSIÓN A: MUBI Pro Cinematic Elevator -->
           <div class="spatial-mubi-tray absolute bottom-0 left-0 right-0 z-30 min-h-[26%] max-h-[34%] p-6 sm:p-8 md:p-10 bg-[#080504]/94 backdrop-blur-xl border-t border-[#dda15e]/50 flex flex-col justify-center shadow-[0_-20px_50px_rgba(0,0,0,0.98)]">
             <div class="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#dda15e]/80 to-transparent"></div>
             <div class="flex items-center justify-between text-[10px] font-mono tracking-widest text-[#dda15e] uppercase mb-2">
