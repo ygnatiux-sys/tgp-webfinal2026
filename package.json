@@ -20,6 +20,7 @@
     "audit:images": "node scripts/auditar-imagenes-posteos.mjs",
     "fix:posts": "node scripts/reparar-y-sanear-posteos.mjs",
     "fix:posts:apply": "node scripts/reparar-y-sanear-posteos.mjs --apply",
+    "loop:forjar": "node scripts/forjar-loop.mjs",
     "generate-types": "wrangler types"
   },
   "dependencies": {
