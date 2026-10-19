@@ -76,8 +76,8 @@ const doubledItems = candidatePosts.slice(0, targetCount);
   <div id="sand-wind-container" class="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-60 mix-blend-screen"></div>
 
   <!-- Máscaras sutiles superior e inferior para suavizar los límites del viewport -->
-  <div class="pointer-events-none absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-[#140e0b] to-transparent z-30"></div>
-  <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#140e0b] to-transparent z-30"></div>
+  <div class="pointer-events-none absolute top-0 left-0 right-0 h-28 bg-linear-to-b from-[#140e0b] to-transparent z-30"></div>
+  <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-28 bg-linear-to-t from-[#140e0b] to-transparent z-30"></div>
 
   <!-- Sector Izquierdo: Tipografía Monumental "Star Wars / TGP Epic IMAX" -->
   <div class="relative z-10 w-full lg:w-3/5 h-full flex flex-col justify-center px-8 sm:px-16 md:px-24">
@@ -92,14 +92,14 @@ const doubledItems = candidatePosts.slice(0, targetCount);
       <!-- Título Monumental 3D Star Wars Crawler con gradiente por línea para preservar el espacio 3D -->
       <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-[7.5rem] xl:text-[8.5rem] font-serif font-black leading-[0.88] tracking-tighter transform-style-preserve-3d">
         {title.trim().split(/\s+/).map(word => (
-          <span class="epic-text-line block transform-style-preserve-3d text-transparent bg-clip-text bg-gradient-to-b from-[#fefae0] via-[#dda15e] to-[#bc6c25] drop-shadow-[0_15px_35px_rgba(188,108,37,0.35)] py-0.5">
+          <span class="epic-text-line block transform-style-preserve-3d text-transparent bg-clip-text bg-linear-to-b from-[#fefae0] via-[#dda15e] to-[#bc6c25] drop-shadow-[0_15px_35px_rgba(188,108,37,0.35)] py-0.5">
             {word}
           </span>
         ))}
       </h1>
       
       <div class="mt-10 flex items-center gap-6">
-        <div class="w-24 h-1 bg-gradient-to-r from-[#bc6c25] to-transparent"></div>
+        <div class="w-24 h-1 bg-linear-to-r from-[#bc6c25] to-transparent"></div>
         <span class="text-[#d4a373]/60 text-xs font-mono uppercase tracking-[0.3em]">
           Showcase · {doubledItems.length} Capítulos en Archivo Vivo
         </span>
@@ -108,11 +108,11 @@ const doubledItems = candidatePosts.slice(0, targetCount);
   </div>
 
   <!-- Sector Derecho: Escena 3D Cilíndrica Asimétrica (El Carrete de Cine 70mm) -->
-  <div class="relative z-10 w-full lg:w-2/5 h-full flex items-center justify-center lg:justify-end pr-0 md:pr-12 lg:pr-20 perspective-[1200px] mt-12 lg:mt-0">
+  <div class="relative z-10 w-full lg:w-2/5 h-full flex items-center justify-center lg:justify-end pr-0 md:pr-12 lg:pr-20 perspective-distant mt-12 lg:mt-0">
     
     <!-- Contenedor del Carrete Inclinado -->
     <div 
-      class="film-cylinder-carrier relative w-[360px] sm:w-[420px] md:w-[450px] h-[580px] lg:h-screen transform-style-preserve-3d flex items-center justify-center cursor-grab active:cursor-grabbing" 
+      class="film-cylinder-carrier relative w-90 sm:w-105 md:w-112.5 h-145 lg:h-screen transform-style-preserve-3d flex items-center justify-center cursor-grab active:cursor-grabbing" 
       style="transform: rotateY(-18deg) rotateZ(-3deg);"
     >
       
@@ -122,7 +122,7 @@ const doubledItems = candidatePosts.slice(0, targetCount);
         style="transform: translate(-50%, -50%) translateZ(-90px);"
       >
         <!-- Núcleo de Candela: Forma de llama elíptica vertical y filamento incandescente -->
-        <div class="candle-core-flame w-[320px] sm:w-[380px] md:w-[440px] h-[540px] sm:h-[640px] rounded-[50%_50%_46%_46%]"></div>
+        <div class="candle-core-flame w-80 sm:w-95 md:w-110 h-135 sm:h-160 rounded-[50%_50%_46%_46%]"></div>
         <!-- Halo Ámbar de Difusión Suave de Lámpara Cálida -->
         <div class="candle-ambient-halo absolute inset-0 -m-20 rounded-full"></div>
       </div>
@@ -139,7 +139,7 @@ const doubledItems = candidatePosts.slice(0, targetCount);
           
           return (
             <div 
-              class="film-frame absolute left-0 w-full h-[300px] bg-[#050302] border-y-[4px] border-black flex items-center justify-center transform-style-preserve-3d backface-hidden shadow-[0_0_50px_rgba(0,0,0,0.85)]"
+              class="film-frame absolute left-0 w-full h-75 bg-[#050302] border-y-4 border-black flex items-center justify-center transform-style-preserve-3d backface-hidden shadow-[0_0_50px_rgba(0,0,0,0.85)]"
               style={`transform: rotateX(${angle}deg) translateZ(${radius}px);`}
             >
               <!-- Cinta Perforada (Generada por CSS) -->
@@ -156,7 +156,7 @@ const doubledItems = candidatePosts.slice(0, targetCount);
                 />
                 
                 <!-- Degradado cinemático sobre el frame -->
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0705] via-[#0a0705]/25 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-60"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-[#0a0705] via-[#0a0705]/25 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-60"></div>
                 
                 <!-- Cabecera de celuloide 70mm -->
                 <div class="absolute top-3 left-4 right-4 flex items-center justify-between text-[9px] font-mono text-[#d4a373]/70 tracking-widest z-10">
