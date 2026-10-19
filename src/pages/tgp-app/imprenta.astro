@@ -788,5 +788,30 @@ const DIRECTORES = [
         }
       });
     });
+
+    // ── RECEPTOR AUTOMÁTICO DE DEEP LINKS (TELEGRAM / GOOGLE CHAT) ──
+    const urlParams = new URLSearchParams(window.location.search);
+    const titleParam = urlParams.get('title') || urlParams.get('topic');
+    const imgParam = urlParams.get('img');
+    const bakParam = urlParams.get('bak');
+
+    if (titleParam && inputTema) {
+      inputTema.value = titleParam;
+      if (bakParam) {
+        fetch(bakParam)
+          .then(r => r.ok ? r.text() : '')
+          .then(text => {
+            if (text && activeCatalog && activeCatalog.length > 0) {
+              activeCatalog[0].title = titleParam;
+              if (imgParam) activeCatalog[0].imageUrl = imgParam;
+              activeCatalog[0].body = text.slice(0, 800);
+              renderFolio(0);
+            }
+          })
+          .catch(() => ejecutarForja(titleParam));
+      } else {
+        ejecutarForja(titleParam);
+      }
+    }
   </script>
 </Layout>

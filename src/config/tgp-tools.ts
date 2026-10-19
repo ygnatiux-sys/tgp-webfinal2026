@@ -4,15 +4,15 @@
 // ─── URLs de Motor (inyectadas desde variables de entorno) ──────────────────
 export const TGP_MOTORES = {
   /** El herrero: Transmutación a WebP, inserción en D1 y guardado en R2 */
-  vault:  import.meta.env.PUBLIC_VAULT_WEBHOOK_URL  as string | undefined,
+  vault:  (import.meta.env.PUBLIC_VAULT_WEBHOOK_URL || 'https://tgp-vault-run-713934653057.us-central1.run.app/vault-ingest') as string,
   /** El transmutador visual: Procesa Base64 e ingesta histórica (tgp-app) */
-  vision: import.meta.env.PUBLIC_VISION_WEBHOOK_URL as string | undefined,
+  vision: (import.meta.env.PUBLIC_VISION_WEBHOOK_URL || 'https://tgp-app-713934653057.us-central1.run.app') as string,
   /** El explorador: Extracción de Wikimedia y scraping de sitios externos */
-  proxy:  import.meta.env.PUBLIC_PROXY_URL          as string | undefined,
+  proxy:  (import.meta.env.PUBLIC_PROXY_URL || 'https://tgp-app-713934653057.us-central1.run.app') as string,
   /** El autómata: Análisis, generación de texto y flujos cognitivos (Gemini/Vertex) */
-  mind:   import.meta.env.PUBLIC_IA_WEBHOOK_URL     as string | undefined,
+  mind:   (import.meta.env.PUBLIC_IA_WEBHOOK_URL || 'https://tgp-mind-alternative-713934653057.us-central1.run.app/inbox') as string,
   /** El editor inmersivo: WikiForge + R2 + Gemini Magazine 60/40 */
-  magazine: (import.meta.env.PUBLIC_IA_WEBHOOK_URL ? import.meta.env.PUBLIC_IA_WEBHOOK_URL.replace(/\/inbox\/?$/, '/magazine') : 'https://tgp-mind-713934653057.us-central1.run.app/magazine') as string,
+  magazine: (import.meta.env.PUBLIC_IA_WEBHOOK_URL ? import.meta.env.PUBLIC_IA_WEBHOOK_URL.replace(/\/inbox\/?$/, '/magazine') : 'https://tgp-mind-alternative-713934653057.us-central1.run.app/magazine') as string,
 } as const;
 
 // ─── Definición de Modos de Operación ──────────────────────────────────────

@@ -15,7 +15,7 @@ const payload = {
 async function render() {
   console.log('⚡ Disparando POST /render-cinematico en tgp-mind...');
   try {
-    const res = await fetch('https://tgp-mind-713934653057.us-central1.run.app/render-cinematico', {
+    const res = await fetch('https://tgp-mind-alternative-713934653057.us-central1.run.app/render-cinematico', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

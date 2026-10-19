@@ -142,6 +142,85 @@
     localDraftsList = [];
   }
 
+  onMount(async () => {
+    cargarBorradoresLocales();
+
+    // ── RECEPTOR AUTOMÁTICO DE DEEP LINKS (TELEGRAM / GOOGLE CHAT) ──
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const bakParam = urlParams.get('bak');
+      const titleParam = urlParams.get('title');
+      const imgParam = urlParams.get('img');
+      const slugParam = urlParams.get('slug');
+      const modeParam = urlParams.get('mode');
+
+      if (titleParam) {
+        titulo = titleParam;
+        mindPrompt = titleParam;
+        magazinePrompt = titleParam;
+      }
+      if (modeParam && MODOS_OPERACION.some(m => m.id === modeParam)) {
+        modoActivo = modeParam;
+      }
+
+      if (bakParam) {
+        status = 'loading';
+        statusMessage = `Descargando respaldo inmutable desde R2: ${titleParam || 'Ensayo TGP'}…`;
+        try {
+          const resBak = await fetch(bakParam);
+          if (resBak.ok) {
+            const markdownContent = await resBak.text();
+            contenidoTexto = markdownContent;
+            mindResponse = markdownContent;
+
+            const cleanTitle = titleParam || markdownContent.split('\n')[0].replace(/^#+\s*/, '') || 'Ensayo TGP';
+            const cleanExcerpt = markdownContent.split('\n\n').find((p: string) => p.length > 50 && !p.startsWith('#')) || '';
+
+            magazineArticle = {
+              titulo: cleanTitle,
+              subtitulo: 'Borrador rescatado desde Bóveda R2',
+              excerpt: cleanExcerpt.slice(0, 300),
+              body: markdownContent,
+              heroUrl: imgParam || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
+              category: 'TGP Alternative',
+              slug: slugParam || slugify(cleanTitle),
+              date: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
+              folios: [
+                {
+                  id: 1,
+                  titulo: cleanTitle,
+                  tipo: 'ensayo',
+                  imagenUrl: imgParam || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
+                  analisis: cleanExcerpt.slice(0, 200),
+                  fragmento: markdownContent.slice(0, 600)
+                }
+              ],
+              galeria: {
+                slider: [
+                  {
+                    id: 1,
+                    url: imgParam || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
+                    title: cleanTitle
+                  }
+                ]
+              },
+              draft: true
+            };
+
+            status = 'success';
+            statusMessage = `✓ Respaldo R2 cargado exitosamente (${markdownContent.length} caracteres). Listo para editar o publicar.`;
+          } else {
+            console.warn('[VaultEngine] Falló la descarga del .bak.md desde R2 status:', resBak.status);
+            status = 'idle';
+          }
+        } catch (bakErr: any) {
+          console.warn('[VaultEngine] Error cargando .bak.md:', bakErr.message);
+          status = 'idle';
+        }
+      }
+    }
+  });
+
   function eliminarBorrador(slugOrId: string) {
     if (typeof window === 'undefined') return;
     try {
@@ -239,7 +318,7 @@
     try {
       const magUrl = TGP_MOTORES.mind
         ? TGP_MOTORES.mind.replace(/\/inbox\/?$/, '/render-cinematico')
-        : 'https://tgp-mind-713934653057.us-central1.run.app/render-cinematico';
+        : 'https://tgp-mind-alternative-713934653057.us-central1.run.app/render-cinematico';
 
       const galleryUrls = (magazineArticle.galeria?.slider || []).map((s: any) => s.url).filter(Boolean);
       if (magazineArticle.heroUrl) galleryUrls.unshift(magazineArticle.heroUrl);
@@ -386,7 +465,7 @@
     }
 
     const motorKey = currentModo.motor;
-    const motorUrl = TGP_MOTORES[motorKey];
+    const motorUrl = TGP_MOTORES[motorKey] || (motorKey === 'mind' ? 'https://tgp-mind-alternative-713934653057.us-central1.run.app/inbox' : 'https://tgp-vault-run-713934653057.us-central1.run.app/vault-ingest');
 
     if (!motorUrl) {
       status = 'error';
