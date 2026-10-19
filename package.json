@@ -18,6 +18,8 @@
     "content:alt": "node scripts/generate-alternative-post.mjs",
     "eod": "node scripts/eod.mjs",
     "audit:images": "node scripts/auditar-imagenes-posteos.mjs",
+    "fix:posts": "node scripts/reparar-y-sanear-posteos.mjs",
+    "fix:posts:apply": "node scripts/reparar-y-sanear-posteos.mjs --apply",
     "generate-types": "wrangler types"
   },
   "dependencies": {
