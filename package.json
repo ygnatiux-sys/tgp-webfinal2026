@@ -17,6 +17,7 @@
     "content": "node scripts/generate-alternative-post.mjs",
     "content:alt": "node scripts/generate-alternative-post.mjs",
     "eod": "node scripts/eod.mjs",
+    "audit:images": "node scripts/auditar-imagenes-posteos.mjs",
     "generate-types": "wrangler types"
   },
   "dependencies": {

@@ -25,3 +25,7 @@ scripts/test-*
 scripts/*-report.json
 scripts/r2-audit-report.json
 scripts/doctor-report.json
+scripts/*audit*.json
+*audit-imagenes*.json
+reports/
+audit/
