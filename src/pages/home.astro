@@ -7,6 +7,7 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import PageHeader from '../components/PageHeader.astro';
+import TgpFilmRoll from '../components/TgpFilmRoll.astro';
 import AtrahasisHeroImax from '../components/AtrahasisHeroImax.astro';
 
 // Sanitizador de texto Markdown crudo para descripciones/extractos
@@ -98,9 +99,39 @@ const mubiCollection = [
 
   <main class="relative z-10 overflow-x-hidden">
     <!-- ═══════════════════════════════════════════════════════════════════════
-         HERO MONUMENTAL FULL BLEED TIPO APPLE (IMAX 1.90:1 / 100vh) — ATRAHASIS
-         - Mismo estilo de la muestra: Glow cobrizo, volanta, título 8vw e imagen Univisi    <!-- ENCABEZADO SUPERIOR EDITORIAL (ESTILO ARCHIVO) -->
-    <div id="portal-exploratorio" class="pt-20 md:pt-28"></div>
+         SHOWCASE IMAX MAX: TGP 70MM FILM ROLL (AL PRINCIPIO DE TODO ARRIBA)
+         - Showcase cinemático cilíndrico 3D con las 10 publicaciones en archivo vivo
+         - Exactamente el mismo componente sin modificaciones
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section id="inicio-imax-showcase" class="relative w-full z-20">
+      <TgpFilmRoll 
+        title="THE GREAT PUZZLE PROJECT" 
+        subtitle="Una Nueva Historia se está gestando" 
+        limit={10} 
+      />
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         ESPACIO DE MITAD DE PANTALLA DE SCROLL CON ESTÉTICA IMAX MAX (50vh)
+         - Zona de descompresión cinemática y navegación espacial hacia el portal
+         - Fusión atmosférica de luz cobriza y telemetría de transición
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="relative w-full h-[50vh] flex flex-col items-center justify-center pointer-events-none select-none overflow-hidden">
+      <!-- Gradiente de desvanecimiento suave de celuloide a fondo base -->
+      <div class="absolute inset-0 bg-gradient-to-b from-[#140e0b] via-[#140e0b]/90 to-bg"></div>
+      <div class="absolute w-96 h-96 bg-[#dda15e]/5 rounded-full blur-[140px] pointer-events-none"></div>
+
+      <!-- Telemetría & Scroller cinemático IMAX MAX -->
+      <div class="relative z-10 flex flex-col items-center gap-3 text-center">
+        <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.35em] text-[#d4a373]/70">
+          Deslizar para ingresar al Portal
+        </span>
+        <div class="w-px h-14 bg-gradient-to-b from-[#dda15e]/60 via-[#bc6c25]/30 to-transparent animate-pulse"></div>
+      </div>
+    </div>
+
+    <!-- ENCABEZADO SUPERIOR EDITORIAL (ESTILO ARCHIVO) -->
+    <div id="portal-exploratorio" class="pt-10 md:pt-16"></div>
     <!-- ENCABEZADO CINEMATOGRÁFICO UNIFICADO -->
     <PageHeader
       kicker="THE GREAT PUZZLE PROJECT · PORTAL PRINCIPAL"
