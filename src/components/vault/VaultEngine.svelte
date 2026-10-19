@@ -35,6 +35,10 @@
   // TGP Mind
   let mindPrompt = '';
   let mindResponse = '';
+  let mindCoverImage = '';
+  let mindGallery: string[] = [];
+  let mindSlug = '';
+  let mindTitle = '';
   let formatoCognitivo: 'magazine' | 'ensayo' = 'magazine';
 
   // TGP Magazine
@@ -618,6 +622,10 @@
 
           const resJson = await response.json().catch(() => null);
           mindResponse = resJson?.mdx_preview || resJson?.respuesta || resJson?.analisis || 'Ensayo cognitivo publicado en GitHub con draft: true.';
+          mindCoverImage = resJson?.coverImage || resJson?.imageUrl || '';
+          mindGallery = resJson?.gallery || [];
+          mindSlug = resJson?.slug || '';
+          mindTitle = resJson?.title || mindPrompt;
 
           // Guardar copia en historial local de ensayos generados
           if (typeof window !== 'undefined') {
@@ -1252,7 +1260,7 @@
           </div>
 
           {#if mindResponse}
-            <div class="p-6 rounded-2xl bg-white/3 border border-white/10 space-y-3">
+            <div class="p-6 rounded-2xl bg-white/3 border border-white/10 space-y-4">
               <div class="flex items-center justify-between border-b border-white/5 pb-2">
                 <span class="text-xs font-mono uppercase tracking-widest text-vault-accent">✦ Síntesis de TGP Mind:</span>
                 <button
@@ -1263,6 +1271,50 @@
                   {copyFeedback ? '✓ Copiado' : 'Copiar Texto'}
                 </button>
               </div>
+
+              {#if mindCoverImage}
+                <div class="flex flex-col sm:flex-row gap-4 items-center p-3 rounded-xl bg-black/40 border border-white/10">
+                  <img
+                    src={mindCoverImage}
+                    alt={mindTitle}
+                    class="w-full sm:w-40 h-28 object-cover rounded-lg border border-white/10 shadow-lg"
+                  />
+                  <div class="flex-1 space-y-1.5 text-xs font-mono">
+                    <div class="text-vault-accent uppercase tracking-wider font-bold">🖼️ Portada Forjada (R2 Storage)</div>
+                    <div class="text-white/90 truncate font-sans text-sm font-semibold">{mindTitle}</div>
+                    <div class="text-primary/50 text-[10px] break-all">{mindCoverImage}</div>
+                    {#if mindSlug}
+                      <div class="pt-1 flex gap-2">
+                        <a
+                          href={`/ensayos/${mindSlug}`}
+                          target="_blank"
+                          class="px-2.5 py-1 rounded bg-vault-accent/20 hover:bg-vault-accent hover:text-black text-vault-accent text-[10px] font-bold transition-all"
+                        >
+                          🌐 Ver Ensayo en Web
+                        </a>
+                      </div>
+                    {/if}
+                  </div>
+                </div>
+              {/if}
+
+              {#if mindGallery && mindGallery.length > 1}
+                <div class="space-y-2">
+                  <span class="text-[10px] font-mono uppercase tracking-widest text-primary/60">
+                    📚 Galería de Artefactos Extraída (Wikimedia Commons + Bóveda R2):
+                  </span>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {#each mindGallery.slice(1, 5) as imgUrl}
+                      <img
+                        src={imgUrl}
+                        alt="Artefacto"
+                        class="w-full h-20 object-cover rounded-lg border border-white/10 hover:border-vault-accent/50 transition-colors"
+                      />
+                    {/each}
+                  </div>
+                </div>
+              {/if}
+
               <div class="text-sm leading-relaxed text-primary/90 whitespace-pre-wrap font-inter">
                 {mindResponse}
               </div>
