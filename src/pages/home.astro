@@ -8,7 +8,43 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import PageHeader from '../components/PageHeader.astro';
 import TgpFilmRoll from '../components/TgpFilmRoll.astro';
-import AtrahasisHeroImax from '../components/AtrahasisHeroImax.astro';
+import ImaxShowcaseHero, { type ImaxItem } from '../components/ImaxShowcaseHero.astro';
+import { getCollection } from 'astro:content';
+
+// Cargar ensayos para el Visor Principal IMAX MAX
+let latestEnsayosImax: ImaxItem[] = [];
+try {
+  const allEnsayos = await getCollection('ensayos', ({ data }) => {
+    return Boolean(data.title && data.title !== 'asado argentino');
+  });
+  if (Array.isArray(allEnsayos)) {
+    const sorted = [...allEnsayos].sort((a, b) => {
+      const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+      const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+      return dateB - dateA;
+    });
+
+    latestEnsayosImax = sorted.slice(0, 8).map((ensayo) => {
+      const data = ensayo.data;
+      const img = data.coverImage || data.heroUrl || (data.gallery && data.gallery[0]);
+      return {
+        id: ensayo.id,
+        slug: ensayo.id,
+        title: data.title,
+        subtitle: data.volanta || data.powertype || 'Ensayo Editorial',
+        volanta: data.category || 'Historia Alternativa',
+        abstract: data.abstract || (ensayo.body ? ensayo.body.slice(0, 180).replace(/<[^>]*>?/gm, '').replace(/^[#\s*]+/gm, '') + '...' : ''),
+        category: data.category || 'Arqueología Cognitiva',
+        era: data.date ? new Date(data.date).toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }) : '2026',
+        imageUrl: img,
+        url: `/ensayos/${ensayo.id}`,
+        isDraft: Boolean(data.draft)
+      };
+    });
+  }
+} catch (e) {
+  console.warn('[Home] Error fetching ensayos for IMAX hero:', e);
+}
 
 // Sanitizador de texto Markdown crudo para descripciones/extractos
 const sanitizeSnippet = (text: string) => {
@@ -99,11 +135,18 @@ const mubiCollection = [
 
   <main class="relative z-10 overflow-x-hidden">
     <!-- ═══════════════════════════════════════════════════════════════════════
-         SHOWCASE IMAX MAX: TGP 70MM FILM ROLL (AL PRINCIPIO DE TODO ARRIBA)
-         - Showcase cinemático cilíndrico 3D con las 10 publicaciones en archivo vivo
-         - Exactamente el mismo componente sin modificaciones
+         VISOR PRINCIPAL MAIN: IMAX MAX 70MM GSAP SHOWCASE (LATEST POSTS & MAGAZINES)
+         - Presenta los últimos posts/magazines con suave crossfade en bucle infinito
+         - Hidratación reactiva desde localStorage con cualquier borrador forjado
          ═══════════════════════════════════════════════════════════════════════ -->
     <section id="inicio-imax-showcase" class="relative w-full z-20">
+      <ImaxShowcaseHero items={latestEnsayosImax} />
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         SHOWCASE CILÍNDRICO: TGP 70MM FILM ROLL
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section id="inicio-filmroll-showcase" class="relative w-full z-15">
       <TgpFilmRoll 
         title="THE GREAT PUZZLE PROJECT" 
         subtitle="Una Nueva Historia se está gestando" 

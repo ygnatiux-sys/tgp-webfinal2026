@@ -1,0 +1,517 @@
+---
+// src/components/ImaxShowcaseHero.astro
+// Visor Principal Main IMAX MAX (1.90:1 / Univisium 2:1 / 100vh) con GSAP
+// Presentación cinemática multi-post con crossfade suave, telemetría editorial y loop seamless.
+// Hidratación reactiva con localStorage para incorporar al instante revistas forjadas en Svelte Forge.
+
+export interface ImaxItem {
+  id: string;
+  slug?: string;
+  title: string;
+  volanta?: string;
+  subtitle?: string;
+  abstract?: string;
+  description?: string;
+  category?: string;
+  era?: string;
+  date?: string;
+  imageUrl?: string;
+  coverImage?: string;
+  url?: string;
+  isDraft?: boolean;
+}
+
+interface Props {
+  id?: string;
+  items?: ImaxItem[];
+  kickerPrefix?: string;
+}
+
+const {
+  id = 'imax-showcase-hero',
+  items = [],
+  kickerPrefix = 'THE GREAT PUZZLE PROJECT · COLECCIÓN MONUMENTAL'
+} = Astro.props;
+
+// Catálogo editorial canónico de salvaguarda (Atrahasis, Nefertiti, Pirámide Roja, Göbekli Tepe, Pompeya)
+const DEFAULT_ITEMS: ImaxItem[] = [
+  {
+    id: 'atrahasis',
+    slug: 'atrahasis',
+    title: 'ATRAHASIS',
+    subtitle: 'La memoria del cataclismo grabada en arcilla.',
+    volanta: 'La Epopeya Acadia · Tablillas de Arcilla',
+    abstract: 'El testimonio cuneiforme más arcaico sobre el diluvio, la fractura de las aguas y la rebelión de los dioses ante el trabajo forzado.',
+    category: 'Arqueología Cognitiva',
+    era: '1700 a.C.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792044295879-ec44cdb6.webp',
+    url: '/archivo'
+  },
+  {
+    id: 'nefertiti',
+    slug: 'nefertiti',
+    title: 'NEFERTITI',
+    subtitle: 'El rostro que desafía al tiempo y la mirada del olvido.',
+    volanta: 'Amarna & El Umbral Solar',
+    abstract: 'El busto de caliza y estuco de Amarna con su cuenca vacía: una fractura temporal que confronta la fragilidad de los imperios ante el arte.',
+    category: 'Arqueología Anómala',
+    era: '1350 a.C.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/46/Nefertiti_30-01-2006.jpg',
+    url: '/magazine/viewer?id=nefertiti'
+  },
+  {
+    id: 'piramide-roja-dahshur',
+    slug: 'piramide-roja-dahshur',
+    title: 'PIRÁMIDE ROJA',
+    subtitle: 'La geometría de lo eterno y la invención del horizonte.',
+    volanta: 'Dahshur · La Primera Pirámide Verdadera',
+    abstract: 'En la bruma matinal de Dahshur se alza la primera pirámide de caras lisas de la historia: un monumento de cálculo astronómico absoluto.',
+    category: 'Arquitectura Megalítica',
+    era: '2600 a.C.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/magazine/piramide-roja-dahshur/26712-red-pyramid-in-morning-hazejpg.webp',
+    url: '/magazine/piramide-roja-dahshur'
+  },
+  {
+    id: 'gobekli-tepe',
+    slug: 'gobekli-tepe',
+    title: 'GÖBEKLI TEPE',
+    subtitle: 'El santuario antes del tiempo y el reinicio del Holoceno.',
+    volanta: 'Anatolia · Doce Mil Años Atrás',
+    abstract: 'Pilares monolíticos de quince toneladas esculpidos antes de la agricultura, desafiando la cronología lineal del desarrollo humano.',
+    category: 'Arqueología Cognitiva',
+    era: '10.000 a.C.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
+    url: '/magazine/gobekli-tepe'
+  },
+  {
+    id: 'pompeya',
+    slug: 'pompeya',
+    title: 'POMPEYA',
+    subtitle: 'El archivo petrificado y la estratigrafía del desastre.',
+    volanta: 'Campania · 79 d.C.',
+    abstract: 'Bajo el manto piroclástico del Vesubio, la técnica, el arte y la vida cotidiana quedaron congelados al vacío en un segundo eterno.',
+    category: 'Memoria & Cataclismo',
+    era: '79 d.C.',
+    imageUrl: 'https://storage.thegreatpuzzleproject.com/vault-media/magazine/pompeya-y-el-vesubio/vesuvius-from-pompeii-hires-version-2png.webp',
+    url: '/magazine/pompeya'
+  }
+];
+
+// Fusionar items provistos por el servidor con defaults si la lista es corta
+const combinedServerItems = items && items.length > 0 ? items : DEFAULT_ITEMS;
+---
+
+<section
+  id={id}
+  class="imax-showcase-root relative w-full min-h-[92vh] lg:min-h-screen overflow-hidden bg-black flex flex-col justify-end lg:justify-center border-b border-white/10 select-none"
+  data-server-items={JSON.stringify(combinedServerItems)}
+>
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       1. CONTENEDOR DE SLIDES IMAX CINEMÁTICAS (CROSSFADE GSAP + KEN BURNS)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="imax-slides-viewport absolute inset-0 z-0 overflow-hidden w-full h-full pointer-events-none">
+    {combinedServerItems.map((item, idx) => {
+      const img = item.imageUrl || item.coverImage || DEFAULT_ITEMS[0].imageUrl;
+      return (
+        <div
+          class={`imax-slide-layer absolute inset-0 w-full h-full transition-opacity duration-1000 ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+          data-slide-index={idx}
+        >
+          <img
+            src={img}
+            alt={item.title}
+            class="imax-slide-bg w-full h-full object-cover object-[center_22%] tgp-img-protected select-none will-change-transform scale-105"
+            style="aspect-ratio: 19 / 10;"
+            loading={idx === 0 ? "eager" : "lazy"}
+          />
+        </div>
+      );
+    })}
+
+    <!-- Ambient Glow Cobrizo / Terracota Cinematográfico -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(195,90,50,0.55)_0%,rgba(169,63,47,0.25)_30%,transparent_65%)] pointer-events-none"></div>
+
+    <!-- Máscara de Fusión Lateral para Legibilidad Pura de Tipografía -->
+    <div class="absolute inset-0 bg-[linear-gradient(90deg,#000000_0%,#000000_28%,rgba(0,0,0,0.85)_46%,rgba(0,0,0,0.25)_72%,transparent_100%)] pointer-events-none"></div>
+
+    <!-- Viñeta Inferior y Superior para Integración Orgánica -->
+    <div class="absolute inset-x-0 bottom-0 h-44 bg-linear-to-t from-black via-black/70 to-transparent pointer-events-none"></div>
+    <div class="absolute inset-x-0 top-0 h-32 bg-linear-to-b from-black/80 via-black/30 to-transparent pointer-events-none"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       2. CONTENIDO EDITORIAL MONUMENTAL (TIPOGRAFÍA EXTRA BOLD 8vw)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div
+    class="relative z-20 w-full max-w-400 mx-auto px-6 sm:px-10 md:px-16 lg:px-20 py-20 md:py-28 lg:py-32 flex flex-col items-start justify-end pointer-events-auto"
+  >
+    <!-- Telemetría Superior MUBI / IMAX -->
+    <div class="imax-meta-bar flex items-center flex-wrap gap-2 text-[10px] sm:text-[11px] font-mono tracking-[0.35em] uppercase text-white/50 mb-3 sm:mb-4">
+      <span class="imax-counter text-vault-accent font-semibold font-mono">FOLIO 01 / {String(combinedServerItems.length).padStart(2, '0')}</span>
+      <span>·</span>
+      <span class="imax-kicker text-white/85 uppercase">{combinedServerItems[0]?.volanta || combinedServerItems[0]?.category || 'COLECCIÓN MONUMENTAL'}</span>
+      <span class="hidden sm:inline text-white/30">·</span>
+      <span class="imax-era hidden sm:inline text-white/50 uppercase">{combinedServerItems[0]?.era || combinedServerItems[0]?.date || 'ARCHIVO TGP'}</span>
+      <span class="imax-badge hidden sm:inline-block px-2 py-0.5 rounded text-[8px] font-mono bg-vault-accent/15 border border-vault-accent/30 text-vault-accent uppercase font-bold">
+        {combinedServerItems[0]?.isDraft ? 'BORRADOR ACTIVO' : 'IMAX 70MM'}
+      </span>
+    </div>
+
+    <!-- Título Gigante Extra Bold (font-size: hasta 8.5vw) -->
+    <h1 class="imax-title font-bodoni font-extrabold text-5xl sm:text-7xl md:text-8xl lg:text-[7.5vw] xl:text-[8vw] tracking-tight leading-[0.88] text-white select-none drop-shadow-[0_10px_35px_rgba(0,0,0,0.95)] max-w-5xl">
+      {combinedServerItems[0]?.title || 'MONUMENTO'}
+    </h1>
+
+    <!-- Subtítulo en Serif Italic de Autor -->
+    <p class="imax-subtitle font-bodoni italic text-xl sm:text-2xl md:text-3xl lg:text-[2.2vw] text-white/80 font-light max-w-3xl leading-snug mt-3 sm:mt-4 drop-shadow-md">
+      {combinedServerItems[0]?.subtitle || 'Una arqueología de la mirada y el tiempo.'}
+    </p>
+
+    <!-- Extracto Poético-Filosófico Breve -->
+    <p class="imax-abstract font-sans text-xs sm:text-sm text-white/60 max-w-2xl leading-relaxed mt-3 drop-shadow hidden md:block">
+      {combinedServerItems[0]?.abstract || combinedServerItems[0]?.description || ''}
+    </p>
+
+    <!-- Acciones Editoriales Estilo Apple Glass -->
+    <div class="imax-actions flex flex-wrap items-center gap-3 sm:gap-4 mt-7 sm:mt-9">
+      <a
+        id="imax-btn-primary"
+        href={combinedServerItems[0]?.url || '/archivo'}
+        class="cinema-action-btn inline-flex items-center gap-3 px-7 sm:px-8 py-3.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white backdrop-blur-md text-xs font-mono tracking-[0.25em] uppercase font-bold transition-all duration-300 group cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,255,255,0.35)] hover:scale-[1.02] active:scale-[0.98]"
+      >
+        <span class="imax-btn-primary-text">Abrir Visor (60/40)</span>
+        <span class="text-sm transition-transform duration-300 group-hover:translate-x-1">↗</span>
+      </a>
+
+      <a
+        id="imax-btn-secondary"
+        href="/tgp-vault"
+        class="inline-flex items-center gap-2.5 px-6 sm:px-7 py-3.5 rounded-full bg-white/5 hover:bg-white/15 text-white/80 hover:text-white border border-white/15 hover:border-white/30 backdrop-blur-md text-xs font-mono tracking-[0.2em] uppercase font-medium transition-all duration-300 cursor-pointer"
+      >
+        <span>Bóveda & Forge</span>
+        <span class="text-xs text-vault-accent">◈</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       3. CONTROLES DE NAVEGACIÓN CINEMÁTICA Y LOOP GSAP
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="absolute bottom-6 sm:bottom-8 right-6 sm:right-12 lg:right-20 z-30 flex items-center gap-3 sm:gap-4">
+    <!-- Botón Anterior -->
+    <button
+      id="imax-btn-prev"
+      type="button"
+      class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/40 hover:bg-white/20 text-white/70 hover:text-white border border-white/15 hover:border-white/40 backdrop-blur-md flex items-center justify-center text-sm transition-all cursor-pointer shadow-md active:scale-95"
+      aria-label="Publicación anterior"
+    >
+      <span>◀</span>
+    </button>
+
+    <!-- Indicadores de Folio / Píldoras -->
+    <div id="imax-indicators-container" class="flex items-center gap-1.5 sm:gap-2 px-3 py-2 rounded-full bg-black/40 border border-white/10 backdrop-blur-md">
+      <!-- Inyectados dinámicamente por JS -->
+    </div>
+
+    <!-- Botón Siguiente -->
+    <button
+      id="imax-btn-next"
+      type="button"
+      class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/40 hover:bg-white/20 text-white/70 hover:text-white border border-white/15 hover:border-white/40 backdrop-blur-md flex items-center justify-center text-sm transition-all cursor-pointer shadow-md active:scale-95"
+      aria-label="Publicación siguiente"
+    >
+      <span>▶</span>
+    </button>
+  </div>
+
+  <!-- Barra de Progreso del Timer Cinemático (Seamless Loop) -->
+  <div class="absolute bottom-0 inset-x-0 h-1 bg-white/5 z-30 overflow-hidden pointer-events-none">
+    <div id="imax-timer-bar" class="h-full bg-vault-accent/80 w-0 transition-all duration-100 ease-linear"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     4. MOTOR GSAP: CROSSFADE SUAVE, LOOP SEAMLESS Y SINCRONIZACIÓN LOCAL
+═══════════════════════════════════════════════════════════════════════ -->
+<script>
+  import gsap from 'gsap';
+
+  function initImaxShowcase() {
+    const root = document.querySelector('.imax-showcase-root') as HTMLElement | null;
+    if (!root) return;
+
+    const viewport = root.querySelector('.imax-slides-viewport') as HTMLElement;
+    const titleEl = root.querySelector('.imax-title') as HTMLElement;
+    const subtitleEl = root.querySelector('.imax-subtitle') as HTMLElement;
+    const abstractEl = root.querySelector('.imax-abstract') as HTMLElement;
+    const counterEl = root.querySelector('.imax-counter') as HTMLElement;
+    const kickerEl = root.querySelector('.imax-kicker') as HTMLElement;
+    const eraEl = root.querySelector('.imax-era') as HTMLElement;
+    const primaryBtn = root.querySelector('#imax-btn-primary') as HTMLAnchorElement;
+    const prevBtn = root.querySelector('#imax-btn-prev');
+    const nextBtn = root.querySelector('#imax-btn-next');
+    const timerBar = root.querySelector('#imax-timer-bar') as HTMLElement;
+    const indicatorsWrap = root.querySelector('#imax-indicators-container') as HTMLElement;
+
+    if (!viewport || !titleEl) return;
+
+    // 1. Obtener items iniciales del servidor
+    let items: any[] = [];
+    try {
+      items = JSON.parse(root.dataset.serverItems || '[]');
+    } catch {
+      items = [];
+    }
+
+    // 2. Hidratación reactiva con localStorage (Svelte Forge & Bóveda D1)
+    if (typeof window !== 'undefined') {
+      try {
+        const rawHistory = localStorage.getItem('tgp_magazines_history');
+        if (rawHistory) {
+          const localDrafts = JSON.parse(rawHistory);
+          if (Array.isArray(localDrafts) && localDrafts.length > 0) {
+            const formattedLocal = localDrafts.map((d: any) => ({
+              id: d.slug || d.id || 'borrador',
+              slug: d.slug || d.id,
+              title: d.title || d.titulo || 'Edición Histórica',
+              subtitle: d.subtitle || d.subtitulo || 'Edición Forjada en Svelte Forge',
+              volanta: d.volanta || d.category || 'TGP Alternative',
+              abstract: d.excerpt || d.abstract || '',
+              category: d.category || 'Revista Inmersiva',
+              era: d.era || d.date || 'Reciente',
+              imageUrl: d.heroUrl || d.coverImage || (d.galeria?.slider?.[0]?.url) || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp',
+              url: `/magazine/viewer?id=${d.slug || d.id}`,
+              isDraft: d.draft !== false
+            }));
+
+            // Prepend los borradores locales deduplicando por id/slug
+            const existingIds = new Set(formattedLocal.map(f => f.id));
+            items = [...formattedLocal, ...items.filter(it => !existingIds.has(it.id))];
+          }
+        }
+      } catch (e) {
+        console.warn('[ImaxShowcaseHero] Error hidratando desde localStorage:', e);
+      }
+    }
+
+    if (items.length === 0) return;
+
+    // 3. Re-renderizar capas de imagen en el viewport si se añadieron elementos desde localStorage
+    const currentLayerCount = viewport.querySelectorAll('.imax-slide-layer').length;
+    if (items.length !== currentLayerCount) {
+      viewport.querySelectorAll('.imax-slide-layer').forEach(l => l.remove());
+      items.forEach((item, idx) => {
+        const layer = document.createElement('div');
+        layer.className = `imax-slide-layer absolute inset-0 w-full h-full transition-opacity duration-1000 ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`;
+        layer.dataset.slideIndex = String(idx);
+        layer.innerHTML = `
+          <img
+            src="${item.imageUrl || item.coverImage || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp'}"
+            alt="${item.title}"
+            class="imax-slide-bg w-full h-full object-cover object-[center_22%] tgp-img-protected select-none will-change-transform scale-105"
+            style="aspect-ratio: 19 / 10;"
+            loading="${idx === 0 ? 'eager' : 'lazy'}"
+          />
+        `;
+        viewport.prepend(layer);
+      });
+    }
+
+    // 4. Crear los indicadores interactivos de folios
+    if (indicatorsWrap) {
+      indicatorsWrap.innerHTML = items.slice(0, 8).map((_, i) => `
+        <button
+          type="button"
+          class="imax-indicator-pill px-2 py-0.5 rounded-full text-[9px] font-mono transition-all cursor-pointer ${i === 0 ? 'bg-vault-accent text-black font-bold scale-105' : 'bg-white/10 text-white/50 hover:text-white'}"
+          data-goto="${i}"
+          aria-label="Ir a folio ${i + 1}"
+        >
+          ${String(i + 1).padStart(2, '0')}
+        </button>
+      `).join('');
+
+      indicatorsWrap.querySelectorAll('.imax-indicator-pill').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const target = Number((e.currentTarget as HTMLElement).dataset.goto);
+          if (!isNaN(target)) goToSlide(target);
+        });
+      });
+    }
+
+    // 5. Estado y Transición GSAP
+    let currentIndex = 0;
+    let isTransitioning = false;
+    let autoInterval: any = null;
+    let progressTween: gsap.core.Tween | null = null;
+    const SLIDE_DURATION = 7.0; // 7 segundos por diapositiva
+
+    function updatePills(activeIdx: number) {
+      if (!indicatorsWrap) return;
+      const pills = indicatorsWrap.querySelectorAll('.imax-indicator-pill');
+      pills.forEach((p, idx) => {
+        if (idx === activeIdx) {
+          p.className = 'imax-indicator-pill px-2 py-0.5 rounded-full text-[9px] font-mono transition-all cursor-pointer bg-vault-accent text-black font-bold scale-105';
+        } else {
+          p.className = 'imax-indicator-pill px-2 py-0.5 rounded-full text-[9px] font-mono transition-all cursor-pointer bg-white/10 text-white/50 hover:text-white';
+        }
+      });
+    }
+
+    function goToSlide(targetIdx: number) {
+      if (isTransitioning || targetIdx === currentIndex) return;
+      isTransitioning = true;
+
+      const layers = viewport.querySelectorAll('.imax-slide-layer');
+      const currentLayer = layers[currentIndex] as HTMLElement;
+      const nextLayer = layers[targetIdx] as HTMLElement;
+      const nextItem = items[targetIdx];
+
+      if (!currentLayer || !nextLayer || !nextItem) {
+        isTransitioning = false;
+        return;
+      }
+
+      // Detener y reiniciar timer bar
+      if (progressTween) progressTween.kill();
+      if (timerBar) gsap.set(timerBar, { width: '0%' });
+
+      // Animación de Salida de Textos
+      const texts = [titleEl, subtitleEl, abstractEl];
+      gsap.to(texts, {
+        opacity: 0,
+        y: -15,
+        filter: 'blur(4px)',
+        duration: 0.45,
+        stagger: 0.05,
+        ease: 'power2.in',
+        onComplete: () => {
+          // Actualizar textos
+          titleEl.textContent = nextItem.title;
+          subtitleEl.textContent = nextItem.subtitle || 'Una arqueología de la mirada y el tiempo.';
+          if (abstractEl) abstractEl.textContent = nextItem.abstract || nextItem.description || '';
+          if (counterEl) counterEl.textContent = `FOLIO ${String(targetIdx + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
+          if (kickerEl) kickerEl.textContent = nextItem.volanta || nextItem.category || 'COLECCIÓN MONUMENTAL';
+          if (eraEl) eraEl.textContent = nextItem.era || nextItem.date || 'ARCHIVO TGP';
+          if (primaryBtn) {
+            primaryBtn.href = nextItem.url || `/magazine/viewer?id=${nextItem.slug || nextItem.id}`;
+          }
+
+          // Animación de Entrada de Textos Monumentales
+          gsap.fromTo(
+            texts,
+            { opacity: 0, y: 35, filter: 'blur(10px)', scale: 0.96 },
+            {
+              opacity: 1,
+              y: 0,
+              filter: 'blur(0px)',
+              scale: 1,
+              duration: 0.9,
+              stagger: 0.08,
+              ease: 'expo.out'
+            }
+          );
+        }
+      });
+
+      // Crossfade de Capas de Fondo y Ken Burns suave
+      nextLayer.style.zIndex = '10';
+      currentLayer.style.zIndex = '5';
+
+      const nextBg = nextLayer.querySelector('.imax-slide-bg');
+      if (nextBg) {
+        gsap.fromTo(nextBg, { scale: 1.08 }, { scale: 1.02, duration: SLIDE_DURATION, ease: 'sine.out' });
+      }
+
+      gsap.to(currentLayer, {
+        opacity: 0,
+        duration: 1.1,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          currentLayer.style.zIndex = '0';
+        }
+      });
+
+      gsap.to(nextLayer, {
+        opacity: 1,
+        duration: 1.1,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          currentIndex = targetIdx;
+          isTransitioning = false;
+          updatePills(currentIndex);
+          startAutoPlay();
+        }
+      });
+    }
+
+    function nextSlide() {
+      const nextIdx = (currentIndex + 1) % items.length;
+      goToSlide(nextIdx);
+    }
+
+    function prevSlide() {
+      const prevIdx = (currentIndex - 1 + items.length) % items.length;
+      goToSlide(prevIdx);
+    }
+
+    function startAutoPlay() {
+      if (progressTween) progressTween.kill();
+      if (autoInterval) clearInterval(autoInterval);
+
+      if (timerBar) {
+        gsap.set(timerBar, { width: '0%' });
+        progressTween = gsap.to(timerBar, {
+          width: '100%',
+          duration: SLIDE_DURATION,
+          ease: 'linear'
+        });
+      }
+
+      autoInterval = setTimeout(() => {
+        nextSlide();
+      }, SLIDE_DURATION * 1000);
+    }
+
+    // Controles de flecha
+    if (nextBtn) nextBtn.addEventListener('click', () => nextSlide());
+    if (prevBtn) prevBtn.addEventListener('click', () => prevSlide());
+
+    // Pausar en hover para permitir lectura sin prisa
+    root.addEventListener('mouseenter', () => {
+      if (progressTween) progressTween.pause();
+      if (autoInterval) clearTimeout(autoInterval);
+    });
+
+    root.addEventListener('mouseleave', () => {
+      if (progressTween) progressTween.resume();
+      if (autoInterval) clearTimeout(autoInterval);
+      const remainingTime = timerBar ? (1 - parseFloat(timerBar.style.width || '0') / 100) * SLIDE_DURATION : SLIDE_DURATION;
+      autoInterval = setTimeout(() => nextSlide(), Math.max(remainingTime * 1000, 1500));
+    });
+
+    // Iniciar loop automático
+    startAutoPlay();
+  }
+
+  // Soporte tanto para Astro View Transitions como para carga inicial clásica
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initImaxShowcase);
+  } else {
+    initImaxShowcase();
+  }
+  document.addEventListener('astro:page-load', initImaxShowcase);
+</script>
+
+<style>
+  .imax-showcase-root {
+    min-height: 92vh;
+    min-height: 92dvh;
+  }
+
+  @media (min-width: 1024px) {
+    .imax-showcase-root {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+  }
+</style>

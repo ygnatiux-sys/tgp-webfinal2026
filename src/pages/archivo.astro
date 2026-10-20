@@ -15,6 +15,7 @@ import ArchivoHub from '../components/archivo/ArchivoHub.svelte';
 import ColeccionesSpatial from '../components/ColeccionesSpatial.astro';
 import EditorialCommandDrawer from '../components/archivo/EditorialCommandDrawer.astro';
 import MicroDockScrubber from '../components/archivo/MicroDockScrubber.astro';
+import ImaxShowcaseHero from '../components/ImaxShowcaseHero.astro';
 import { getCollection } from 'astro:content';
 
 let initialEnsayos: any[] = [];
@@ -22,7 +23,7 @@ let initialD1Items: any[] = [];
 
 try {
   const ensayos = await getCollection('ensayos', ({ data }) => {
-    return !data.draft && data.title && data.title !== 'asado argentino';
+    return Boolean(data.title && data.title !== 'asado argentino');
   });
   if (Array.isArray(ensayos)) {
     // Ordenar ensayos para priorizar piezas maestras con portada e información completa
@@ -92,6 +93,17 @@ try {
         icon: "↓"
       }}
     />
+
+    <!-- ========================================================================= -->
+    <!-- VISOR PRINCIPAL MAIN: IMAX MAX 70MM GSAP SHOWCASE (LATEST POSTS & MAGAZINES) -->
+    <!-- ========================================================================= -->
+    <section class="relative w-full z-20 mb-16">
+      <ImaxShowcaseHero
+        id="archivo-imax-showcase"
+        items={initialEnsayos.slice(0, 8)}
+        kickerPrefix="THE GREAT PUZZLE PROJECT · ARCHIVO VIVO MONUMENTAL"
+      />
+    </section>
 
     <!-- ========================================================================= -->
     <!-- MODO 01: SPATIAL ZOOM / FLUID GRID (IMAX A BENTO GRID CON GSAP FLIP)     -->

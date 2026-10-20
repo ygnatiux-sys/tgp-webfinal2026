@@ -21,7 +21,7 @@ let colecciones = Array.isArray(casos) && casos.length > 0 ? casos : [];
 
 if (colecciones.length === 0) {
   try {
-    const ensayos = await getCollection('ensayos', ({ data }) => !data.draft);
+    const ensayos = await getCollection('ensayos', ({ data }) => Boolean(data.title && data.title !== 'asado argentino'));
     if (Array.isArray(ensayos) && ensayos.length > 0) {
       colecciones = ensayos.slice(0, 8).map(e => ({
         id: e.id,
