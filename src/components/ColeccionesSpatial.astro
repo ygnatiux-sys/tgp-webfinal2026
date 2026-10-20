@@ -56,11 +56,11 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
   <!-- Header & Control de Vista -->
   <div class="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-8 mb-16">
     <div class="max-w-2xl">
-      <span class="text-purple-400/80 text-xs tracking-[0.4em] uppercase font-mono mb-4 block flex items-center gap-2">
+      <span class="text-purple-400/80 text-xs tracking-[0.4em] uppercase font-mono mb-4 flex items-center gap-2">
         <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse"></span>
         {subtitle}
       </span>
-      <h2 class="text-4xl sm:text-5xl md:text-7xl font-serif font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/60">
+      <h2 class="text-4xl sm:text-5xl md:text-7xl font-serif font-bold tracking-tight text-transparent bg-clip-text bg-linear-to-b from-white via-white to-white/60">
         {title}
       </h2>
     </div>
@@ -69,7 +69,7 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
     <button id="toggle-view-btn" class="group mt-8 md:mt-0 relative flex items-center gap-3 text-[10px] tracking-[0.3em] uppercase font-mono bg-transparent border border-white/20 px-6 py-3 rounded-full hover:border-purple-400/60 hover:bg-white/5 transition-all duration-300 cursor-pointer">
       <span class="view-label grid-label">Ver Cuadrícula</span>
       <span class="view-label imax-label hidden">Ver Formato IMAX</span>
-      <div class="w-4 h-4 grid grid-cols-2 gap-[2px] opacity-70 group-hover:opacity-100 transition-opacity">
+      <div class="w-4 h-4 grid grid-cols-2 gap-0.5 opacity-70 group-hover:opacity-100 transition-opacity">
         <div class="bg-current rounded-[1px]"></div><div class="bg-current rounded-[1px]"></div>
         <div class="bg-current rounded-[1px]"></div><div class="bg-current rounded-[1px]"></div>
       </div>
@@ -85,7 +85,7 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
         class={`spatial-card group relative w-full overflow-hidden bg-[#0a0a0e] border border-white/10 cursor-pointer will-change-transform shadow-[0_20px_60px_rgba(0,0,0,0.85)] ${isVersionB ? 'is-version-b' : 'is-version-a'}`}
         data-id={`card-${post.id}`}
       >
-        <div class="absolute inset-0 z-10 bg-gradient-to-t from-[#050508] via-[#050508]/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-700 pointer-events-none"></div>
+        <div class="absolute inset-0 z-10 bg-linear-to-t from-[#050508] via-[#050508]/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-700 pointer-events-none"></div>
         
         <!-- Imagen con zoom lento en hover -->
         <img 
@@ -129,7 +129,7 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
 
           <div class="explore-btn mt-6 opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 pointer-events-auto">
             <a href={post.url} class="inline-flex items-center gap-4 text-xs tracking-[0.2em] uppercase text-white hover:text-purple-300 transition-colors">
-              Explorar Dossier <span class="w-8 h-[1px] bg-current block"></span>
+              Explorar Dossier <span class="w-8 h-px bg-current block"></span>
             </a>
           </div>
         </div>
@@ -157,7 +157,7 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
           </div>
         ) : (
           <div class="spatial-mubi-tray absolute bottom-0 left-0 right-0 z-30 min-h-[26%] max-h-[34%] p-6 sm:p-8 md:p-10 bg-[#080504]/94 backdrop-blur-xl border-t border-[#dda15e]/50 flex flex-col justify-center shadow-[0_-20px_50px_rgba(0,0,0,0.98)]">
-            <div class="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#dda15e]/80 to-transparent"></div>
+            <div class="absolute top-0 left-8 right-8 h-px bg-linear-to-r from-transparent via-[#dda15e]/80 to-transparent"></div>
             <div class="flex items-center justify-between text-[10px] font-mono tracking-widest text-[#dda15e] uppercase mb-2">
               <div class="flex items-center gap-2">
                 <span class="px-2 py-0.5 rounded bg-[#dda15e]/25 text-[#fefae0] font-bold">MUBI CINEMATIC PRO</span>
@@ -318,7 +318,7 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
               art.className = 'spatial-card is-version-a group relative w-full overflow-hidden bg-[#0a0a0e] border border-white/10 cursor-pointer will-change-transform shadow-[0_20px_60px_rgba(0,0,0,0.85)]';
               art.dataset.id = cardId;
               art.innerHTML = `
-                <div class="absolute inset-0 z-10 bg-gradient-to-t from-[#050508] via-[#050508]/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-700 pointer-events-none"></div>
+                <div class="absolute inset-0 z-10 bg-linear-to-t from-[#050508] via-[#050508]/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-700 pointer-events-none"></div>
                 <img src="${item.heroUrl || item.coverImage || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp'}" alt="${item.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105 pointer-events-none" loading="lazy" />
                 <div class="card-content spatial-elevator-content absolute bottom-0 left-0 right-0 z-20 p-8 md:p-14 flex flex-col justify-end h-full pointer-events-none">
                   <div class="mb-3 inline-flex items-center">
@@ -341,7 +341,7 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
                   </div>
                   <div class="explore-btn mt-6 opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 pointer-events-auto">
                     <a href="${item.url || `/magazine/viewer?id=${item.slug || item.id}`}" class="inline-flex items-center gap-4 text-xs tracking-[0.2em] uppercase text-white hover:text-purple-300 transition-colors">
-                      Abrir Visor (60/40) <span class="w-8 h-[1px] bg-current block"></span>
+                      Abrir Visor (60/40) <span class="w-8 h-px bg-current block"></span>
                     </a>
                   </div>
                 </div>
