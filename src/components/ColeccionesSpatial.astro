@@ -305,6 +305,56 @@ const cardsToDisplay = (colecciones.length > 0 ? colecciones : fallbackCards).ma
     
     if (!btn || !container) return;
 
+    // Hidratación reactiva con publicaciones locales de Svelte Forge
+    try {
+      const rawHistory = localStorage.getItem('tgp_magazines_history');
+      if (rawHistory) {
+        const localItems = JSON.parse(rawHistory);
+        if (Array.isArray(localItems) && localItems.length > 0) {
+          localItems.forEach(item => {
+            const cardId = `card-${item.slug || item.id}`;
+            if (!container.querySelector(`[data-id="${cardId}"]`)) {
+              const art = document.createElement('article');
+              art.className = 'spatial-card is-version-a group relative w-full overflow-hidden bg-[#0a0a0e] border border-white/10 cursor-pointer will-change-transform shadow-[0_20px_60px_rgba(0,0,0,0.85)]';
+              art.dataset.id = cardId;
+              art.innerHTML = `
+                <div class="absolute inset-0 z-10 bg-gradient-to-t from-[#050508] via-[#050508]/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-700 pointer-events-none"></div>
+                <img src="${item.heroUrl || item.coverImage || 'https://storage.thegreatpuzzleproject.com/vault-media/1792044290145-53f05a9f.webp'}" alt="${item.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105 pointer-events-none" loading="lazy" />
+                <div class="card-content spatial-elevator-content absolute bottom-0 left-0 right-0 z-20 p-8 md:p-14 flex flex-col justify-end h-full pointer-events-none">
+                  <div class="mb-3 inline-flex items-center">
+                    <span class="px-2.5 py-0.5 rounded-full text-[9px] font-mono tracking-widest uppercase bg-[#dda15e]/25 text-[#fefae0] border border-[#dda15e]/50 shadow-md">
+                      ${item.draft !== false ? 'BORRADOR SVELTE FORGE' : 'COLECCIÓN MONUMENTAL'}
+                    </span>
+                  </div>
+                  <div class="meta-wrapper overflow-hidden mb-3">
+                    <span class="text-purple-300 text-[10px] tracking-[0.3em] uppercase font-mono block transform transition-transform duration-500 origin-left">
+                      ${item.category || 'Revista Inmersiva'}
+                    </span>
+                  </div>
+                  <h3 class="card-title font-serif font-bold text-white leading-[1.08] mb-4 drop-shadow-lg transition-all duration-500">
+                    ${item.title}
+                  </h3>
+                  <div class="abstract-wrapper overflow-hidden max-w-2xl">
+                    <p class="card-abstract text-white/75 text-sm md:text-base font-sans leading-relaxed tracking-wide transition-all duration-500">
+                      ${item.excerpt || item.subtitle || ''}
+                    </p>
+                  </div>
+                  <div class="explore-btn mt-6 opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 pointer-events-auto">
+                    <a href="${item.url || `/magazine/viewer?id=${item.slug || item.id}`}" class="inline-flex items-center gap-4 text-xs tracking-[0.2em] uppercase text-white hover:text-purple-300 transition-colors">
+                      Abrir Visor (60/40) <span class="w-8 h-[1px] bg-current block"></span>
+                    </a>
+                  </div>
+                </div>
+              `;
+              container.prepend(art);
+            }
+          });
+        }
+      }
+    } catch (e) {
+      console.warn('[ColeccionesSpatial] Error hidratando tarjetas locales:', e);
+    }
+
     let isGrid = false;
 
     // Clonamos botón para remover listeners previos en astro:page-load

@@ -1127,8 +1127,8 @@ const initialPage = MOCK_PAGES[0];
       const pathId = pathParts[pathParts.length - 1];
       const curId = queryId || pathId || 'viewer';
 
-      // 1. Buscar directamente por clave individual de edición
-      let raw = localStorage.getItem(`tgp_magazine_${curId}`);
+      // 1. Buscar directamente por clave individual de edición (publicada o borrador)
+      let raw = localStorage.getItem(`tgp_magazine_${curId}`) || localStorage.getItem(`tgp_magazine_draft_${curId}`);
 
       // 2. Si no se encuentra, buscar en el array de historial permanente
       if (!raw) {
