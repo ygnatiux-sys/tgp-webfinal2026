@@ -1,0 +1,674 @@
+---
+// src/components/CubeRubikShowcase.astro
+// Showcase 3D: Cubo Rubik de Archivos — The Great Puzzle Project
+// Topología cúbica modular: 6 Caras · Cuadrículas 2x3 · 36 Archivos Vivos con rotación discreta por matrices.
+
+import { getCollection } from 'astro:content';
+
+interface Props {
+  kicker?: string;
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  kicker = "MATRIZ CÚBICA // 6 CARAS • 36 ARCHIVOS VIVOS",
+  title = "EL CUBO DE ARCHIVOS TGP",
+  subtitle = "«Topología de la memoria: rotaciones discretas en el laberinto del tiempo»"
+} = Astro.props;
+
+// Obtener ensayos para cruzar títulos y enlaces a rutas reales
+let allEnsayos: any[] = [];
+try {
+  allEnsayos = await getCollection('ensayos', ({ data }) => import.meta.env.DEV || !data.draft);
+} catch (e) {
+  console.warn('[CubeRubikShowcase] Error obteniendo ensayos:', e);
+}
+
+// Estructura canónica de las 6 caras del Cubo TGP (6 posts por cara = 36 celdas)
+const rawFacesData = [
+  {
+    name: "CARA 01 · ORÍGENES & MEGALITISMO",
+    direction: "NORTE",
+    axisTag: "+Z FRONT",
+    accentColor: "#d4af37",
+    posts: [
+      { title: "El Monte Kailash", tag: "TÍBET", slug: "kailash", desc: "Eje cosmológico y arquitectura megalítica sagrada en el Himalaya." },
+      { title: "Göbekli Tepe", tag: "TURQUÍA", slug: "gobekli", desc: "Pilares en T de doce mil años levantados antes del Neolítico oficial." },
+      { title: "Baalbek", tag: "LÍBANO", slug: "baalbek", desc: "Trilitones de cantera de 800 toneladas en los confines del Levante." },
+      { title: "Pumapunku", tag: "BOLIVIA", slug: "pumapunku", desc: "Andesitas con mecanizado milimétrico y machihembrado litico." },
+      { title: "Nan Madol", tag: "PACÍFICO", slug: "nan-madol", desc: "La Venecia megalítica de basalto sobre arrecife de coral." },
+      { title: "Rapa Nui", tag: "POLINESIA", slug: "rapa-nui", desc: "Plataformas Ahu y traslado cinemático de los colosos volcánicos." }
+    ]
+  },
+  {
+    name: "CARA 02 · SIMBOLOGÍA & PAISAJE ARCAICO",
+    direction: "SUR",
+    axisTag: "-Z BACK",
+    accentColor: "#e6c229",
+    posts: [
+      { title: "Esfinge Beluchistán", tag: "PAKISTÁN", slug: "beluchistan", desc: "Formaciones y cortes en roca viva en la remota costa de Makrán." },
+      { title: "Kurganes de la Estepa", tag: "EURASIA", slug: "kurganes", desc: "Túmulos funerarios y la domesticación primordial del caballo." },
+      { title: "Doggerland Sumergido", tag: "MAR DEL NORTE", slug: "doggerland", desc: "El continente sumergido por el pulso de deshielo post-glacial." },
+      { title: "Cabezas Olmecas", tag: "MESOAMÉRICA", slug: "olmecas", desc: "Basaltos colosales y la mirada atemporal en las selvas de Veracruz." },
+      { title: "Yonaguni Monument", tag: "JAPÓN", slug: "yonaguni", desc: "Terrazas y escalinatas sumergidas en el archipiélago Ryukyu." },
+      { title: "Gunung Padang", tag: "INDONESIA", slug: "gunung-padang", desc: "La colina escalonada megalítica en el sudeste asiático." }
+    ]
+  },
+  {
+    name: "CARA 03 · CÓDICES & TRADICIÓN PRIMORDIAL",
+    direction: "ESTE",
+    axisTag: "+X RIGHT",
+    accentColor: "#c4a882",
+    posts: [
+      { title: "El Poema de Atrahasis", tag: "MESOPOTAMIA", slug: "atrahasis", desc: "El mito del diluvio y la rebelión de los dioses menores Igigi." },
+      { title: "El Rostro de Nefertiti", tag: "EGIPTO", slug: "nefertiti", desc: "La fractura solar de Amarna y el silencio en el ojo de Tutmose." },
+      { title: "Libro de los Gigantes", tag: "QUMRÁN", slug: "gigantes", desc: "Códices apócrifos y los vigilantes inscritos en las cuevas del Mar Muerto." },
+      { title: "Codex Glitch", tag: "EPISTEMOLOGÍA", slug: "codex-glitch", desc: "La lectura de anomalías históricas como fracturas de código de memoria." },
+      { title: "Arqueosemiótica", tag: "HERMENÉUTICA", slug: "arqueosemiotica", desc: "El símbolo grabado en piedra como prótesis para el tiempo profundo." },
+      { title: "Eje Cósmico", tag: "MITOLOGÍA", slug: "eje-cosmico", desc: "La precesión de los equinoccios registrada en el molino de Hamlet." }
+    ]
+  },
+  {
+    name: "CARA 04 · FILOSOFÍA & MÁQUINAS DE SENTIDO",
+    direction: "OESTE",
+    axisTag: "-X LEFT",
+    accentColor: "#a93f2f",
+    posts: [
+      { title: "Sistemas Complejos", tag: "CIBERNÉTICA", slug: "sistemas-complejos", desc: "Emergencia, caos determinista y la dinámica no-lineal del colapso." },
+      { title: "Wittgenstein & Silencio", tag: "LÓGICA", slug: "wittgenstein", desc: "Los límites del lenguaje como límites del mundo arqueológico." },
+      { title: "Deleuze: Máquinas Deseantes", tag: "ONTOLOGÍA", slug: "deleuze", desc: "Ensamblajes de materia y flujos de memoria contra el Estado." },
+      { title: "Borges: El Laberinto", tag: "LITERATURA", slug: "borges", desc: "La biblioteca de arena y el tiempo circular que todo lo devora." },
+      { title: "Etimologías del Vacío", tag: "FILOLOGÍA", slug: "etimologias", desc: "Rastreo de las raíces indoeuropeas en los nombres de lo numinoso." },
+      { title: "Panlingua Arcaica", tag: "LINGÜÍSTICA", slug: "panlingua", desc: "La búsqueda de la lengua madre anterior a la dispersión de Babel." }
+    ]
+  },
+  {
+    name: "CARA 05 · COSMOLOGÍA & ALINEACIONES",
+    direction: "CIMA",
+    axisTag: "+Y TOP",
+    accentColor: "#d4af37",
+    posts: [
+      { title: "Gran Pirámide de Guiza", tag: "EGIPTO", slug: "piramide", desc: "Ocho caras biseladas y concordancia matemática con el radio terrestre." },
+      { title: "Pirámide del Sol", tag: "TEOTIHUACAN", slug: "teotihuacan", desc: "La calzada de los muertos alineada con el ocaso de las Pléyades." },
+      { title: "Templo de Karnak", tag: "TEBAS", slug: "karnak", desc: "Eje solar del solsticio de invierno iluminando el santuario interior." },
+      { title: "Pirámides de Bosnia", tag: "VISOKO", slug: "bosnia", desc: "Polémicas geometrías de hormigón ancestral y túneles Ravne." },
+      { title: "Alineaciones Solsticiales", tag: "ARQUEOASTRONOMÍA", slug: "solsticios", desc: "Horizonte sagrado y marcadores líticos para la cuenta del año largo." },
+      { title: "Zodíaco de Dendera", tag: "HATHOR", slug: "dendera", desc: "El mapa celeste del techo hipóstilo con las constelaciones arcaicas." }
+    ]
+  },
+  {
+    name: "CARA 06 · CANTERÍA & MEMORIA MATERIAL",
+    direction: "BASE",
+    axisTag: "-Y BOTTOM",
+    accentColor: "#b89714",
+    posts: [
+      { title: "Tracción Lítica", tag: "FÍSICA", slug: "traccion", desc: "El misterio mecánico de arrastre de megabloques sin rodillos de madera." },
+      { title: "Ishi-no-Hōden", tag: "JAPÓN", slug: "ishi-no-hoden", desc: "El bloque flotante de 500 toneladas sobre el estanque sagrado." },
+      { title: "Cuevas de Longyou", tag: "CHINA", slug: "longyou", desc: "Hipogeos tallados con cincelado paralelo sin rastro de escombros." },
+      { title: "Masuda no Iwafune", tag: "ASUKA", slug: "masuda-no-iwafune", desc: "La nave lítica con cavidades cuadradas tallada en granito vivo." },
+      { title: "Cantera de Yangshan", tag: "NANJING", slug: "yangshan", desc: "La estela inacabada de 16.000 toneladas dejada en el lecho rocoso." },
+      { title: "Scriptorium & Bitácoras", tag: "ARCHIVO", slug: "archivo-vivo", desc: "El registro vivo y la preservación digital en el ecosistema TGP." }
+    ]
+  }
+];
+
+// Vincular dinámicamente con ensayos existentes
+const facesData = rawFacesData.map((face) => {
+  return {
+    ...face,
+    posts: face.posts.map((post) => {
+      const match = allEnsayos.find(e => {
+        const titleL = (e.data.title || '').toLowerCase();
+        const idL = e.id.toLowerCase();
+        const hintL = post.slug.toLowerCase();
+        return titleL.includes(hintL) || idL.includes(hintL);
+      });
+      return {
+        ...post,
+        realTitle: match?.data.title || post.title,
+        url: match ? `/ensayos/${match.id}` : `/archivo`,
+        image: match?.data.coverImage || match?.data.heroUrl || null,
+        desc: match?.data.abstract || post.desc
+      };
+    })
+  };
+});
+---
+
+<section class="relative w-full py-16 px-4 sm:px-6 md:px-12 lg:px-16 overflow-hidden">
+  <!-- Contenedor Maestro Estilo Bóveda / Rubik -->
+  <div class="relative w-full max-w-7xl mx-auto rounded-[2.5rem] bg-[#0c0a09] border border-amber-500/25 shadow-[0_0_90px_rgba(212,175,55,0.07)] overflow-hidden">
+    
+    <!-- Luces volumétricas en esquinas -->
+    <div class="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/10 rounded-full blur-[110px] pointer-events-none"></div>
+    <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-amber-600/10 rounded-full blur-[110px] pointer-events-none"></div>
+
+    <!-- Encabezado Editorial Cinzel / Bodoni -->
+    <div class="relative z-20 pt-10 px-6 sm:px-10 md:px-14 flex flex-col md:flex-row md:items-end justify-between gap-6 pointer-events-none">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-[10px] tracking-[0.28em] text-amber-400 font-mono uppercase mb-3 backdrop-blur-md">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+          <span>{kicker}</span>
+        </div>
+        <h2 class="font-bodoni text-3xl sm:text-5xl lg:text-6xl text-white font-bold tracking-tight">
+          {title}
+        </h2>
+        <p class="font-gloock text-lg sm:text-2xl text-amber-400/90 italic mt-2 tracking-wide font-normal">
+          {subtitle}
+        </p>
+      </div>
+
+      <!-- Métricas del hipercubo -->
+      <div class="flex items-center gap-6 text-xs text-stone-400 font-mono tracking-wider">
+        <div class="border-l border-amber-500/30 pl-4">
+          <div class="text-amber-400/90 text-sm font-semibold">6 CARAS / 36 FRAMES</div>
+          <div class="text-[10px] text-stone-500 uppercase tracking-widest">Matriz Hexaédrica</div>
+        </div>
+        <div class="border-l border-amber-500/30 pl-4">
+          <div class="text-amber-400/90 text-sm font-semibold">ROTACIONES $\pi/2$</div>
+          <div class="text-[10px] text-stone-500 uppercase tracking-widest">Matrices Ortogonales</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escenario 3D Three.js -->
+    <div class="relative w-full h-155 sm:h-180 md:h-205">
+      
+      <!-- Canvas Three.js -->
+      <div id="tgp-cube-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+      <!-- Leyenda de navegación orbital -->
+      <div class="absolute top-6 right-6 z-10 hidden sm:flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-stone-900/80 border border-white/10 text-[11px] text-stone-400 font-mono tracking-wider backdrop-blur-md pointer-events-none">
+        <span class="text-amber-400 font-mono">⟳</span>
+        <span>Arrastra libremente · Clic en cualquier celda para leer</span>
+      </div>
+
+      <!-- HUD Flotante: Controles de Rotación Discreta (Matriz Rubik) -->
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 sm:gap-3 bg-stone-950/85 border border-amber-500/35 px-4 sm:px-6 py-2.5 rounded-full shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+        <button
+          class="tgp-cube-btn px-2.5 sm:px-3 py-1 rounded-md text-[11px] font-mono text-amber-400 hover:text-white hover:bg-amber-500/20 transition-all uppercase tracking-widest cursor-pointer"
+          data-axis="y"
+          data-angle="1.5707963"
+        >
+          ← Izq
+        </button>
+        <span class="text-stone-700">|</span>
+        <button
+          class="tgp-cube-btn px-2.5 sm:px-3 py-1 rounded-md text-[11px] font-mono text-amber-400 hover:text-white hover:bg-amber-500/20 transition-all uppercase tracking-widest cursor-pointer"
+          data-axis="x"
+          data-angle="1.5707963"
+        >
+          ↑ Arriba
+        </button>
+        <span class="text-stone-700">|</span>
+        <button
+          class="tgp-cube-btn px-2.5 sm:px-3 py-1 rounded-md text-[11px] font-mono text-amber-400 hover:text-white hover:bg-amber-500/20 transition-all uppercase tracking-widest cursor-pointer"
+          data-axis="x"
+          data-angle="-1.5707963"
+        >
+          ↓ Abajo
+        </button>
+        <span class="text-stone-700">|</span>
+        <button
+          class="tgp-cube-btn px-2.5 sm:px-3 py-1 rounded-md text-[11px] font-mono text-amber-400 hover:text-white hover:bg-amber-500/20 transition-all uppercase tracking-widest cursor-pointer"
+          data-axis="y"
+          data-angle="-1.5707963"
+        >
+          Der →
+        </button>
+        <span class="text-stone-700 hidden sm:inline">|</span>
+        <button
+          id="tgp-cube-reset"
+          class="hidden sm:inline-block px-3 py-1 rounded-md text-[11px] font-mono text-stone-400 hover:text-amber-300 hover:bg-white/5 transition-all uppercase tracking-widest cursor-pointer"
+        >
+          Vista Frontal
+        </button>
+      </div>
+
+      <!-- Modal Flotante de Posteo Seleccionado (Al hacer clic en cualquier celda de la cara) -->
+      <div
+        id="tgp-cube-card"
+        class="absolute bottom-20 right-6 sm:right-10 z-30 w-80 sm:w-96 bg-stone-950/95 border border-amber-500/40 p-5 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.85)] backdrop-blur-2xl transition-all duration-300 opacity-0 translate-y-4 pointer-events-none"
+      >
+        <!-- Botón cerrar -->
+        <button
+          id="tgp-cube-card-close"
+          class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/5 hover:bg-amber-500/20 text-stone-400 hover:text-white flex items-center justify-center transition-colors text-xs font-mono cursor-pointer"
+          aria-label="Cerrar modal"
+        >
+          ✕
+        </button>
+
+        <!-- Indicador de Coordenada en el Cubo -->
+        <div class="flex items-center justify-between text-[10px] text-amber-400 font-mono tracking-[0.25em] uppercase mb-1.5 border-b border-white/5 pb-2">
+          <span id="tgp-cube-face-name">CARA 01 · NORTE</span>
+          <span id="tgp-cube-cell-tag" class="text-stone-400">FRAME #01</span>
+        </div>
+
+        <!-- Título -->
+        <h3 class="font-bodoni text-stone-100 text-xl font-bold mb-2 leading-snug line-clamp-2" id="tgp-cube-card-title">
+          Título del Archivo
+        </h3>
+
+        <!-- Descripción -->
+        <p class="font-inter text-xs text-stone-300 font-light leading-relaxed mb-4 line-clamp-3" id="tgp-cube-card-desc">
+          Descripción conceptual del posteo alojado en esta coordenada del cubo.
+        </p>
+
+        <!-- Botón de Enlace -->
+        <a
+          id="tgp-cube-card-link"
+          href="/archivo"
+          class="w-full inline-flex items-center justify-between px-4 py-2.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 hover:text-white font-inter text-xs uppercase tracking-widest font-medium transition-all group"
+        >
+          <span>Examinar Archivo</span>
+          <span class="text-sm transition-transform group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Inyección de datos al contexto del cliente -->
+<script define:vars={{ cubeFaces: facesData }}>
+  window.__TGP_CUBE_FACES__ = cubeFaces;
+</script>
+
+<script>
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+  function initTgpCube() {
+    const container = document.getElementById('tgp-cube-canvas');
+    if (!container || container.dataset.initialized === 'true') return;
+    container.dataset.initialized = 'true';
+
+    const facesData = window.__TGP_CUBE_FACES__ || [];
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // 1. Escena, Cámara y Renderer
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x0c0a09, 0.015);
+
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    camera.position.set(3.4, 2.2, 4.2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.25;
+    container.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.rotateSpeed = 0.55;
+    controls.minDistance = 3.0;
+    controls.maxDistance = 7.5;
+
+    // 2. Luces Cinematográficas
+    const ambientLight = new THREE.AmbientLight(0xfff5ea, 1.0);
+    scene.add(ambientLight);
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.6);
+    keyLight.position.set(6, 6, 7);
+    scene.add(keyLight);
+
+    const goldPoint = new THREE.PointLight(0xd4af37, 2.5, 30);
+    goldPoint.position.set(-5, -3, -5);
+    scene.add(goldPoint);
+
+    // 3. Generación de Texturas Canvas para cada una de las 6 caras (Cuadrícula 2 columnas x 3 filas)
+    function createFaceCanvasTexture(faceInfo, faceIndex) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 1024;
+      const ctx = canvas.getContext('2d');
+
+      // Fondo oscuro basalto
+      ctx.fillStyle = '#141210';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Marco perimetral dorado
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 14;
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+      // Línea de cabecera
+      ctx.fillStyle = '#d4af37';
+      ctx.font = 'bold 32px "Bodoni Moda", Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(faceInfo.name, canvas.width / 2, 72);
+
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.35)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(80, 95);
+      ctx.lineTo(canvas.width - 80, 95);
+      ctx.stroke();
+
+      // Cuadrícula de 6 celdas: 2 columnas x 3 filas
+      const cols = 2;
+      const rows = 3;
+      const padX = 50;
+      const padTop = 115;
+      const padBottom = 40;
+      const gap = 20;
+
+      const cellW = (canvas.width - padX * 2 - gap * (cols - 1)) / cols;
+      const cellH = (canvas.height - padTop - padBottom - gap * (rows - 1)) / rows;
+
+      faceInfo.posts.forEach((post, i) => {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        const x = padX + col * (cellW + gap);
+        const y = padTop + row * (cellH + gap);
+
+        // Fondo de tarjeta individual
+        ctx.fillStyle = '#201d1a';
+        ctx.fillRect(x, y, cellW, cellH);
+
+        // Bisel dorado sutil
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, cellW, cellH);
+
+        // Esquinas técnicas estilo blueprint
+        ctx.fillStyle = '#d4af37';
+        const cornerSize = 8;
+        ctx.fillRect(x, y, cornerSize, 2);
+        ctx.fillRect(x, y, 2, cornerSize);
+        ctx.fillRect(x + cellW - cornerSize, y, cornerSize, 2);
+        ctx.fillRect(x + cellW - 2, y, 2, cornerSize);
+
+        // Tag del frame (arriba a la izquierda)
+        ctx.font = '16px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(`FRAME #0${i + 1} · ${post.tag || 'TGP'}`, x + 20, y + 40);
+
+        // Título del ensayo
+        ctx.fillStyle = '#f5f2ec';
+        ctx.font = 'bold 26px "Bodoni Moda", Georgia, serif';
+        const titleText = post.realTitle || post.title;
+        ctx.fillText(titleText.slice(0, 22), x + 20, y + 80);
+        if (titleText.length > 22) {
+          ctx.fillText(titleText.slice(22, 44), x + 20, y + 112);
+        }
+
+        // Breve sinopsis
+        ctx.fillStyle = 'rgba(212, 175, 55, 0.75)';
+        ctx.font = '15px sans-serif';
+        const descText = post.desc || '';
+        ctx.fillText(descText.slice(0, 36) + '...', x + 20, y + cellH - 35);
+
+        // Indicador de lectura
+        ctx.fillStyle = '#d4af37';
+        ctx.font = '14px monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText('ABRIR ↗', x + cellW - 20, y + cellH - 35);
+      });
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      return texture;
+    }
+
+    // 4. Construcción del Cubo Principal
+    // Three.js BoxGeometry material slots:
+    // 0: +X (Right / Cara 03 Este)
+    // 1: -X (Left / Cara 04 Oeste)
+    // 2: +Y (Top / Cara 05 Cima)
+    // 3: -Y (Bottom / Cara 06 Base)
+    // 4: +Z (Front / Cara 01 Norte)
+    // 5: -Z (Back / Cara 02 Sur)
+    const slotMapping = [
+      facesData[2] || facesData[0], // +X Este
+      facesData[3] || facesData[0], // -X Oeste
+      facesData[4] || facesData[0], // +Y Cima
+      facesData[5] || facesData[0], // -Y Base
+      facesData[0],                 // +Z Norte (Frontal principal)
+      facesData[1] || facesData[0]  // -Z Sur
+    ];
+
+    const cubeSize = 2.4;
+    const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+
+    const materials = slotMapping.map((face, index) => {
+      const texture = createFaceCanvasTexture(face, index);
+      return new THREE.MeshStandardMaterial({
+        map: texture,
+        roughness: 0.45,
+        metalness: 0.25,
+      });
+    });
+
+    const cube = new THREE.Mesh(geometry, materials);
+    scene.add(cube);
+
+    // Malla de alambre exterior Blueprint técnico (efecto Rubik / Tesseract)
+    const wireGeo = new THREE.BoxGeometry(cubeSize * 1.015, cubeSize * 1.015, cubeSize * 1.015);
+    const wireMat = new THREE.MeshBasicMaterial({
+      color: 0xd4af37,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.16
+    });
+    const wireCube = new THREE.Mesh(wireGeo, wireMat);
+    scene.add(wireCube);
+
+    // Polvo estelar de fondo
+    const starGeo = new THREE.BufferGeometry();
+    const starCount = 450;
+    const starCoords = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount * 3; i += 3) {
+      starCoords[i] = (Math.random() - 0.5) * 25;
+      starCoords[i + 1] = (Math.random() - 0.5) * 25;
+      starCoords[i + 2] = (Math.random() - 0.5) * 25;
+    }
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starCoords, 3));
+    const starMat = new THREE.PointsMaterial({
+      color: 0xd4af37,
+      size: 0.035,
+      transparent: true,
+      opacity: 0.3
+    });
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+
+    // 5. Interacción de Rotaciones Discretas (Matrices pi/2)
+    let isRotating = false;
+    function rotateCube(axis, angle) {
+      if (isRotating) return;
+      isRotating = true;
+
+      const targetX = cube.rotation.x + (axis === 'x' ? angle : 0);
+      const targetY = cube.rotation.y + (axis === 'y' ? angle : 0);
+      const targetZ = cube.rotation.z + (axis === 'z' ? angle : 0);
+
+      const duration = 650; // ms
+      const startX = cube.rotation.x;
+      const startY = cube.rotation.y;
+      const startZ = cube.rotation.z;
+      const startTime = performance.now();
+
+      function stepRotation(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease Out Cubic
+        const ease = 1 - Math.pow(1 - progress, 3);
+
+        cube.rotation.x = startX + (targetX - startX) * ease;
+        cube.rotation.y = startY + (targetY - startY) * ease;
+        cube.rotation.z = startZ + (targetZ - startZ) * ease;
+
+        wireCube.rotation.copy(cube.rotation);
+
+        if (progress < 1) {
+          requestAnimationFrame(stepRotation);
+        } else {
+          isRotating = false;
+        }
+      }
+      requestAnimationFrame(stepRotation);
+    }
+
+    function resetFrontView() {
+      if (isRotating) return;
+      isRotating = true;
+
+      const startX = cube.rotation.x;
+      const startY = cube.rotation.y;
+      const startZ = cube.rotation.z;
+      const startTime = performance.now();
+      const duration = 750;
+
+      function stepReset(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+
+        cube.rotation.x = startX * (1 - ease);
+        cube.rotation.y = startY * (1 - ease);
+        cube.rotation.z = startZ * (1 - ease);
+
+        wireCube.rotation.copy(cube.rotation);
+
+        if (progress < 1) {
+          requestAnimationFrame(stepReset);
+        } else {
+          cube.rotation.set(0, 0, 0);
+          wireCube.rotation.set(0, 0, 0);
+          isRotating = false;
+        }
+      }
+      requestAnimationFrame(stepReset);
+    }
+
+    // Vincular botones HUD
+    const buttons = document.querySelectorAll('.tgp-cube-btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const axis = btn.getAttribute('data-axis') || 'y';
+        const angle = parseFloat(btn.getAttribute('data-angle') || '0');
+        rotateCube(axis, angle);
+      });
+    });
+
+    const resetBtn = document.getElementById('tgp-cube-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        resetFrontView();
+      });
+    }
+
+    // 6. Raycasting y Selección Precisa de Celdas (Modal Flotante)
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    const card = document.getElementById('tgp-cube-card');
+    const cardFaceName = document.getElementById('tgp-cube-face-name');
+    const cardCellTag = document.getElementById('tgp-cube-cell-tag');
+    const cardTitle = document.getElementById('tgp-cube-card-title');
+    const cardDesc = document.getElementById('tgp-cube-card-desc');
+    const cardLink = document.getElementById('tgp-cube-card-link');
+    const cardClose = document.getElementById('tgp-cube-card-close');
+
+    function mostrarTarjeta(faceInfo, post, cellIndex) {
+      if (!card) return;
+      cardFaceName.innerText = faceInfo.name || 'CARA';
+      cardCellTag.innerText = `FRAME #0${cellIndex + 1} · ${post.tag || 'TGP'}`;
+      cardTitle.innerText = post.realTitle || post.title || 'Archivo';
+      cardDesc.innerText = post.desc || '';
+      cardLink.href = post.url || '/archivo';
+
+      card.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      card.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+    }
+
+    function ocultarTarjeta() {
+      if (!card) return;
+      card.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      card.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+    }
+
+    if (cardClose) {
+      cardClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        ocultarTarjeta();
+      });
+    }
+
+    function onPointerClick(event) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(cube);
+
+      if (intersects.length > 0) {
+        const hit = intersects[0];
+        // En Three.js BoxGeometry: materialIndex corresponde a la cara impactada
+        const matIndex = hit.face.materialIndex;
+        const faceInfo = slotMapping[matIndex];
+
+        if (faceInfo && hit.uv) {
+          const uv = hit.uv;
+          // Calcular columna (0 o 1) y fila (0, 1 o 2)
+          const cols = 2;
+          const rows = 3;
+          const col = Math.min(Math.floor(uv.x * cols), cols - 1);
+          const row = Math.min(Math.floor((1 - uv.y) * rows), rows - 1);
+          const cellIndex = row * cols + col;
+
+          const post = faceInfo.posts[cellIndex];
+          if (post) {
+            mostrarTarjeta(faceInfo, post, cellIndex);
+          }
+        }
+      }
+    }
+
+    renderer.domElement.addEventListener('click', onPointerClick);
+
+    // 7. Loop de Renderizado continuo
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Rotación pasiva muy sutil si no está rotando por botones
+      if (!isRotating) {
+        // Rotación de estrellas de fondo
+        stars.rotation.y += 0.0003;
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Redimensionamiento responsivo
+    function onResize() {
+      if (!container) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+    window.addEventListener('resize', onResize);
+  }
+
+  // Inicialización compatible con Astro View Transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTgpCube);
+  } else {
+    initTgpCube();
+  }
+  document.addEventListener('astro:page-load', initTgpCube);
+</script>
