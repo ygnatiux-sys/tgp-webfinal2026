@@ -16,16 +16,27 @@ export async function getStaticPaths() {
   const ensayos = await getCollection('ensayos', ({ data }) => {
     return isDev || !data.draft;
   });
-  return ensayos.map((entry) => ({
-    params: { slug: entry.id },
-    props: { entry },
-  }));
+  const paths: any[] = [];
+  const seenSlugs = new Set<string>();
+
+  for (const entry of ensayos) {
+    if (entry.id && !seenSlugs.has(entry.id)) {
+      seenSlugs.add(entry.id);
+      paths.push({ params: { slug: entry.id }, props: { entry } });
+    }
+    const frontmatterSlug = (entry.data as any)?.slug;
+    if (frontmatterSlug && !seenSlugs.has(frontmatterSlug)) {
+      seenSlugs.add(frontmatterSlug);
+      paths.push({ params: { slug: frontmatterSlug }, props: { entry } });
+    }
+  }
+  return paths;
 }
 
 const { slug } = Astro.params;
 const isDev = import.meta.env.DEV;
 const ensayos = await getCollection('ensayos');
-const entry = Astro.props.entry || ensayos.find((e) => e.id === slug);
+const entry = Astro.props.entry || ensayos.find((e) => e.id === slug || (e.data as any)?.slug === slug);
 
 if (!entry || (!isDev && entry.data.draft)) {
   return Astro.redirect('/archivo');
