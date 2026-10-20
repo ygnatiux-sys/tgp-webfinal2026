@@ -1,0 +1,784 @@
+---
+// src/components/GlobeShowcase.astro
+// Showcase 3D: Atlas Global de Archivos Vivos — The Great Puzzle Project
+// Perspectiva esférica con curvas Bézier en 3D, geolocalización de ensayos y órbita cinemática.
+
+import { getCollection } from 'astro:content';
+
+interface Props {
+  kicker?: string;
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  kicker = "ATLAS DE ARCHIVOS VIVOS // GEOLOCALIZACIÓN 3D",
+  title = "THE GREAT PUZZLE -PROJECT-",
+  subtitle = "«Un solo mundo; todas las historias»"
+} = Astro.props;
+
+// Obtener ensayos para vincular dinámicamente imágenes, slugs y datos reales
+let allEnsayos: any[] = [];
+try {
+  allEnsayos = await getCollection('ensayos', ({ data }) => import.meta.env.DEV || !data.draft);
+} catch (e) {
+  console.warn('[GlobeShowcase] Error obteniendo colección de ensayos:', e);
+}
+
+// Catálogo de vestigios y anomalías líticas con georreferenciación canónica
+const rawLocations = [
+  {
+    title: "El Monte Kailash",
+    lat: 31.0667,
+    lng: 81.3125,
+    tag: "FRAME #01 · TÍBET",
+    region: "Himalaya Occidental",
+    desc: "Eje cosmológico y arquitectura megalítica sagrada. La pirámide natural que ninguna cordada ha osado escalar.",
+    slugHint: "kailash",
+    fallbackImg: "https://storage.thegreatpuzzleproject.com/vault-media/1792137342460-4f977b70.webp"
+  },
+  {
+    title: "Esfinge de Beluchistán",
+    lat: 25.4500,
+    lng: 65.5167,
+    tag: "FRAME #02 · PAKISTÁN",
+    region: "Costa de Makrán",
+    desc: "Anomalías estructurales esculpidas en la piedra viva. Vestigios antediluvianos ignorados por la geología convencional.",
+    slugHint: "beluchistan",
+    fallbackImg: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Baalbek y la Tracción",
+    lat: 34.0058,
+    lng: 36.2111,
+    tag: "FRAME #03 · LÍBANO",
+    region: "Valle de Bekaa",
+    desc: "Trilitones de más de 800 toneladas en el podio de Júpiter. La física de cantera llevada al límite absoluto de la materia.",
+    slugHint: "baalbek",
+    fallbackImg: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "El Silencio de Nefertiti",
+    lat: 27.6450,
+    lng: 30.9000,
+    tag: "FRAME #04 · EGIPTO",
+    region: "Amarna / Ajetatón",
+    desc: "La fractura solar de Ajetatón y la mirada incompleta que desafió tres milenios de olvido bajo la arena.",
+    slugHint: "nefertiti",
+    fallbackImg: "https://storage.thegreatpuzzleproject.com/vault-media/1792486792176-a073021e.webp"
+  },
+  {
+    title: "Nan Madol: La Ciudad de Basalto",
+    lat: 6.8450,
+    lng: 158.3350,
+    tag: "FRAME #05 · MICRONESIA",
+    region: "Isla de Pohnpei",
+    desc: "Megaconstrucción de columnas prismáticas basálticas sobre un arrecife de coral en el vacío del Pacífico.",
+    slugHint: "nan-madol",
+    fallbackImg: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Pumapunku y Tiwanaku",
+    lat: -16.5547,
+    lng: -68.6736,
+    tag: "FRAME #06 · BOLIVIA",
+    region: "Altiplano Andino",
+    desc: "Bloques en H de andesita con ranuras milimétricas y perforaciones mecánicas pre-alfareras.",
+    slugHint: "pumapunku",
+    fallbackImg: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Göbekli Tepe: El Umbral Lítico",
+    lat: 37.2231,
+    lng: 38.9225,
+    tag: "FRAME #07 · TURQUÍA",
+    region: "Mesopotamia Superior",
+    desc: "Pilares en T de doce mil años tallados con bajorrelieves zoomorfos antes de la invención de la rueda o la agricultura.",
+    slugHint: "gobekli",
+    fallbackImg: "https://images.unsplash.com/photo-1528164344705-475426879c0d?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Cuevas de Longyou",
+    lat: 29.0667,
+    lng: 119.1667,
+    tag: "FRAME #08 · CHINA",
+    region: "Zhejiang",
+    desc: "Cámaras subterráneas monumentales excavadas en arenisca con cincelado paralelo uniforme sin registro dinástico alguno.",
+    slugHint: "longyou",
+    fallbackImg: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Ishi-no-Hōden",
+    lat: 34.7878,
+    lng: 134.7869,
+    tag: "FRAME #09 · JAPÓN",
+    region: "Takasago, Hyōgo",
+    desc: "Monolito de 500 toneladas suspendido sobre un estanque sagrado perenne con saliente posterior piramidal.",
+    slugHint: "ishi-no-hoden",
+    fallbackImg: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Geoglifos de Nasca & Palpa",
+    lat: -14.7167,
+    lng: -75.1333,
+    tag: "FRAME #10 · PERÚ",
+    region: "Pampa de Jumana",
+    desc: "Líneas geométricas que rasgan el desierto para ser leídas únicamente desde la estratosfera o el vuelo.",
+    slugHint: "nasca",
+    fallbackImg: "https://images.unsplash.com/photo-1589802829985-817e51171b92?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Derinkuyu Subterránea",
+    lat: 38.3736,
+    lng: 34.7347,
+    tag: "FRAME #11 · CAPADOCIA",
+    region: "Anatolia Central",
+    desc: "Refugio ctoniano de dieciocho niveles bajo tierra con conductos de ventilación y puertas de muela basáltica.",
+    slugHint: "derinkuyu",
+    fallbackImg: "https://storage.thegreatpuzzleproject.com/vault-media/1792137342460-4f977b70.webp"
+  },
+  {
+    title: "Gran Pirámide de Guiza",
+    lat: 29.9792,
+    lng: 31.1342,
+    tag: "FRAME #12 · EGIPTO",
+    region: "Meseta de Guiza",
+    desc: "Orientación astronómica precisa al milímetro con las cuatro caras bisectadas y precesión equinoccial inscrita.",
+    slugHint: "piramide",
+    fallbackImg: "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=800&q=80"
+  }
+];
+
+// Enlazar con ensayos reales si existen
+const posts = rawLocations.map((loc) => {
+  const match = allEnsayos.find(e => {
+    const titleLower = (e.data.title || '').toLowerCase();
+    const idLower = e.id.toLowerCase();
+    const hint = loc.slugHint.toLowerCase();
+    return titleLower.includes(hint) || idLower.includes(hint);
+  });
+
+  const slug = match ? match.id : loc.slugHint;
+  const url = match ? `/ensayos/${match.id}` : `/archivo`;
+  const image = match?.data.coverImage || match?.data.heroUrl || loc.fallbackImg;
+  const title = match?.data.title || loc.title;
+  const desc = match?.data.abstract || loc.desc;
+
+  return {
+    ...loc,
+    title,
+    desc,
+    slug,
+    url,
+    image
+  };
+});
+---
+
+<section class="relative w-full py-20 px-4 sm:px-6 md:px-12 lg:px-16 overflow-hidden">
+  <!-- Tarjeta Contenedor Principal IMAX 3D -->
+  <div class="relative w-full max-w-7xl mx-auto rounded-[2.5rem] bg-[#0c0a09] border border-amber-500/25 shadow-[0_0_80px_rgba(212,175,55,0.08)] overflow-hidden">
+    
+    <!-- Aura de fondo sutil -->
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-amber-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-amber-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+    <!-- Encabezado Editorial Estilo Dark Academia -->
+    <div class="relative z-20 pt-10 px-6 sm:px-10 md:px-14 flex flex-col md:flex-row md:items-end justify-between gap-6 pointer-events-none">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-[10px] tracking-[0.28em] text-amber-400 font-mono uppercase mb-3 backdrop-blur-md">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+          <span>{kicker}</span>
+        </div>
+        <h2 class="font-bodoni text-3xl sm:text-5xl lg:text-6xl text-white font-bold tracking-tight">
+          {title}
+        </h2>
+        <p class="font-gloock text-lg sm:text-2xl text-amber-400/90 italic mt-2 tracking-wide font-normal">
+          {subtitle}
+        </p>
+      </div>
+
+      <!-- Métricas / Badge geodésico -->
+      <div class="flex items-center gap-6 text-xs text-stone-400 font-mono tracking-wider">
+        <div class="border-l border-amber-500/30 pl-4">
+          <div class="text-amber-400/90 text-sm font-semibold">{posts.length} ESTACIONES</div>
+          <div class="text-[10px] text-stone-500 uppercase tracking-widest">Nodos Geodésicos</div>
+        </div>
+        <div class="border-l border-amber-500/30 pl-4">
+          <div class="text-amber-400/90 text-sm font-semibold">ARCOS BÉZIER 3D</div>
+          <div class="text-[10px] text-stone-500 uppercase tracking-widest">Órbita Continua</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escenario Three.js (Alto impacto visual: 700px a 820px) -->
+    <div class="relative w-full h-[620px] sm:h-[720px] md:h-[820px]">
+      
+      <!-- Canvas Three.js -->
+      <div id="tgp-globe-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+      <!-- Instrucciones flotantes de interacción -->
+      <div class="absolute top-6 right-6 z-10 hidden sm:flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-stone-900/70 border border-white/10 text-[11px] text-stone-400 font-mono tracking-wider backdrop-blur-md pointer-events-none">
+        <svg class="w-3.5 h-3.5 text-amber-400 animate-spin" style="animation-duration: 8s;" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="10" stroke-width="1.5" stroke-dasharray="4 4" />
+        </svg>
+        <span>Arrastra para rotar · Rueda para zoom · Clic en nodo</span>
+      </div>
+
+      <!-- Tarjeta Flotante Cinematográfica (Modal de Posteo) -->
+      <div
+        id="tgp-post-card"
+        class="absolute bottom-24 right-6 sm:right-10 z-30 w-80 sm:w-96 bg-stone-950/95 border border-amber-500/40 p-5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-xl transition-all duration-300 opacity-0 translate-y-4 pointer-events-none"
+      >
+        <!-- Botón cerrar -->
+        <button
+          id="tgp-card-close"
+          class="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/5 hover:bg-amber-500/20 text-stone-400 hover:text-white flex items-center justify-center transition-colors text-xs font-mono"
+          aria-label="Cerrar ficha"
+        >
+          ✕
+        </button>
+
+        <!-- Imagen Thumbnail -->
+        <div class="relative w-full aspect-16/9 rounded-lg overflow-hidden mb-3.5 bg-stone-900 border border-white/5">
+          <img id="tgp-card-img" src="" alt="" class="w-full h-full object-cover filter contrast-[1.05]" />
+          <div class="absolute inset-0 bg-linear-to-t from-stone-950 via-transparent to-transparent"></div>
+          <span id="tgp-card-coords" class="absolute bottom-2 left-2.5 font-mono text-[9px] text-amber-300 tracking-wider bg-black/70 px-2 py-0.5 rounded backdrop-blur-sm">
+            00°00'N, 00°00'E
+          </span>
+        </div>
+
+        <!-- Tag / Volanta -->
+        <div class="text-[10px] text-amber-400 font-mono tracking-[0.25em] uppercase mb-1.5" id="tgp-card-tag">
+          FRAME #01 · MESOPOTAMIA
+        </div>
+
+        <!-- Título -->
+        <h3 class="font-bodoni text-stone-100 text-xl font-bold mb-2 leading-snug line-clamp-2" id="tgp-card-title">
+          Título del Ensayo
+        </h3>
+
+        <!-- Descripción -->
+        <p class="font-inter text-xs text-stone-300 font-light leading-relaxed mb-4 line-clamp-3" id="tgp-card-desc">
+          Ubicación y coordenadas del vestigio histórico analizado en el archivo.
+        </p>
+
+        <!-- CTA Botón -->
+        <a
+          id="tgp-card-link"
+          href="/archivo"
+          class="w-full inline-flex items-center justify-between px-4 py-2.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 hover:text-white font-inter text-xs uppercase tracking-widest font-medium transition-all group"
+        >
+          <span>Explorar Ensayo</span>
+          <span class="text-sm transition-transform group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+
+      <!-- Cinta Inferior de Fotogramas / Acceso Rápido a Nodos -->
+      <div class="absolute bottom-4 left-4 right-4 z-20 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none px-2 mask-linear-fade">
+        {posts.map((post, idx) => (
+          <button
+            class="tgp-node-pill shrink-0 flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-stone-900/80 hover:bg-amber-500/20 border border-white/10 hover:border-amber-500/40 transition-all text-left backdrop-blur-md cursor-pointer group"
+            data-index={idx}
+            data-lat={post.lat}
+            data-lng={post.lng}
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400/70 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+            <span class="font-mono text-[10px] text-stone-300 group-hover:text-amber-200 tracking-wider whitespace-nowrap">
+              {post.title}
+            </span>
+          </button>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Inyección de datos para el motor cliente de Three.js -->
+<script define:vars={{ postsData: posts }}>
+  window.__TGP_POSTS__ = postsData;
+</script>
+
+<script>
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+  function initTgpGlobe() {
+    const container = document.getElementById('tgp-globe-canvas');
+    if (!container || container.dataset.initialized === 'true') return;
+    container.dataset.initialized = 'true';
+
+    const posts = window.__TGP_POSTS__ || [];
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // 1. Escena, Cámara y Renderer
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x0c0a09, 0.012);
+
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    camera.position.set(0, 0.8, 3.8);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    container.appendChild(renderer.domElement);
+
+    // Controles de órbita con inercia cinematográfica (simulando la fricción de celuloide)
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.rotateSpeed = 0.55;
+    controls.enableZoom = true;
+    controls.minDistance = 2.2;
+    controls.maxDistance = 5.5;
+    controls.autoRotate = false; // Manejado por loop condicional
+
+    // 2. Luces Cinematográficas
+    const ambientLight = new THREE.AmbientLight(0xfff5ea, 1.1);
+    scene.add(ambientLight);
+
+    const sunLight = new THREE.DirectionalLight(0xffffff, 1.8);
+    sunLight.position.set(6, 4, 7);
+    scene.add(sunLight);
+
+    const goldPointLight = new THREE.PointLight(0xd4af37, 3, 20);
+    goldPointLight.position.set(-5, 3, -3);
+    scene.add(goldPointLight);
+
+    // 3. Creación del Globo Terráqueo
+    const globeRadius = 1.25;
+    const sphereGeometry = new THREE.SphereGeometry(globeRadius, 64, 64);
+
+    // Canvas procedural con texturizado de cuadrícula geodésica y continentes estilizados
+    function createGlobeTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 2048;
+      canvas.height = 1024;
+      const ctx = canvas.getContext('2d');
+
+      // Fondo base basalto oscuro
+      ctx.fillStyle = '#100e0d';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Líneas de latitud y longitud geodésicas doradas sutiles
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.08)';
+      ctx.lineWidth = 1;
+
+      // Meridianos
+      for (let x = 0; x < canvas.width; x += canvas.width / 24) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+
+      // Paralelos
+      for (let y = 0; y < canvas.height; y += canvas.height / 12) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // Ecuador y Meridiano de Greenwich con mayor fulgor
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.22)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height / 2);
+      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, 0);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+      ctx.stroke();
+
+      // Constelación de puntos de ruido / continentes simbólicos
+      ctx.fillStyle = 'rgba(212, 175, 55, 0.18)';
+      for (let i = 0; i < 4000; i++) {
+        const px = Math.random() * canvas.width;
+        const py = Math.random() * canvas.height;
+        const r = Math.random() * 1.5;
+        ctx.beginPath();
+        ctx.arc(px, py, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    const globeTexture = createGlobeTexture();
+    const globeMaterial = new THREE.MeshStandardMaterial({
+      map: globeTexture,
+      color: 0x181513,
+      roughness: 0.65,
+      metalness: 0.35,
+    });
+    const globe = new THREE.Mesh(sphereGeometry, globeMaterial);
+    scene.add(globe);
+
+    // Malla exterior de alambre sutil (Retícula de Arquitectura Megalítica)
+    const wireGeo = new THREE.SphereGeometry(globeRadius * 1.002, 36, 18);
+    const wireMat = new THREE.MeshBasicMaterial({
+      color: 0xd4af37,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.04
+    });
+    const wireSphere = new THREE.Mesh(wireGeo, wireMat);
+    scene.add(wireSphere);
+
+    // Halo de atmósfera exterior cálida / dorada
+    const atmosphereGeometry = new THREE.SphereGeometry(globeRadius * 1.035, 64, 64);
+    const atmosphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0xd4af37,
+      transparent: true,
+      opacity: 0.06,
+      side: THREE.BackSide
+    });
+    const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+    scene.add(atmosphere);
+
+    // Polvo estelar cósmico de fondo
+    const starGeo = new THREE.BufferGeometry();
+    const starCount = 600;
+    const starCoords = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount * 3; i += 3) {
+      starCoords[i] = (Math.random() - 0.5) * 30;
+      starCoords[i + 1] = (Math.random() - 0.5) * 30;
+      starCoords[i + 2] = (Math.random() - 0.5) * 30;
+    }
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starCoords, 3));
+    const starMat = new THREE.PointsMaterial({
+      color: 0xd4af37,
+      size: 0.04,
+      transparent: true,
+      opacity: 0.35
+    });
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+
+    // 4. Conversión matemática: Latitud / Longitud a Vector 3D Cartesiano
+    function latLngToVector3(lat, lng, radius, altitude = 0) {
+      const phi = (90 - lat) * (Math.PI / 180);
+      const theta = (lng + 180) * (Math.PI / 180);
+      const r = radius + altitude;
+      return new THREE.Vector3(
+        -r * Math.sin(phi) * Math.cos(theta),
+        r * Math.cos(phi),
+        r * Math.sin(phi) * Math.sin(theta)
+      );
+    }
+
+    // Grupos interactivos
+    const markersGroup = new THREE.Group();
+    scene.add(markersGroup);
+
+    const arcsGroup = new THREE.Group();
+    scene.add(arcsGroup);
+
+    const interactiveMarkers = [];
+    const markerPositions = [];
+
+    // 5. Instanciación de Nodos Marcadores y Arcos Bézier 3D
+    posts.forEach((post, idx) => {
+      const pos = latLngToVector3(post.lat, post.lng, globeRadius);
+      markerPositions.push({ pos, post, idx });
+
+      // Núcleo del marcador (Esfera dorada fulgurante)
+      const markerGeo = new THREE.SphereGeometry(0.024, 16, 16);
+      const markerMat = new THREE.MeshBasicMaterial({ color: 0xf5d64e });
+      const markerMesh = new THREE.Mesh(markerGeo, markerMat);
+      markerMesh.position.copy(pos);
+      markerMesh.userData = { ...post, index: idx, baseScale: 1 };
+      markersGroup.add(markerMesh);
+      interactiveMarkers.push(markerMesh);
+
+      // Pin cenital que se proyecta hacia afuera del globo
+      const pinEnd = latLngToVector3(post.lat, post.lng, globeRadius, 0.08);
+      const pinGeo = new THREE.BufferGeometry().setFromPoints([pos, pinEnd]);
+      const pinMat = new THREE.LineBasicMaterial({
+        color: 0xd4af37,
+        transparent: true,
+        opacity: 0.7
+      });
+      const pinLine = new THREE.Line(pinGeo, pinMat);
+      markersGroup.add(pinLine);
+
+      // Anillo de pulso concéntrico sobre la superficie
+      const ringGeo = new THREE.RingGeometry(0.03, 0.045, 24);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0xd4af37,
+        transparent: true,
+        opacity: 0.5,
+        side: THREE.DoubleSide
+      });
+      const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+      ringMesh.position.copy(pos);
+      ringMesh.lookAt(new THREE.Vector3(0, 0, 0));
+      markersGroup.add(ringMesh);
+    });
+
+    // Crear arcos de conexión Bézier 3D entre estaciones geodésicas sucesivas
+    const bezierPulses = [];
+    for (let i = 0; i < markerPositions.length; i++) {
+      const current = markerPositions[i];
+      const next = markerPositions[(i + 1) % markerPositions.length];
+
+      const pA = current.pos;
+      const pB = next.pos;
+
+      // Calcular punto medio y elevarlo sobre la superficie para formar la curvatura Bézier
+      const mid = new THREE.Vector3().addVectors(pA, pB).multiplyScalar(0.5);
+      const distance = pA.distanceTo(pB);
+      const altitude = Math.min(Math.max(distance * 0.35, 0.2), 0.65);
+      const controlPoint = mid.clone().normalize().multiplyScalar(globeRadius + altitude);
+
+      const curve = new THREE.QuadraticBezierCurve3(pA, controlPoint, pB);
+      const points = curve.getPoints(60);
+      const curveGeo = new THREE.BufferGeometry().setFromPoints(points);
+
+      // Material del arco: hilo dorado translúcido
+      const curveMat = new THREE.LineBasicMaterial({
+        color: 0xd4af37,
+        transparent: true,
+        opacity: 0.28
+      });
+      const curveLine = new THREE.Line(curveGeo, curveMat);
+      arcsGroup.add(curveLine);
+
+      // Partícula de luz viajera que recorre el arco Bézier
+      const pulseGeo = new THREE.SphereGeometry(0.016, 8, 8);
+      const pulseMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
+      arcsGroup.add(pulseMesh);
+
+      bezierPulses.push({
+        mesh: pulseMesh,
+        curve,
+        progress: (i / markerPositions.length) // Distribución progresiva
+      });
+    }
+
+    // 6. Interacción: Raycasting, Hover, Clic y Enfoque de Cámara
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let hoveredMarker = null;
+
+    const card = document.getElementById('tgp-post-card');
+    const cardImg = document.getElementById('tgp-card-img');
+    const cardTag = document.getElementById('tgp-card-tag');
+    const cardTitle = document.getElementById('tgp-card-title');
+    const cardDesc = document.getElementById('tgp-card-desc');
+    const cardCoords = document.getElementById('tgp-card-coords');
+    const cardLink = document.getElementById('tgp-card-link');
+    const cardClose = document.getElementById('tgp-card-close');
+
+    function formatearCoords(lat, lng) {
+      const latDir = lat >= 0 ? 'N' : 'S';
+      const lngDir = lng >= 0 ? 'E' : 'O';
+      return `${Math.abs(lat).toFixed(2)}°${latDir}, ${Math.abs(lng).toFixed(2)}°${lngDir}`;
+    }
+
+    function mostrarTarjeta(data) {
+      if (!card || !data) return;
+      cardTag.innerText = data.tag || 'FRAME #01';
+      cardTitle.innerText = data.title || 'Ensayo';
+      cardDesc.innerText = data.desc || '';
+      cardCoords.innerText = formatearCoords(data.lat, data.lng);
+      cardLink.href = data.url || `/ensayos/${data.slug || ''}`;
+
+      if (data.image) {
+        cardImg.src = data.image;
+        cardImg.alt = data.title;
+        cardImg.parentElement.classList.remove('hidden');
+      } else {
+        cardImg.parentElement.classList.add('hidden');
+      }
+
+      card.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      card.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+    }
+
+    function ocultarTarjeta() {
+      if (!card) return;
+      card.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      card.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+    }
+
+    if (cardClose) {
+      cardClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        ocultarTarjeta();
+      });
+    }
+
+    // Manejo de movimiento de mouse (Hover reactivo)
+    function onMouseMove(event) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(interactiveMarkers);
+
+      if (intersects.length > 0) {
+        const obj = intersects[0].object;
+        renderer.domElement.style.cursor = 'pointer';
+
+        if (hoveredMarker !== obj) {
+          if (hoveredMarker) hoveredMarker.scale.set(1, 1, 1);
+          hoveredMarker = obj;
+          obj.scale.set(1.6, 1.6, 1.6);
+        }
+      } else {
+        renderer.domElement.style.cursor = 'grab';
+        if (hoveredMarker) {
+          hoveredMarker.scale.set(1, 1, 1);
+          hoveredMarker = null;
+        }
+      }
+    }
+
+    // Manejo de Clic en la esfera 3D
+    function onClick(event) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(interactiveMarkers);
+
+      if (intersects.length > 0) {
+        const marker = intersects[0].object;
+        const data = marker.userData;
+        mostrarTarjeta(data);
+        enfocarCoordenada(data.lat, data.lng);
+      }
+    }
+
+    renderer.domElement.addEventListener('mousemove', onMouseMove);
+    renderer.domElement.addEventListener('click', onClick);
+
+    // Función suave para rotar la cámara y mirar directamente al nodo seleccionado
+    let targetRotation = null;
+    function enfocarCoordenada(lat, lng) {
+      // Rotar el grupo del globo para que el punto quede frente a la cámara (eje Z positivo)
+      const phi = (90 - lat) * (Math.PI / 180);
+      const theta = (lng + 180) * (Math.PI / 180);
+
+      // Calculamos la rotación deseada en Y
+      const targetY = -theta + Math.PI / 2;
+      targetRotation = {
+        y: targetY,
+        progress: 0
+      };
+    }
+
+    // Botones de acceso rápido inferior (Cinta de fotogramas)
+    const pills = document.querySelectorAll('.tgp-node-pill');
+    pills.forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(pill.getAttribute('data-index') || '0', 10);
+        const post = posts[idx];
+        if (post) {
+          mostrarTarjeta(post);
+          enfocarCoordenada(post.lat, post.lng);
+        }
+      });
+    });
+
+    // 7. Loop de Animación Continuo
+    let lastTime = performance.now();
+    let isUserInteracting = false;
+
+    controls.addEventListener('start', () => { isUserInteracting = true; });
+    controls.addEventListener('end', () => { isUserInteracting = false; });
+
+    function animate(time) {
+      requestAnimationFrame(animate);
+
+      const delta = (time - lastTime) / 1000;
+      lastTime = time;
+
+      // Rotación pasiva continua si el usuario no arrastra ni está enfocando
+      if (!isUserInteracting && !targetRotation) {
+        globe.rotation.y += 0.0012;
+        wireSphere.rotation.y += 0.0012;
+        markersGroup.rotation.y += 0.0012;
+        arcsGroup.rotation.y += 0.0012;
+        atmosphere.rotation.y += 0.0012;
+      }
+
+      // Animación suave de enfoque al hacer clic en un post
+      if (targetRotation) {
+        targetRotation.progress += delta * 2;
+        const step = Math.min(targetRotation.progress, 1);
+        
+        // Interpolación sutil
+        const diff = targetRotation.y - globe.rotation.y;
+        globe.rotation.y += diff * 0.08;
+        wireSphere.rotation.y = globe.rotation.y;
+        markersGroup.rotation.y = globe.rotation.y;
+        arcsGroup.rotation.y = globe.rotation.y;
+        atmosphere.rotation.y = globe.rotation.y;
+
+        if (Math.abs(diff) < 0.005 || step >= 1) {
+          targetRotation = null;
+        }
+      }
+
+      // Animación de pulsos de luz a lo largo de las curvas Bézier 3D
+      bezierPulses.forEach(p => {
+        p.progress += delta * 0.25;
+        if (p.progress > 1) p.progress = 0;
+        const pt = p.curve.getPoint(p.progress);
+        p.mesh.position.copy(pt);
+      });
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    requestAnimationFrame(animate);
+
+    // Ajuste dinámico de dimensiones al redimensionar la ventana
+    function onWindowResize() {
+      if (!container) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+    window.addEventListener('resize', onWindowResize);
+  }
+
+  // Montar en carga de página y navegación cliente Astro View Transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTgpGlobe);
+  } else {
+    initTgpGlobe();
+  }
+  document.addEventListener('astro:page-load', initTgpGlobe);
+</script>
+
+<style>
+  .mask-linear-fade {
+    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  }
+
+  /* Ocultar barra de scroll pero mantener funcionalidad */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
