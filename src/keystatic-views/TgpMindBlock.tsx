@@ -16,7 +16,7 @@ function TgpMindPreview(props: {
 
   const iaWebhookUrl =
     (import.meta as any).env?.PUBLIC_IA_WEBHOOK_URL ||
-    'https://tgp-app-713934653057.us-central1.run.app';
+    'https://tgp-mind-alternative-713934653057.us-central1.run.app/inbox';
 
   async function handleConsultarIA(e: React.MouseEvent) {
     e.preventDefault();

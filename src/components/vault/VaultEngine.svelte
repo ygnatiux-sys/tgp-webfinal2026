@@ -754,8 +754,8 @@
   <!-- ── CABECERA PRINCIPAL ────────────────────────────────────────── -->
   <header class="text-center mb-12">
     <div class="flex items-center justify-center gap-2 t-telemetry text-vault-accent mb-4">
-      <span class="font-semibold">â—ˆ</span>
-      <span>THE GREAT PUZZLE PROJECT Â· MESA DE OPERACIONES CMS</span>
+      <span class="font-semibold">◈</span>
+      <span>THE GREAT PUZZLE PROJECT · MESA DE OPERACIONES CMS</span>
     </div>
 
     <h1 class="t-display text-4xl sm:text-6xl md:text-7xl mb-4">
@@ -765,7 +765,7 @@
     <div class="w-16 h-px bg-white/20 mx-auto mb-5"></div>
 
     <p class="t-logline text-sm sm:text-base md:text-lg text-white/70 max-w-2xl mx-auto mb-6">
-      Arquitectura tÃ©cnica de ingesta histÃ³rica, transmutaciÃ³n multimedia y sÃ­ntesis cognitiva.
+      Arquitectura técnica de ingesta histórica, transmutación multimedia y síntesis cognitiva.
     </p>
 
     <!-- Indicadores de Enlace de Motores -->
@@ -775,14 +775,14 @@
         <span class="text-white/80">Vault (D1 + R2)</span>
       </div>
 
-      <span class="text-white/20 hidden sm:inline">Â·</span>
+      <span class="text-white/20 hidden sm:inline">·</span>
 
       <div class="flex items-center gap-2">
         <span class="w-1.5 h-1.5 rounded-full {TGP_MOTORES.proxy ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-white/25'}"></span>
         <span class="text-white/80">Proxy (WikiForge)</span>
       </div>
 
-      <span class="text-white/20 hidden sm:inline">Â·</span>
+      <span class="text-white/20 hidden sm:inline">·</span>
 
       <div class="flex items-center gap-2">
         <span class="w-1.5 h-1.5 rounded-full {TGP_MOTORES.mind ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-white/25'}"></span>

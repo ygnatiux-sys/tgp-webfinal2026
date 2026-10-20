@@ -8,7 +8,7 @@ export const TGP_MOTORES = {
   /** El transmutador visual: Procesa Base64 e ingesta histórica (tgp-app) */
   vision: (import.meta.env.PUBLIC_VISION_WEBHOOK_URL || 'https://tgp-app-713934653057.us-central1.run.app') as string,
   /** El explorador: Extracción de Wikimedia y scraping de sitios externos */
-  proxy:  (import.meta.env.PUBLIC_PROXY_URL || 'https://tgp-app-713934653057.us-central1.run.app') as string,
+  proxy:  (import.meta.env.PUBLIC_PROXY_URL || 'https://tgp-mind-alternative-713934653057.us-central1.run.app/cx-tool-wikimedia') as string,
   /** El autómata: Análisis, generación de texto y flujos cognitivos (Gemini/Vertex) */
   mind:   (import.meta.env.PUBLIC_IA_WEBHOOK_URL || 'https://tgp-mind-alternative-713934653057.us-central1.run.app/inbox') as string,
   /** El editor inmersivo: WikiForge + R2 + Gemini Magazine 60/40 */
