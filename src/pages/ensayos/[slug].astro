@@ -12,8 +12,9 @@ import CinematicTimelineHero from '../../components/CinematicTimelineHero.astro'
 import { detectFocalPoint } from '../../lib/focalPointDetector';
 
 export async function getStaticPaths() {
+  const isDev = import.meta.env.DEV;
   const ensayos = await getCollection('ensayos', ({ data }) => {
-    return !data.draft;
+    return isDev || !data.draft;
   });
   return ensayos.map((entry) => ({
     params: { slug: entry.id },
@@ -22,10 +23,11 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
+const isDev = import.meta.env.DEV;
 const ensayos = await getCollection('ensayos');
 const entry = Astro.props.entry || ensayos.find((e) => e.id === slug);
 
-if (!entry || entry.data.draft) {
+if (!entry || (!isDev && entry.data.draft)) {
   return Astro.redirect('/archivo');
 }
 
